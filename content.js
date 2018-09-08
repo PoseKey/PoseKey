@@ -1,33 +1,61 @@
 import * as tf from '@tensorflow/tfjs';
 import * as posenet from '@tensorflow-models/posenet';
-// import 'babel-polyfill';
-// a();
-// function a(){
-//     abc();
-// }
-// async function abc(){
-//     const model = await posenet.load();
-// }
-
-let video;
-navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream)=>{
-    video = document.createElement('video');
+import Stats from 'stats.js';
+const stats = new Stats();
+async function setup(){
+    const video = await loadVideo();
+    // console.log(video);
+    const model = await posenet.load();
+    // console.log(model);
+    setupFPS();
+    animate(video, model);
+}
+async function loadVideo(){
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+    let video = document.createElement('video');
     video.height = 480;
     video.width = 640;
     video.srcObject = stream;
     video.play();
-    posenet.load().then((model)=>{        
-    console.log(model);
-        frames(model,video);
-    });
-});
-
-function frames(model, video){
-    model.estimateSinglePose(video).then((pose)=>{
-        console.log(pose);
-    });
-    // requestAnimationFrame(frames);
+    return video;
 }
+
+function animate(video, model){
+    async function detect(){
+        stats.begin();
+        const pose = await model.estimateSinglePose(video);
+        // console.log(pose);
+        stats.end();
+        requestAnimationFrame(detect);
+    }
+    detect();
+}
+function setupFPS() {
+    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.body.appendChild(stats.dom);
+  }
+
+setup();
+
+// let video;
+// navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream)=>{
+//     video = document.createElement('video');
+//     video.height = 480;
+//     video.width = 640;
+//     video.srcObject = stream;
+//     video.play();
+//     posenet.load().then((model)=>{        
+//     console.log(model);
+//         frames(model,video);
+//     });
+// });
+
+// function frames(model, video){
+//     model.estimateSinglePose(video).then((pose)=>{
+//         console.log(pose);
+//     });
+//     // requestAnimationFrame(frames);
+// }
 
 // function frames(model, video){
 //     model.estimateSinglePose(video).then((pose)=>{

@@ -2,13 +2,12 @@
 웹캠으로 모션을 인지해 tab안에서의 몇몇 조작이 가능하도록 하는 프로그램
 
 ## Requirement
-
+clone 후
+npm install
 
 ### parcel
 ES2017를 이용하기 위해서 transpiler인 parcel를 사용하지만 추후에 babeljs로 바뀔 수 도 있음
 npm install -g parcel-bundler
-### posenet
-npm install @tensorflow-models/posenet
 
 
 ## chrome extension unpacked로 올릴때는 dist폴더 사용
