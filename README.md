@@ -1,34 +1,30 @@
 # ChromeExtension
 웹캠으로 모션을 인지해 tab안에서의 몇몇 조작이 가능하도록 하는 프로그램
 
-## Requirement
-clone 후
+## 사용법
+
+### 1. 다운로드 or Clone
+
+git clone
+
+### 2. npm module 설치
+
 npm install
 
-### parcel
-ES2017를 이용하기 위해서 transpiler인 parcel를 사용하지만 추후에 babeljs로 바뀔 수 도 있음
-npm install -g parcel-bundler
+### 3. 크롬에 등록
+왼쪽 설정버튼>도구 더보기>확장프로그램>압축해제된 확장 프로그램을 로드합니다. > dist폴더 등록
 
+## 파일 수정
 
-## chrome extension unpacked로 올릴때는 dist폴더 사용
+### content.js/background.js
 
-content.js를 수정하고 싶을때는
+content.js/background.js는 es2017로 제작되어 별도의 transpile 작업이 필요함
 
-parcel content.js를 입력하면
-/dist의 content.js가 새로 생김새로 생성
+parcel content.js background.js
+혹은 수정한 파일만
+parcel content.js
+라고 입력하면 dist 폴더에 변환된 파일이 생성됨
 
-## 파일구성
-
-background.js -> parcel로 transpile 하기전 background.js
-camera.js -> tfjs-models에서 우리가 사용하는 posenet모델의 일부로 실제 크롬ex에 소스파일로 활용되지는 않음
-content.js -> parcel로 transpile 하기전 content.js
-index.html -> transpile할때 test용
-package-lock.json 
-package.json ->npm 패키지를 위한거
-README.md -> 설명 파일
-
-### dist 폴더내
-manifest.json ->
-thumbs-up.png ->임의로 사용중인 테스트용 버튼
-background.js -> parcel로 transpile된 background.js
-content.js -> parcel로 transpile된 content.js
+실시간으로 변환해주기때문에 여러개의 콘솔창을 키고 작업하다가 
+Ctrl+c
+를 입력하면 실시간 변환을 멈출 수 있음
