@@ -106,16 +106,28 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"background.js":[function(require,module,exports) {
 console.log('background running');
 
-// chrome.browserAction.onClicked.addListener(buttonClicked);
+let is = true;
+chrome.browserAction.onClicked.addListener(buttonClicked);
 
-// function buttonClicked(tab) {
-//     // console.log("button clicked!");
-//     // console.log(tab);
-//     let msg = {
-//         txt: "hello"
-//     }
-//     chrome.tabs.sendMessage(tab.id, msg);
-// }
+function buttonClicked(tab) {
+    console.log("button clicked!");
+    // console.log(tab);
+    let msg = {
+        txt: "ON"
+    };
+    if (is === true) {
+        msg = {
+            txt: "OFF"
+        };
+        is = false;
+    } else {
+        msg = {
+            txt: "ON"
+        };
+        is = true;
+    }
+    chrome.tabs.sendMessage(tab.id, msg);
+}
 },{}],"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -145,7 +157,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '54428' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '63699' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
