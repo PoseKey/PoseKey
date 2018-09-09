@@ -5,7 +5,7 @@
 
 ### 1. 다운로드 or Clone
 
-git clone
+git clone https://github.com/taeyeobyeo/Capstone.git
 
 ### 2. npm module 설치
 
