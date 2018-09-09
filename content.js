@@ -1,6 +1,7 @@
 import * as tf from '@tensorflow/tfjs';
 import * as posenet from '@tensorflow-models/posenet';
 import Stats from 'stats.js';
+
 const stats = new Stats();
 async function setup(){
     const video = await loadVideo();
@@ -36,33 +37,6 @@ function setupFPS() {
   }
 
 setup();
-
-// let video;
-// navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream)=>{
-//     video = document.createElement('video');
-//     video.height = 480;
-//     video.width = 640;
-//     video.srcObject = stream;
-//     video.play();
-//     posenet.load().then((model)=>{        
-//     console.log(model);
-//         frames(model,video);
-//     });
-// });
-
-// function frames(model, video){
-//     model.estimateSinglePose(video).then((pose)=>{
-//         console.log(pose);
-//     });
-//     // requestAnimationFrame(frames);
-// }
-
-// function frames(model, video){
-//     model.estimateSinglePose(video).then((pose)=>{
-//         console.log(pose);
-//     });
-//     // requestAnimationFrame(frames);
-// }
 
 // chrome.runtime.onMessage.addListener(gotMessage);
 
