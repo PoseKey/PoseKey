@@ -112,19 +112,19 @@ chrome.browserAction.onClicked.addListener(buttonClicked);
 function buttonClicked(tab) {
     console.log("button clicked!");
     // console.log(tab);
-    let msg = {
-        txt: "ON"
-    };
+    let msg;
     if (is === true) {
         msg = {
             txt: "OFF"
         };
         is = false;
+        chrome.browserAction.setIcon({ path: "likeR.png" });
     } else {
         msg = {
             txt: "ON"
         };
         is = true;
+        chrome.browserAction.setIcon({ path: "likeG.png" });
     }
     chrome.tabs.sendMessage(tab.id, msg);
 }
@@ -157,7 +157,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '63699' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '58468' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
