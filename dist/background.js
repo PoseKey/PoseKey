@@ -107,26 +107,62 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 console.log('background running');
 
 let is = true;
+let lastTab;
 chrome.browserAction.onClicked.addListener(buttonClicked);
+chrome.tabs.onUpdated.addListener(onLoad);
+chrome.tabs.onCreated.addListener(onLoad);
+chrome.tabs.onActivated.addListener(active); //active는 하나밖에 없음
 
 function buttonClicked(tab) {
     console.log("button clicked!");
     // console.log(tab);
-    let msg;
+    let msg = {
+        data: "ON"
+    };
     if (is === true) {
-        msg = {
-            txt: "OFF"
-        };
+        msg.data = "OFF";
         is = false;
         chrome.browserAction.setIcon({ path: "likeR.png" });
     } else {
-        msg = {
-            txt: "ON"
-        };
         is = true;
         chrome.browserAction.setIcon({ path: "likeG.png" });
     }
     chrome.tabs.sendMessage(tab.id, msg);
+}
+
+function onLoad(id) {
+    console.log("onLoad!");
+    // console.log(id);
+    let msg;
+    if (is === true) {
+        msg = {
+            data: "ON"
+        };
+    } else {
+        msg = {
+            data: "OFF"
+        };
+    }
+    chrome.tabs.sendMessage(id, msg);
+}
+
+function active(tab) {
+    console.log("onLoad!");
+    // console.log(tab);
+    let msg = {
+        data: "ON"
+    };
+    let msg2 = {
+        data: "OFF"
+    };
+    if (is === false) {
+        msg.data = "OFF";
+    }
+    chrome.tabs.sendMessage(tab.tabId, msg);
+    if (lastTab) {
+        chrome.tabs.sendMessage(lastTab, msg2);
+    }
+    lastTab = tab.tabId;
 }
 },{}],"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -157,7 +193,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '58468' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '52569' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 

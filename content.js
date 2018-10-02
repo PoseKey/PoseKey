@@ -1,28 +1,28 @@
 import * as tf from '@tensorflow/tfjs';
 import * as posenet from '@tensorflow-models/posenet';
 import Stats from 'stats.js';
-import { CHROME_ENVS } from '@tensorflow/tfjs-core/dist/test_util';
 //global variables
 const stats = new Stats();
-let isDetecting = true;
-
+let isDetecting;
+let stream;
+let video;
 /*
  * 프로그램이 실행되면 실행되는 코드
  */
 async function setup(){
-    const video = await loadVideo();
+    video = await loadVideo();
     // console.log(video);
     const model = await posenet.load();
     // console.log(model);
     setupFPS();
-    animate(video, model);
+    animate(model);
 }
 
 /**
  * 카메라가 활성화된 HTMLVideoElement를 생성후 리턴
  */
 async function loadVideo(){
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
     let video = document.createElement('video');
     video.height = 480;
     video.width = 640;
@@ -36,14 +36,15 @@ async function loadVideo(){
  * @param {*} video // 카메라로 찍는 화면이 활성화된 HTMLVideoElement
  * @param {*} model // posenet.PoseNet 모델
  */
-function animate(video, model){
+function animate(model){
     async function detect(){
+        // console.log(isDetecting);
         stats.begin();
         if(isDetecting === true){
             const pose = await model.estimateSinglePose(video);
             console.log(pose);
         }
-        stats.end();
+        stats.end(); 
         requestAnimationFrame(detect);
     }
     detect();
@@ -57,15 +58,16 @@ function setupFPS() {
 }
 
 setup();
-
 chrome.runtime.onMessage.addListener(gotMessage);
 
-function gotMessage(message, sender, sendResponse){
-    console.log(message.txt);
-    if(message.txt === "OFF") {
+async function gotMessage(message, sender, sendResponse){
+    console.log(message.data);
+    if(message.data === "OFF") {
         isDetecting = false;
+        stream.getTracks().forEach(track => track.stop());
     }
-    else if (message.txt ==="ON"){
+    else if (message.data === "ON"){
+        video = await loadVideo();
         isDetecting = true;
     }
 }
