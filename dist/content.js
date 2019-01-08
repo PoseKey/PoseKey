@@ -33909,7 +33909,7 @@ var version = "0.12.7",
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getBoundingBoxPoints = exports.getBoundingBox = exports.getAdjacentKeyPoints = exports.poseChain = exports.partNames = exports.partIds = exports.checkpoints = exports.PoseNet = exports.load = exports.decodeSinglePose = exports.decodeMultiplePoses = undefined;
+exports.getBoundingBoxPoints = exports.getBoundingBox = exports.getAdjacentKeyPoints = exports.poseChain = exports.partNames = exports.partIds = exports.PoseNet = exports.load = exports.decodeSinglePose = exports.decodeMultiplePoses = exports.CheckpointLoader = exports.mobileNetArchitectures = exports.MobileNet = undefined;
 
 var _tfjs = require("@tensorflow/tfjs");
 
@@ -33918,7 +33918,94 @@ var tf = _interopRequireWildcard(_tfjs);
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 // @tensorflow/tfjs-models Copyright 2018 Google
-function __awaiter(e, t, r, n) {
+var MANIFEST_FILE = "manifest.json",
+    CheckpointLoader = function () {
+  function e(e) {
+    this.urlPath = e, "/" !== this.urlPath.charAt(this.urlPath.length - 1) && (this.urlPath += "/");
+  }return e.prototype.loadManifest = function () {
+    var e = this;return new Promise(function (t, r) {
+      var n = new XMLHttpRequest();n.open("GET", e.urlPath + MANIFEST_FILE), n.onload = function () {
+        e.checkpointManifest = JSON.parse(n.responseText), t();
+      }, n.onerror = function (t) {
+        throw new Error(MANIFEST_FILE + " not found at " + e.urlPath + ". " + t);
+      }, n.send();
+    });
+  }, e.prototype.getCheckpointManifest = function () {
+    var e = this;return null == this.checkpointManifest ? new Promise(function (t, r) {
+      e.loadManifest().then(function () {
+        t(e.checkpointManifest);
+      });
+    }) : new Promise(function (t, r) {
+      t(e.checkpointManifest);
+    });
+  }, e.prototype.getAllVariables = function () {
+    var e = this;return null != this.variables ? new Promise(function (t, r) {
+      t(e.variables);
+    }) : new Promise(function (t, r) {
+      e.getCheckpointManifest().then(function (r) {
+        for (var n = Object.keys(e.checkpointManifest), o = [], i = 0; i < n.length; i++) o.push(e.getVariable(n[i]));Promise.all(o).then(function (r) {
+          e.variables = {};for (var o = 0; o < r.length; o++) e.variables[n[o]] = r[o];t(e.variables);
+        });
+      });
+    });
+  }, e.prototype.getVariable = function (e) {
+    var t = this;if (!(e in this.checkpointManifest)) throw new Error("Cannot load non-existant variable " + e);var r = function (r, n) {
+      var o = new XMLHttpRequest();o.responseType = "arraybuffer";var i = t.checkpointManifest[e].filename;o.open("GET", t.urlPath + i), o.onload = function () {
+        if (404 === o.status) throw new Error("Not found variable " + e);var n = new Float32Array(o.response),
+            i = _tfjs.Tensor.make(t.checkpointManifest[e].shape, { values: n });r(i);
+      }, o.onerror = function (t) {
+        throw new Error("Could not fetch variable " + e + ": " + t);
+      }, o.send();
+    };return null == this.checkpointManifest ? new Promise(function (e, n) {
+      t.loadManifest().then(function () {
+        new Promise(r).then(e);
+      });
+    }) : new Promise(r);
+  }, e;
+}(),
+    mobileNet100Architecture = [["conv2d", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1]],
+    mobileNet75Architecture = [["conv2d", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1]],
+    mobileNet50Architecture = [["conv2d", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1]],
+    VALID_OUTPUT_STRIDES = [8, 16, 32];function assertValidOutputStride(e) {
+  _tfjs.util.assert("number" == typeof e, "outputStride is not a number"), _tfjs.util.assert(VALID_OUTPUT_STRIDES.indexOf(e) >= 0, "outputStride of " + e + " is invalid. It must be either 8, 16, or 32");
+}function assertValidScaleFactor(e) {
+  _tfjs.util.assert("number" == typeof e, "imageScaleFactor is not a number"), _tfjs.util.assert(e >= .2 && e <= 1, "imageScaleFactor must be between 0.2 and 1.0");
+}var mobileNetArchitectures = { 100: mobileNet100Architecture, 75: mobileNet75Architecture, 50: mobileNet50Architecture };function toOutputStridedLayers(e, t) {
+  var r = 1,
+      n = 1;return e.map(function (e, o) {
+    var i,
+        a,
+        s = e[0],
+        u = e[1];return r === t ? (i = 1, a = n, n *= u) : (i = u, a = 1, r *= u), { blockId: o, convType: s, stride: i, rate: a, outputStride: r };
+  });
+}var MobileNet = function () {
+  function e(e, t) {
+    this.PREPROCESS_DIVISOR = (0, _tfjs.scalar)(127.5), this.ONE = (0, _tfjs.scalar)(1), this.variables = e, this.convolutionDefinitions = t;
+  }return e.prototype.predict = function (e, t) {
+    var r = this,
+        n = (0, _tfjs.cast)(e, "float32").div(this.PREPROCESS_DIVISOR).sub(this.ONE);return toOutputStridedLayers(this.convolutionDefinitions, t).reduce(function (e, t) {
+      var n = t.blockId,
+          o = t.stride,
+          i = t.convType,
+          a = t.rate;if ("conv2d" === i) return r.conv(e, o, n);if ("separableConv" === i) return r.separableConv(e, o, n, a);throw Error("Unknown conv type of " + i);
+    }, n);
+  }, e.prototype.convToOutput = function (e, t) {
+    return e.conv2d(this.weights(t), 1, "same").add(this.biases(t));
+  }, e.prototype.conv = function (e, t, r) {
+    return e.conv2d(this.weights("Conv2d_" + String(r)), t, "same").add(this.biases("Conv2d_" + String(r))).clipByValue(0, 6);
+  }, e.prototype.separableConv = function (e, t, r, n) {
+    void 0 === n && (n = 1);var o = "Conv2d_" + String(r) + "_depthwise",
+        i = "Conv2d_" + String(r) + "_pointwise";return e.depthwiseConv2D(this.depthwiseWeights(o), t, "same", "NHWC", n).add(this.biases(o)).clipByValue(0, 6).conv2d(this.weights(i), [1, 1], "same").add(this.biases(i)).clipByValue(0, 6);
+  }, e.prototype.weights = function (e) {
+    return this.variables["MobilenetV1/" + e + "/weights"];
+  }, e.prototype.biases = function (e) {
+    return this.variables["MobilenetV1/" + e + "/biases"];
+  }, e.prototype.depthwiseWeights = function (e) {
+    return this.variables["MobilenetV1/" + e + "/depthwise_weights"];
+  }, e.prototype.dispose = function () {
+    for (var e in this.variables) this.variables[e].dispose();
+  }, e;
+}();function __awaiter(e, t, r, n) {
   return new (r || (r = Promise))(function (o, i) {
     function a(e) {
       try {
@@ -34141,95 +34228,7 @@ function __awaiter(e, t, r, n) {
           for (l = w.sent(), c = l[0], p = l[1], f = l[2], h = l[3], d = buildPartWithScoreQueue(a, kLocalMaximumRadius, c), v = s * s; u.length < i && !d.empty();) m = d.dequeue(), g = getImageCoords(m.part, o, p), withinNmsRadiusOfCorrespondingPoint(u, v, g, m.part.id) || (b = decodePose(m, c, p, o, f, h), y = getInstanceScore(u, v, b), u.push({ keypoints: b, score: y }));return [2, u];}
     });
   });
-}var MANIFEST_FILE = "manifest.json",
-    CheckpointLoader = function () {
-  function e(e) {
-    this.urlPath = e, "/" !== this.urlPath.charAt(this.urlPath.length - 1) && (this.urlPath += "/");
-  }return e.prototype.loadManifest = function () {
-    var e = this;return new Promise(function (t, r) {
-      var n = new XMLHttpRequest();n.open("GET", e.urlPath + MANIFEST_FILE), n.onload = function () {
-        e.checkpointManifest = JSON.parse(n.responseText), t();
-      }, n.onerror = function (t) {
-        throw new Error(MANIFEST_FILE + " not found at " + e.urlPath + ". " + t);
-      }, n.send();
-    });
-  }, e.prototype.getCheckpointManifest = function () {
-    var e = this;return null == this.checkpointManifest ? new Promise(function (t, r) {
-      e.loadManifest().then(function () {
-        t(e.checkpointManifest);
-      });
-    }) : new Promise(function (t, r) {
-      t(e.checkpointManifest);
-    });
-  }, e.prototype.getAllVariables = function () {
-    var e = this;return null != this.variables ? new Promise(function (t, r) {
-      t(e.variables);
-    }) : new Promise(function (t, r) {
-      e.getCheckpointManifest().then(function (r) {
-        for (var n = Object.keys(e.checkpointManifest), o = [], i = 0; i < n.length; i++) o.push(e.getVariable(n[i]));Promise.all(o).then(function (r) {
-          e.variables = {};for (var o = 0; o < r.length; o++) e.variables[n[o]] = r[o];t(e.variables);
-        });
-      });
-    });
-  }, e.prototype.getVariable = function (e) {
-    var t = this;if (!(e in this.checkpointManifest)) throw new Error("Cannot load non-existant variable " + e);var r = function (r, n) {
-      var o = new XMLHttpRequest();o.responseType = "arraybuffer";var i = t.checkpointManifest[e].filename;o.open("GET", t.urlPath + i), o.onload = function () {
-        if (404 === o.status) throw new Error("Not found variable " + e);var n = new Float32Array(o.response),
-            i = _tfjs.Tensor.make(t.checkpointManifest[e].shape, { values: n });r(i);
-      }, o.onerror = function (t) {
-        throw new Error("Could not fetch variable " + e + ": " + t);
-      }, o.send();
-    };return null == this.checkpointManifest ? new Promise(function (e, n) {
-      t.loadManifest().then(function () {
-        new Promise(r).then(e);
-      });
-    }) : new Promise(r);
-  }, e;
-}(),
-    mobileNet100Architecture = [["conv2d", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1]],
-    mobileNet75Architecture = [["conv2d", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1]],
-    mobileNet50Architecture = [["conv2d", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 2], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1], ["separableConv", 1]],
-    VALID_OUTPUT_STRIDES = [8, 16, 32];function assertValidOutputStride(e) {
-  _tfjs.util.assert("number" == typeof e, "outputStride is not a number"), _tfjs.util.assert(VALID_OUTPUT_STRIDES.indexOf(e) >= 0, "outputStride of " + e + " is invalid. It must be either 8, 16, or 32");
-}function assertValidScaleFactor(e) {
-  _tfjs.util.assert("number" == typeof e, "imageScaleFactor is not a number"), _tfjs.util.assert(e >= .2 && e <= 1, "imageScaleFactor must be between 0.2 and 1.0");
-}var mobileNetArchitectures = { 100: mobileNet100Architecture, 75: mobileNet75Architecture, 50: mobileNet50Architecture };function toOutputStridedLayers(e, t) {
-  var r = 1,
-      n = 1;return e.map(function (e, o) {
-    var i,
-        a,
-        s = e[0],
-        u = e[1];return r === t ? (i = 1, a = n, n *= u) : (i = u, a = 1, r *= u), { blockId: o, convType: s, stride: i, rate: a, outputStride: r };
-  });
-}var MobileNet = function () {
-  function e(e, t) {
-    this.PREPROCESS_DIVISOR = (0, _tfjs.scalar)(127.5), this.ONE = (0, _tfjs.scalar)(1), this.variables = e, this.convolutionDefinitions = t;
-  }return e.prototype.predict = function (e, t) {
-    var r = this,
-        n = (0, _tfjs.cast)(e, "float32").div(this.PREPROCESS_DIVISOR).sub(this.ONE);return toOutputStridedLayers(this.convolutionDefinitions, t).reduce(function (e, t) {
-      var n = t.blockId,
-          o = t.stride,
-          i = t.convType,
-          a = t.rate;if ("conv2d" === i) return r.conv(e, o, n);if ("separableConv" === i) return r.separableConv(e, o, n, a);throw Error("Unknown conv type of " + i);
-    }, n);
-  }, e.prototype.convToOutput = function (e, t) {
-    return e.conv2d(this.weights(t), 1, "same").add(this.biases(t));
-  }, e.prototype.conv = function (e, t, r) {
-    return e.conv2d(this.weights("Conv2d_" + String(r)), t, "same").add(this.biases("Conv2d_" + String(r))).clipByValue(0, 6);
-  }, e.prototype.separableConv = function (e, t, r, n) {
-    void 0 === n && (n = 1);var o = "Conv2d_" + String(r) + "_depthwise",
-        i = "Conv2d_" + String(r) + "_pointwise";return e.depthwiseConv2D(this.depthwiseWeights(o), t, "same", "NHWC", n).add(this.biases(o)).clipByValue(0, 6).conv2d(this.weights(i), [1, 1], "same").add(this.biases(i)).clipByValue(0, 6);
-  }, e.prototype.weights = function (e) {
-    return this.variables["MobilenetV1/" + e + "/weights"];
-  }, e.prototype.biases = function (e) {
-    return this.variables["MobilenetV1/" + e + "/biases"];
-  }, e.prototype.depthwiseWeights = function (e) {
-    return this.variables["MobilenetV1/" + e + "/depthwise_weights"];
-  }, e.prototype.dispose = function () {
-    for (var e in this.variables) this.variables[e].dispose();
-  }, e;
-}(),
-    GOOGLE_CLOUD_STORAGE_DIR = "https://storage.googleapis.com/tfjs-models/weights/posenet/",
+}var GOOGLE_CLOUD_STORAGE_DIR = "https://storage.googleapis.com/tfjs-models/weights/posenet/",
     checkpoints = { 1.01: { url: GOOGLE_CLOUD_STORAGE_DIR + "mobilenet_v1_101/", architecture: mobileNetArchitectures[100] }, 1: { url: GOOGLE_CLOUD_STORAGE_DIR + "mobilenet_v1_100/", architecture: mobileNetArchitectures[100] }, .75: { url: GOOGLE_CLOUD_STORAGE_DIR + "mobilenet_v1_075/", architecture: mobileNetArchitectures[75] }, .5: { url: GOOGLE_CLOUD_STORAGE_DIR + "mobilenet_v1_050/", architecture: mobileNetArchitectures[50] } };function mod(e, t) {
   return (0, _tfjs.tidy)(function () {
     var r = e.div((0, _tfjs.scalar)(t, "int32"));return e.sub(r.mul((0, _tfjs.scalar)(t, "int32")));
@@ -34349,11 +34348,13 @@ function __awaiter(e, t, r, n) {
             return r = n.sent(), [2, new MobileNet(r, t.architecture)];}
       });
     });
-  } };exports.decodeMultiplePoses = decodeMultiplePoses;
+  } };exports.MobileNet = MobileNet;
+exports.mobileNetArchitectures = mobileNetArchitectures;
+exports.CheckpointLoader = CheckpointLoader;
+exports.decodeMultiplePoses = decodeMultiplePoses;
 exports.decodeSinglePose = decodeSinglePose;
 exports.load = load;
 exports.PoseNet = PoseNet;
-exports.checkpoints = checkpoints;
 exports.partIds = partIds;
 exports.partNames = partNames;
 exports.poseChain = poseChain;
@@ -34398,10 +34399,17 @@ let video;
 async function setup() {
     video = await loadVideo();
     // console.log(video);
-    const model = await posenet.load();
+    const model = await posenet.load(1.0);
     // console.log(model);
-    setupFPS();
-    animate(model);
+    // setupFPS();
+    // animate(model);
+    let playAlert = setInterval(async function () {
+        if (isDetecting === true) {
+            // const pose = await 
+            model.estimateSinglePose(video, 0.2, true, 16).then(pose => console.log(pose));
+            // console.log(pose);
+        }
+    }, 1000);
 }
 
 /**
@@ -34422,19 +34430,20 @@ async function loadVideo() {
  * @param {*} video // 카메라로 찍는 화면이 활성화된 HTMLVideoElement
  * @param {*} model // posenet.PoseNet 모델
  */
-function animate(model) {
-    async function detect() {
-        // console.log(isDetecting);
-        stats.begin();
-        if (isDetecting === true) {
-            const pose = await model.estimateSinglePose(video);
-            console.log(pose);
-        }
-        stats.end();
-        requestAnimationFrame(detect);
-    }
-    detect();
-}
+// function animate(model){
+//     async function detect(){
+//         // console.log(isDetecting);
+//         stats.begin();
+//         if(isDetecting === true){
+//             // const pose = await 
+//             model.estimateSinglePose(video,0.5,true,16).then((pose)=>console.log(pose));
+//             // console.log(pose);
+//         }
+//         stats.end();
+//         requestAnimationFrame(detect);
+//     }
+//     detect();
+// }
 /**
  * 카메라로 1초에 몇번 인식하고 있는지 왼쪽 상단에 표시
  */
@@ -34447,10 +34456,17 @@ setup();
 chrome.runtime.onMessage.addListener(gotMessage);
 
 async function gotMessage(message, sender, sendResponse) {
-    console.log(message.data);
+    // console.log(message.data);
     if (message.data === "OFF") {
         isDetecting = false;
-        stream.getTracks().forEach(track => track.stop());
+        // stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: false });
+        // var tracks = await stream.getTracks();
+        // tracks.forEach(track => track.stop());
+        video.pause();
+        video.srcObject = null;
+        stream.getTracks().forEach(track => {
+            track.stop();
+        });
     } else if (message.data === "ON") {
         video = await loadVideo();
         isDetecting = true;
@@ -34485,7 +34501,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '52569' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '65059' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 

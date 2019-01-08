@@ -12,10 +12,17 @@ let video;
 async function setup(){
     video = await loadVideo();
     // console.log(video);
-    const model = await posenet.load();
+    const model = await posenet.load(1.0);
     // console.log(model);
-    setupFPS();
-    animate(model);
+    // setupFPS();
+    // animate(model);
+    let playAlert = setInterval(async function(){
+        if(isDetecting === true){
+            // const pose = await 
+            model.estimateSinglePose(video,0.2,true,16).then((pose)=>console.log(pose));
+            // console.log(pose);
+        }
+    },1000);
 }
 
 /**
@@ -36,19 +43,20 @@ async function loadVideo(){
  * @param {*} video // 카메라로 찍는 화면이 활성화된 HTMLVideoElement
  * @param {*} model // posenet.PoseNet 모델
  */
-function animate(model){
-    async function detect(){
-        // console.log(isDetecting);
-        stats.begin();
-        if(isDetecting === true){
-            const pose = await model.estimateSinglePose(video);
-            console.log(pose);
-        }
-        stats.end(); 
-        requestAnimationFrame(detect);
-    }
-    detect();
-}
+// function animate(model){
+//     async function detect(){
+//         // console.log(isDetecting);
+//         stats.begin();
+//         if(isDetecting === true){
+//             // const pose = await 
+//             model.estimateSinglePose(video,0.5,true,16).then((pose)=>console.log(pose));
+//             // console.log(pose);
+//         }
+//         stats.end();
+//         requestAnimationFrame(detect);
+//     }
+//     detect();
+// }
 /**
  * 카메라로 1초에 몇번 인식하고 있는지 왼쪽 상단에 표시
  */
@@ -61,10 +69,17 @@ setup();
 chrome.runtime.onMessage.addListener(gotMessage);
 
 async function gotMessage(message, sender, sendResponse){
-    console.log(message.data);
+    // console.log(message.data);
     if(message.data === "OFF") {
         isDetecting = false;
-        stream.getTracks().forEach(track => track.stop());
+        // stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: false });
+        // var tracks = await stream.getTracks();
+        // tracks.forEach(track => track.stop());
+        video.pause();
+        video.srcObject = null;
+        stream.getTracks().forEach((track) => {
+            track.stop();
+        });
     }
     else if (message.data === "ON"){
         video = await loadVideo();

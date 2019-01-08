@@ -1,6 +1,6 @@
 {
   "name": "v1",
-  "version": "0.1",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "license": "Apache-2.0",
@@ -20,6 +20,7 @@
     "lint": "eslint ."
   },
   "devDependencies": {
+    "babel-core": "^6.26.3",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
