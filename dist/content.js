@@ -34456,12 +34456,9 @@ setup();
 chrome.runtime.onMessage.addListener(gotMessage);
 
 async function gotMessage(message, sender, sendResponse) {
-    // console.log(message.data);
+    console.log(message.data);
     if (message.data === "OFF") {
         isDetecting = false;
-        // stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: false });
-        // var tracks = await stream.getTracks();
-        // tracks.forEach(track => track.stop());
         video.pause();
         video.srcObject = null;
         stream.getTracks().forEach(track => {
@@ -34501,7 +34498,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '65059' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '56240' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 

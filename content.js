@@ -69,12 +69,9 @@ setup();
 chrome.runtime.onMessage.addListener(gotMessage);
 
 async function gotMessage(message, sender, sendResponse){
-    // console.log(message.data);
+    console.log(message.data);
     if(message.data === "OFF") {
         isDetecting = false;
-        // stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: false });
-        // var tracks = await stream.getTracks();
-        // tracks.forEach(track => track.stop());
         video.pause();
         video.srcObject = null;
         stream.getTracks().forEach((track) => {
