@@ -103,7 +103,1383 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   // Override the current require with this new one
   return newRequire;
-})({"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\node_modules\\base64-js\\index.js":[function(require,module,exports) {
+})({"node_modules\\core-js\\library\\modules\\es6.object.to-string.js":[function(require,module,exports) {
+
+},{}],"node_modules\\core-js\\library\\modules\\_to-integer.js":[function(require,module,exports) {
+// 7.1.4 ToInteger
+var ceil = Math.ceil;
+var floor = Math.floor;
+module.exports = function (it) {
+  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
+};
+
+},{}],"node_modules\\core-js\\library\\modules\\_defined.js":[function(require,module,exports) {
+// 7.2.1 RequireObjectCoercible(argument)
+module.exports = function (it) {
+  if (it == undefined) throw TypeError("Can't call method on  " + it);
+  return it;
+};
+
+},{}],"node_modules\\core-js\\library\\modules\\_string-at.js":[function(require,module,exports) {
+var toInteger = require('./_to-integer');
+var defined = require('./_defined');
+// true  -> String#at
+// false -> String#codePointAt
+module.exports = function (TO_STRING) {
+  return function (that, pos) {
+    var s = String(defined(that));
+    var i = toInteger(pos);
+    var l = s.length;
+    var a, b;
+    if (i < 0 || i >= l) return TO_STRING ? '' : undefined;
+    a = s.charCodeAt(i);
+    return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
+      ? TO_STRING ? s.charAt(i) : a
+      : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
+  };
+};
+
+},{"./_to-integer":"node_modules\\core-js\\library\\modules\\_to-integer.js","./_defined":"node_modules\\core-js\\library\\modules\\_defined.js"}],"node_modules\\core-js\\library\\modules\\_library.js":[function(require,module,exports) {
+module.exports = true;
+
+},{}],"node_modules\\core-js\\library\\modules\\_global.js":[function(require,module,exports) {
+
+// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
+var global = module.exports = typeof window != 'undefined' && window.Math == Math
+  ? window : typeof self != 'undefined' && self.Math == Math ? self
+  // eslint-disable-next-line no-new-func
+  : Function('return this')();
+if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
+
+},{}],"node_modules\\core-js\\library\\modules\\_core.js":[function(require,module,exports) {
+var core = module.exports = { version: '2.5.7' };
+if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
+
+},{}],"node_modules\\core-js\\library\\modules\\_a-function.js":[function(require,module,exports) {
+module.exports = function (it) {
+  if (typeof it != 'function') throw TypeError(it + ' is not a function!');
+  return it;
+};
+
+},{}],"node_modules\\core-js\\library\\modules\\_ctx.js":[function(require,module,exports) {
+// optional / simple context binding
+var aFunction = require('./_a-function');
+module.exports = function (fn, that, length) {
+  aFunction(fn);
+  if (that === undefined) return fn;
+  switch (length) {
+    case 1: return function (a) {
+      return fn.call(that, a);
+    };
+    case 2: return function (a, b) {
+      return fn.call(that, a, b);
+    };
+    case 3: return function (a, b, c) {
+      return fn.call(that, a, b, c);
+    };
+  }
+  return function (/* ...args */) {
+    return fn.apply(that, arguments);
+  };
+};
+
+},{"./_a-function":"node_modules\\core-js\\library\\modules\\_a-function.js"}],"node_modules\\core-js\\library\\modules\\_is-object.js":[function(require,module,exports) {
+module.exports = function (it) {
+  return typeof it === 'object' ? it !== null : typeof it === 'function';
+};
+
+},{}],"node_modules\\core-js\\library\\modules\\_an-object.js":[function(require,module,exports) {
+var isObject = require('./_is-object');
+module.exports = function (it) {
+  if (!isObject(it)) throw TypeError(it + ' is not an object!');
+  return it;
+};
+
+},{"./_is-object":"node_modules\\core-js\\library\\modules\\_is-object.js"}],"node_modules\\core-js\\library\\modules\\_fails.js":[function(require,module,exports) {
+module.exports = function (exec) {
+  try {
+    return !!exec();
+  } catch (e) {
+    return true;
+  }
+};
+
+},{}],"node_modules\\core-js\\library\\modules\\_descriptors.js":[function(require,module,exports) {
+// Thank's IE8 for his funny defineProperty
+module.exports = !require('./_fails')(function () {
+  return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
+});
+
+},{"./_fails":"node_modules\\core-js\\library\\modules\\_fails.js"}],"node_modules\\core-js\\library\\modules\\_dom-create.js":[function(require,module,exports) {
+var isObject = require('./_is-object');
+var document = require('./_global').document;
+// typeof document.createElement is 'object' in old IE
+var is = isObject(document) && isObject(document.createElement);
+module.exports = function (it) {
+  return is ? document.createElement(it) : {};
+};
+
+},{"./_is-object":"node_modules\\core-js\\library\\modules\\_is-object.js","./_global":"node_modules\\core-js\\library\\modules\\_global.js"}],"node_modules\\core-js\\library\\modules\\_ie8-dom-define.js":[function(require,module,exports) {
+module.exports = !require('./_descriptors') && !require('./_fails')(function () {
+  return Object.defineProperty(require('./_dom-create')('div'), 'a', { get: function () { return 7; } }).a != 7;
+});
+
+},{"./_descriptors":"node_modules\\core-js\\library\\modules\\_descriptors.js","./_fails":"node_modules\\core-js\\library\\modules\\_fails.js","./_dom-create":"node_modules\\core-js\\library\\modules\\_dom-create.js"}],"node_modules\\core-js\\library\\modules\\_to-primitive.js":[function(require,module,exports) {
+// 7.1.1 ToPrimitive(input [, PreferredType])
+var isObject = require('./_is-object');
+// instead of the ES6 spec version, we didn't implement @@toPrimitive case
+// and the second argument - flag - preferred type is a string
+module.exports = function (it, S) {
+  if (!isObject(it)) return it;
+  var fn, val;
+  if (S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it))) return val;
+  if (typeof (fn = it.valueOf) == 'function' && !isObject(val = fn.call(it))) return val;
+  if (!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it))) return val;
+  throw TypeError("Can't convert object to primitive value");
+};
+
+},{"./_is-object":"node_modules\\core-js\\library\\modules\\_is-object.js"}],"node_modules\\core-js\\library\\modules\\_object-dp.js":[function(require,module,exports) {
+var anObject = require('./_an-object');
+var IE8_DOM_DEFINE = require('./_ie8-dom-define');
+var toPrimitive = require('./_to-primitive');
+var dP = Object.defineProperty;
+
+exports.f = require('./_descriptors') ? Object.defineProperty : function defineProperty(O, P, Attributes) {
+  anObject(O);
+  P = toPrimitive(P, true);
+  anObject(Attributes);
+  if (IE8_DOM_DEFINE) try {
+    return dP(O, P, Attributes);
+  } catch (e) { /* empty */ }
+  if ('get' in Attributes || 'set' in Attributes) throw TypeError('Accessors not supported!');
+  if ('value' in Attributes) O[P] = Attributes.value;
+  return O;
+};
+
+},{"./_an-object":"node_modules\\core-js\\library\\modules\\_an-object.js","./_ie8-dom-define":"node_modules\\core-js\\library\\modules\\_ie8-dom-define.js","./_to-primitive":"node_modules\\core-js\\library\\modules\\_to-primitive.js","./_descriptors":"node_modules\\core-js\\library\\modules\\_descriptors.js"}],"node_modules\\core-js\\library\\modules\\_property-desc.js":[function(require,module,exports) {
+module.exports = function (bitmap, value) {
+  return {
+    enumerable: !(bitmap & 1),
+    configurable: !(bitmap & 2),
+    writable: !(bitmap & 4),
+    value: value
+  };
+};
+
+},{}],"node_modules\\core-js\\library\\modules\\_hide.js":[function(require,module,exports) {
+var dP = require('./_object-dp');
+var createDesc = require('./_property-desc');
+module.exports = require('./_descriptors') ? function (object, key, value) {
+  return dP.f(object, key, createDesc(1, value));
+} : function (object, key, value) {
+  object[key] = value;
+  return object;
+};
+
+},{"./_object-dp":"node_modules\\core-js\\library\\modules\\_object-dp.js","./_property-desc":"node_modules\\core-js\\library\\modules\\_property-desc.js","./_descriptors":"node_modules\\core-js\\library\\modules\\_descriptors.js"}],"node_modules\\core-js\\library\\modules\\_has.js":[function(require,module,exports) {
+var hasOwnProperty = {}.hasOwnProperty;
+module.exports = function (it, key) {
+  return hasOwnProperty.call(it, key);
+};
+
+},{}],"node_modules\\core-js\\library\\modules\\_export.js":[function(require,module,exports) {
+
+var global = require('./_global');
+var core = require('./_core');
+var ctx = require('./_ctx');
+var hide = require('./_hide');
+var has = require('./_has');
+var PROTOTYPE = 'prototype';
+
+var $export = function (type, name, source) {
+  var IS_FORCED = type & $export.F;
+  var IS_GLOBAL = type & $export.G;
+  var IS_STATIC = type & $export.S;
+  var IS_PROTO = type & $export.P;
+  var IS_BIND = type & $export.B;
+  var IS_WRAP = type & $export.W;
+  var exports = IS_GLOBAL ? core : core[name] || (core[name] = {});
+  var expProto = exports[PROTOTYPE];
+  var target = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE];
+  var key, own, out;
+  if (IS_GLOBAL) source = name;
+  for (key in source) {
+    // contains in native
+    own = !IS_FORCED && target && target[key] !== undefined;
+    if (own && has(exports, key)) continue;
+    // export native or passed
+    out = own ? target[key] : source[key];
+    // prevent global pollution for namespaces
+    exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
+    // bind timers to global for call from export context
+    : IS_BIND && own ? ctx(out, global)
+    // wrap global constructors for prevent change them in library
+    : IS_WRAP && target[key] == out ? (function (C) {
+      var F = function (a, b, c) {
+        if (this instanceof C) {
+          switch (arguments.length) {
+            case 0: return new C();
+            case 1: return new C(a);
+            case 2: return new C(a, b);
+          } return new C(a, b, c);
+        } return C.apply(this, arguments);
+      };
+      F[PROTOTYPE] = C[PROTOTYPE];
+      return F;
+    // make static versions for prototype methods
+    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
+    // export proto methods to core.%CONSTRUCTOR%.methods.%NAME%
+    if (IS_PROTO) {
+      (exports.virtual || (exports.virtual = {}))[key] = out;
+      // export proto methods to core.%CONSTRUCTOR%.prototype.%NAME%
+      if (type & $export.R && expProto && !expProto[key]) hide(expProto, key, out);
+    }
+  }
+};
+// type bitmap
+$export.F = 1;   // forced
+$export.G = 2;   // global
+$export.S = 4;   // static
+$export.P = 8;   // proto
+$export.B = 16;  // bind
+$export.W = 32;  // wrap
+$export.U = 64;  // safe
+$export.R = 128; // real proto method for `library`
+module.exports = $export;
+
+},{"./_global":"node_modules\\core-js\\library\\modules\\_global.js","./_core":"node_modules\\core-js\\library\\modules\\_core.js","./_ctx":"node_modules\\core-js\\library\\modules\\_ctx.js","./_hide":"node_modules\\core-js\\library\\modules\\_hide.js","./_has":"node_modules\\core-js\\library\\modules\\_has.js"}],"node_modules\\core-js\\library\\modules\\_redefine.js":[function(require,module,exports) {
+module.exports = require('./_hide');
+
+},{"./_hide":"node_modules\\core-js\\library\\modules\\_hide.js"}],"node_modules\\core-js\\library\\modules\\_iterators.js":[function(require,module,exports) {
+module.exports = {};
+
+},{}],"node_modules\\core-js\\library\\modules\\_cof.js":[function(require,module,exports) {
+var toString = {}.toString;
+
+module.exports = function (it) {
+  return toString.call(it).slice(8, -1);
+};
+
+},{}],"node_modules\\core-js\\library\\modules\\_iobject.js":[function(require,module,exports) {
+// fallback for non-array-like ES3 and non-enumerable old V8 strings
+var cof = require('./_cof');
+// eslint-disable-next-line no-prototype-builtins
+module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
+  return cof(it) == 'String' ? it.split('') : Object(it);
+};
+
+},{"./_cof":"node_modules\\core-js\\library\\modules\\_cof.js"}],"node_modules\\core-js\\library\\modules\\_to-iobject.js":[function(require,module,exports) {
+// to indexed object, toObject with fallback for non-array-like ES3 strings
+var IObject = require('./_iobject');
+var defined = require('./_defined');
+module.exports = function (it) {
+  return IObject(defined(it));
+};
+
+},{"./_iobject":"node_modules\\core-js\\library\\modules\\_iobject.js","./_defined":"node_modules\\core-js\\library\\modules\\_defined.js"}],"node_modules\\core-js\\library\\modules\\_to-length.js":[function(require,module,exports) {
+// 7.1.15 ToLength
+var toInteger = require('./_to-integer');
+var min = Math.min;
+module.exports = function (it) {
+  return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
+};
+
+},{"./_to-integer":"node_modules\\core-js\\library\\modules\\_to-integer.js"}],"node_modules\\core-js\\library\\modules\\_to-absolute-index.js":[function(require,module,exports) {
+var toInteger = require('./_to-integer');
+var max = Math.max;
+var min = Math.min;
+module.exports = function (index, length) {
+  index = toInteger(index);
+  return index < 0 ? max(index + length, 0) : min(index, length);
+};
+
+},{"./_to-integer":"node_modules\\core-js\\library\\modules\\_to-integer.js"}],"node_modules\\core-js\\library\\modules\\_array-includes.js":[function(require,module,exports) {
+// false -> Array#indexOf
+// true  -> Array#includes
+var toIObject = require('./_to-iobject');
+var toLength = require('./_to-length');
+var toAbsoluteIndex = require('./_to-absolute-index');
+module.exports = function (IS_INCLUDES) {
+  return function ($this, el, fromIndex) {
+    var O = toIObject($this);
+    var length = toLength(O.length);
+    var index = toAbsoluteIndex(fromIndex, length);
+    var value;
+    // Array#includes uses SameValueZero equality algorithm
+    // eslint-disable-next-line no-self-compare
+    if (IS_INCLUDES && el != el) while (length > index) {
+      value = O[index++];
+      // eslint-disable-next-line no-self-compare
+      if (value != value) return true;
+    // Array#indexOf ignores holes, Array#includes - not
+    } else for (;length > index; index++) if (IS_INCLUDES || index in O) {
+      if (O[index] === el) return IS_INCLUDES || index || 0;
+    } return !IS_INCLUDES && -1;
+  };
+};
+
+},{"./_to-iobject":"node_modules\\core-js\\library\\modules\\_to-iobject.js","./_to-length":"node_modules\\core-js\\library\\modules\\_to-length.js","./_to-absolute-index":"node_modules\\core-js\\library\\modules\\_to-absolute-index.js"}],"node_modules\\core-js\\library\\modules\\_shared.js":[function(require,module,exports) {
+
+var core = require('./_core');
+var global = require('./_global');
+var SHARED = '__core-js_shared__';
+var store = global[SHARED] || (global[SHARED] = {});
+
+(module.exports = function (key, value) {
+  return store[key] || (store[key] = value !== undefined ? value : {});
+})('versions', []).push({
+  version: core.version,
+  mode: require('./_library') ? 'pure' : 'global',
+  copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
+});
+
+},{"./_core":"node_modules\\core-js\\library\\modules\\_core.js","./_global":"node_modules\\core-js\\library\\modules\\_global.js","./_library":"node_modules\\core-js\\library\\modules\\_library.js"}],"node_modules\\core-js\\library\\modules\\_uid.js":[function(require,module,exports) {
+var id = 0;
+var px = Math.random();
+module.exports = function (key) {
+  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
+};
+
+},{}],"node_modules\\core-js\\library\\modules\\_shared-key.js":[function(require,module,exports) {
+var shared = require('./_shared')('keys');
+var uid = require('./_uid');
+module.exports = function (key) {
+  return shared[key] || (shared[key] = uid(key));
+};
+
+},{"./_shared":"node_modules\\core-js\\library\\modules\\_shared.js","./_uid":"node_modules\\core-js\\library\\modules\\_uid.js"}],"node_modules\\core-js\\library\\modules\\_object-keys-internal.js":[function(require,module,exports) {
+var has = require('./_has');
+var toIObject = require('./_to-iobject');
+var arrayIndexOf = require('./_array-includes')(false);
+var IE_PROTO = require('./_shared-key')('IE_PROTO');
+
+module.exports = function (object, names) {
+  var O = toIObject(object);
+  var i = 0;
+  var result = [];
+  var key;
+  for (key in O) if (key != IE_PROTO) has(O, key) && result.push(key);
+  // Don't enum bug & hidden keys
+  while (names.length > i) if (has(O, key = names[i++])) {
+    ~arrayIndexOf(result, key) || result.push(key);
+  }
+  return result;
+};
+
+},{"./_has":"node_modules\\core-js\\library\\modules\\_has.js","./_to-iobject":"node_modules\\core-js\\library\\modules\\_to-iobject.js","./_array-includes":"node_modules\\core-js\\library\\modules\\_array-includes.js","./_shared-key":"node_modules\\core-js\\library\\modules\\_shared-key.js"}],"node_modules\\core-js\\library\\modules\\_enum-bug-keys.js":[function(require,module,exports) {
+// IE 8- don't enum bug keys
+module.exports = (
+  'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
+).split(',');
+
+},{}],"node_modules\\core-js\\library\\modules\\_object-keys.js":[function(require,module,exports) {
+// 19.1.2.14 / 15.2.3.14 Object.keys(O)
+var $keys = require('./_object-keys-internal');
+var enumBugKeys = require('./_enum-bug-keys');
+
+module.exports = Object.keys || function keys(O) {
+  return $keys(O, enumBugKeys);
+};
+
+},{"./_object-keys-internal":"node_modules\\core-js\\library\\modules\\_object-keys-internal.js","./_enum-bug-keys":"node_modules\\core-js\\library\\modules\\_enum-bug-keys.js"}],"node_modules\\core-js\\library\\modules\\_object-dps.js":[function(require,module,exports) {
+var dP = require('./_object-dp');
+var anObject = require('./_an-object');
+var getKeys = require('./_object-keys');
+
+module.exports = require('./_descriptors') ? Object.defineProperties : function defineProperties(O, Properties) {
+  anObject(O);
+  var keys = getKeys(Properties);
+  var length = keys.length;
+  var i = 0;
+  var P;
+  while (length > i) dP.f(O, P = keys[i++], Properties[P]);
+  return O;
+};
+
+},{"./_object-dp":"node_modules\\core-js\\library\\modules\\_object-dp.js","./_an-object":"node_modules\\core-js\\library\\modules\\_an-object.js","./_object-keys":"node_modules\\core-js\\library\\modules\\_object-keys.js","./_descriptors":"node_modules\\core-js\\library\\modules\\_descriptors.js"}],"node_modules\\core-js\\library\\modules\\_html.js":[function(require,module,exports) {
+var document = require('./_global').document;
+module.exports = document && document.documentElement;
+
+},{"./_global":"node_modules\\core-js\\library\\modules\\_global.js"}],"node_modules\\core-js\\library\\modules\\_object-create.js":[function(require,module,exports) {
+// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
+var anObject = require('./_an-object');
+var dPs = require('./_object-dps');
+var enumBugKeys = require('./_enum-bug-keys');
+var IE_PROTO = require('./_shared-key')('IE_PROTO');
+var Empty = function () { /* empty */ };
+var PROTOTYPE = 'prototype';
+
+// Create object with fake `null` prototype: use iframe Object with cleared prototype
+var createDict = function () {
+  // Thrash, waste and sodomy: IE GC bug
+  var iframe = require('./_dom-create')('iframe');
+  var i = enumBugKeys.length;
+  var lt = '<';
+  var gt = '>';
+  var iframeDocument;
+  iframe.style.display = 'none';
+  require('./_html').appendChild(iframe);
+  iframe.src = 'javascript:'; // eslint-disable-line no-script-url
+  // createDict = iframe.contentWindow.Object;
+  // html.removeChild(iframe);
+  iframeDocument = iframe.contentWindow.document;
+  iframeDocument.open();
+  iframeDocument.write(lt + 'script' + gt + 'document.F=Object' + lt + '/script' + gt);
+  iframeDocument.close();
+  createDict = iframeDocument.F;
+  while (i--) delete createDict[PROTOTYPE][enumBugKeys[i]];
+  return createDict();
+};
+
+module.exports = Object.create || function create(O, Properties) {
+  var result;
+  if (O !== null) {
+    Empty[PROTOTYPE] = anObject(O);
+    result = new Empty();
+    Empty[PROTOTYPE] = null;
+    // add "__proto__" for Object.getPrototypeOf polyfill
+    result[IE_PROTO] = O;
+  } else result = createDict();
+  return Properties === undefined ? result : dPs(result, Properties);
+};
+
+},{"./_an-object":"node_modules\\core-js\\library\\modules\\_an-object.js","./_object-dps":"node_modules\\core-js\\library\\modules\\_object-dps.js","./_enum-bug-keys":"node_modules\\core-js\\library\\modules\\_enum-bug-keys.js","./_shared-key":"node_modules\\core-js\\library\\modules\\_shared-key.js","./_dom-create":"node_modules\\core-js\\library\\modules\\_dom-create.js","./_html":"node_modules\\core-js\\library\\modules\\_html.js"}],"node_modules\\core-js\\library\\modules\\_wks.js":[function(require,module,exports) {
+var store = require('./_shared')('wks');
+var uid = require('./_uid');
+var Symbol = require('./_global').Symbol;
+var USE_SYMBOL = typeof Symbol == 'function';
+
+var $exports = module.exports = function (name) {
+  return store[name] || (store[name] =
+    USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : uid)('Symbol.' + name));
+};
+
+$exports.store = store;
+
+},{"./_shared":"node_modules\\core-js\\library\\modules\\_shared.js","./_uid":"node_modules\\core-js\\library\\modules\\_uid.js","./_global":"node_modules\\core-js\\library\\modules\\_global.js"}],"node_modules\\core-js\\library\\modules\\_set-to-string-tag.js":[function(require,module,exports) {
+var def = require('./_object-dp').f;
+var has = require('./_has');
+var TAG = require('./_wks')('toStringTag');
+
+module.exports = function (it, tag, stat) {
+  if (it && !has(it = stat ? it : it.prototype, TAG)) def(it, TAG, { configurable: true, value: tag });
+};
+
+},{"./_object-dp":"node_modules\\core-js\\library\\modules\\_object-dp.js","./_has":"node_modules\\core-js\\library\\modules\\_has.js","./_wks":"node_modules\\core-js\\library\\modules\\_wks.js"}],"node_modules\\core-js\\library\\modules\\_iter-create.js":[function(require,module,exports) {
+'use strict';
+var create = require('./_object-create');
+var descriptor = require('./_property-desc');
+var setToStringTag = require('./_set-to-string-tag');
+var IteratorPrototype = {};
+
+// 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
+require('./_hide')(IteratorPrototype, require('./_wks')('iterator'), function () { return this; });
+
+module.exports = function (Constructor, NAME, next) {
+  Constructor.prototype = create(IteratorPrototype, { next: descriptor(1, next) });
+  setToStringTag(Constructor, NAME + ' Iterator');
+};
+
+},{"./_object-create":"node_modules\\core-js\\library\\modules\\_object-create.js","./_property-desc":"node_modules\\core-js\\library\\modules\\_property-desc.js","./_set-to-string-tag":"node_modules\\core-js\\library\\modules\\_set-to-string-tag.js","./_hide":"node_modules\\core-js\\library\\modules\\_hide.js","./_wks":"node_modules\\core-js\\library\\modules\\_wks.js"}],"node_modules\\core-js\\library\\modules\\_to-object.js":[function(require,module,exports) {
+// 7.1.13 ToObject(argument)
+var defined = require('./_defined');
+module.exports = function (it) {
+  return Object(defined(it));
+};
+
+},{"./_defined":"node_modules\\core-js\\library\\modules\\_defined.js"}],"node_modules\\core-js\\library\\modules\\_object-gpo.js":[function(require,module,exports) {
+// 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
+var has = require('./_has');
+var toObject = require('./_to-object');
+var IE_PROTO = require('./_shared-key')('IE_PROTO');
+var ObjectProto = Object.prototype;
+
+module.exports = Object.getPrototypeOf || function (O) {
+  O = toObject(O);
+  if (has(O, IE_PROTO)) return O[IE_PROTO];
+  if (typeof O.constructor == 'function' && O instanceof O.constructor) {
+    return O.constructor.prototype;
+  } return O instanceof Object ? ObjectProto : null;
+};
+
+},{"./_has":"node_modules\\core-js\\library\\modules\\_has.js","./_to-object":"node_modules\\core-js\\library\\modules\\_to-object.js","./_shared-key":"node_modules\\core-js\\library\\modules\\_shared-key.js"}],"node_modules\\core-js\\library\\modules\\_iter-define.js":[function(require,module,exports) {
+'use strict';
+var LIBRARY = require('./_library');
+var $export = require('./_export');
+var redefine = require('./_redefine');
+var hide = require('./_hide');
+var Iterators = require('./_iterators');
+var $iterCreate = require('./_iter-create');
+var setToStringTag = require('./_set-to-string-tag');
+var getPrototypeOf = require('./_object-gpo');
+var ITERATOR = require('./_wks')('iterator');
+var BUGGY = !([].keys && 'next' in [].keys()); // Safari has buggy iterators w/o `next`
+var FF_ITERATOR = '@@iterator';
+var KEYS = 'keys';
+var VALUES = 'values';
+
+var returnThis = function () { return this; };
+
+module.exports = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED) {
+  $iterCreate(Constructor, NAME, next);
+  var getMethod = function (kind) {
+    if (!BUGGY && kind in proto) return proto[kind];
+    switch (kind) {
+      case KEYS: return function keys() { return new Constructor(this, kind); };
+      case VALUES: return function values() { return new Constructor(this, kind); };
+    } return function entries() { return new Constructor(this, kind); };
+  };
+  var TAG = NAME + ' Iterator';
+  var DEF_VALUES = DEFAULT == VALUES;
+  var VALUES_BUG = false;
+  var proto = Base.prototype;
+  var $native = proto[ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT];
+  var $default = $native || getMethod(DEFAULT);
+  var $entries = DEFAULT ? !DEF_VALUES ? $default : getMethod('entries') : undefined;
+  var $anyNative = NAME == 'Array' ? proto.entries || $native : $native;
+  var methods, key, IteratorPrototype;
+  // Fix native
+  if ($anyNative) {
+    IteratorPrototype = getPrototypeOf($anyNative.call(new Base()));
+    if (IteratorPrototype !== Object.prototype && IteratorPrototype.next) {
+      // Set @@toStringTag to native iterators
+      setToStringTag(IteratorPrototype, TAG, true);
+      // fix for some old engines
+      if (!LIBRARY && typeof IteratorPrototype[ITERATOR] != 'function') hide(IteratorPrototype, ITERATOR, returnThis);
+    }
+  }
+  // fix Array#{values, @@iterator}.name in V8 / FF
+  if (DEF_VALUES && $native && $native.name !== VALUES) {
+    VALUES_BUG = true;
+    $default = function values() { return $native.call(this); };
+  }
+  // Define iterator
+  if ((!LIBRARY || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
+    hide(proto, ITERATOR, $default);
+  }
+  // Plug for library
+  Iterators[NAME] = $default;
+  Iterators[TAG] = returnThis;
+  if (DEFAULT) {
+    methods = {
+      values: DEF_VALUES ? $default : getMethod(VALUES),
+      keys: IS_SET ? $default : getMethod(KEYS),
+      entries: $entries
+    };
+    if (FORCED) for (key in methods) {
+      if (!(key in proto)) redefine(proto, key, methods[key]);
+    } else $export($export.P + $export.F * (BUGGY || VALUES_BUG), NAME, methods);
+  }
+  return methods;
+};
+
+},{"./_library":"node_modules\\core-js\\library\\modules\\_library.js","./_export":"node_modules\\core-js\\library\\modules\\_export.js","./_redefine":"node_modules\\core-js\\library\\modules\\_redefine.js","./_hide":"node_modules\\core-js\\library\\modules\\_hide.js","./_iterators":"node_modules\\core-js\\library\\modules\\_iterators.js","./_iter-create":"node_modules\\core-js\\library\\modules\\_iter-create.js","./_set-to-string-tag":"node_modules\\core-js\\library\\modules\\_set-to-string-tag.js","./_object-gpo":"node_modules\\core-js\\library\\modules\\_object-gpo.js","./_wks":"node_modules\\core-js\\library\\modules\\_wks.js"}],"node_modules\\core-js\\library\\modules\\es6.string.iterator.js":[function(require,module,exports) {
+'use strict';
+var $at = require('./_string-at')(true);
+
+// 21.1.3.27 String.prototype[@@iterator]()
+require('./_iter-define')(String, 'String', function (iterated) {
+  this._t = String(iterated); // target
+  this._i = 0;                // next index
+// 21.1.5.2.1 %StringIteratorPrototype%.next()
+}, function () {
+  var O = this._t;
+  var index = this._i;
+  var point;
+  if (index >= O.length) return { value: undefined, done: true };
+  point = $at(O, index);
+  this._i += point.length;
+  return { value: point, done: false };
+});
+
+},{"./_string-at":"node_modules\\core-js\\library\\modules\\_string-at.js","./_iter-define":"node_modules\\core-js\\library\\modules\\_iter-define.js"}],"node_modules\\core-js\\library\\modules\\_add-to-unscopables.js":[function(require,module,exports) {
+module.exports = function () { /* empty */ };
+
+},{}],"node_modules\\core-js\\library\\modules\\_iter-step.js":[function(require,module,exports) {
+module.exports = function (done, value) {
+  return { value: value, done: !!done };
+};
+
+},{}],"node_modules\\core-js\\library\\modules\\es6.array.iterator.js":[function(require,module,exports) {
+'use strict';
+var addToUnscopables = require('./_add-to-unscopables');
+var step = require('./_iter-step');
+var Iterators = require('./_iterators');
+var toIObject = require('./_to-iobject');
+
+// 22.1.3.4 Array.prototype.entries()
+// 22.1.3.13 Array.prototype.keys()
+// 22.1.3.29 Array.prototype.values()
+// 22.1.3.30 Array.prototype[@@iterator]()
+module.exports = require('./_iter-define')(Array, 'Array', function (iterated, kind) {
+  this._t = toIObject(iterated); // target
+  this._i = 0;                   // next index
+  this._k = kind;                // kind
+// 22.1.5.2.1 %ArrayIteratorPrototype%.next()
+}, function () {
+  var O = this._t;
+  var kind = this._k;
+  var index = this._i++;
+  if (!O || index >= O.length) {
+    this._t = undefined;
+    return step(1);
+  }
+  if (kind == 'keys') return step(0, index);
+  if (kind == 'values') return step(0, O[index]);
+  return step(0, [index, O[index]]);
+}, 'values');
+
+// argumentsList[@@iterator] is %ArrayProto_values% (9.4.4.6, 9.4.4.7)
+Iterators.Arguments = Iterators.Array;
+
+addToUnscopables('keys');
+addToUnscopables('values');
+addToUnscopables('entries');
+
+},{"./_add-to-unscopables":"node_modules\\core-js\\library\\modules\\_add-to-unscopables.js","./_iter-step":"node_modules\\core-js\\library\\modules\\_iter-step.js","./_iterators":"node_modules\\core-js\\library\\modules\\_iterators.js","./_to-iobject":"node_modules\\core-js\\library\\modules\\_to-iobject.js","./_iter-define":"node_modules\\core-js\\library\\modules\\_iter-define.js"}],"node_modules\\core-js\\library\\modules\\web.dom.iterable.js":[function(require,module,exports) {
+
+require('./es6.array.iterator');
+var global = require('./_global');
+var hide = require('./_hide');
+var Iterators = require('./_iterators');
+var TO_STRING_TAG = require('./_wks')('toStringTag');
+
+var DOMIterables = ('CSSRuleList,CSSStyleDeclaration,CSSValueList,ClientRectList,DOMRectList,DOMStringList,' +
+  'DOMTokenList,DataTransferItemList,FileList,HTMLAllCollection,HTMLCollection,HTMLFormElement,HTMLSelectElement,' +
+  'MediaList,MimeTypeArray,NamedNodeMap,NodeList,PaintRequestList,Plugin,PluginArray,SVGLengthList,SVGNumberList,' +
+  'SVGPathSegList,SVGPointList,SVGStringList,SVGTransformList,SourceBufferList,StyleSheetList,TextTrackCueList,' +
+  'TextTrackList,TouchList').split(',');
+
+for (var i = 0; i < DOMIterables.length; i++) {
+  var NAME = DOMIterables[i];
+  var Collection = global[NAME];
+  var proto = Collection && Collection.prototype;
+  if (proto && !proto[TO_STRING_TAG]) hide(proto, TO_STRING_TAG, NAME);
+  Iterators[NAME] = Iterators.Array;
+}
+
+},{"./es6.array.iterator":"node_modules\\core-js\\library\\modules\\es6.array.iterator.js","./_global":"node_modules\\core-js\\library\\modules\\_global.js","./_hide":"node_modules\\core-js\\library\\modules\\_hide.js","./_iterators":"node_modules\\core-js\\library\\modules\\_iterators.js","./_wks":"node_modules\\core-js\\library\\modules\\_wks.js"}],"node_modules\\core-js\\library\\modules\\_classof.js":[function(require,module,exports) {
+// getting tag from 19.1.3.6 Object.prototype.toString()
+var cof = require('./_cof');
+var TAG = require('./_wks')('toStringTag');
+// ES3 wrong here
+var ARG = cof(function () { return arguments; }()) == 'Arguments';
+
+// fallback for IE11 Script Access Denied error
+var tryGet = function (it, key) {
+  try {
+    return it[key];
+  } catch (e) { /* empty */ }
+};
+
+module.exports = function (it) {
+  var O, T, B;
+  return it === undefined ? 'Undefined' : it === null ? 'Null'
+    // @@toStringTag case
+    : typeof (T = tryGet(O = Object(it), TAG)) == 'string' ? T
+    // builtinTag case
+    : ARG ? cof(O)
+    // ES3 arguments fallback
+    : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
+};
+
+},{"./_cof":"node_modules\\core-js\\library\\modules\\_cof.js","./_wks":"node_modules\\core-js\\library\\modules\\_wks.js"}],"node_modules\\core-js\\library\\modules\\_an-instance.js":[function(require,module,exports) {
+module.exports = function (it, Constructor, name, forbiddenField) {
+  if (!(it instanceof Constructor) || (forbiddenField !== undefined && forbiddenField in it)) {
+    throw TypeError(name + ': incorrect invocation!');
+  } return it;
+};
+
+},{}],"node_modules\\core-js\\library\\modules\\_iter-call.js":[function(require,module,exports) {
+// call something on iterator step with safe closing on error
+var anObject = require('./_an-object');
+module.exports = function (iterator, fn, value, entries) {
+  try {
+    return entries ? fn(anObject(value)[0], value[1]) : fn(value);
+  // 7.4.6 IteratorClose(iterator, completion)
+  } catch (e) {
+    var ret = iterator['return'];
+    if (ret !== undefined) anObject(ret.call(iterator));
+    throw e;
+  }
+};
+
+},{"./_an-object":"node_modules\\core-js\\library\\modules\\_an-object.js"}],"node_modules\\core-js\\library\\modules\\_is-array-iter.js":[function(require,module,exports) {
+// check on default Array iterator
+var Iterators = require('./_iterators');
+var ITERATOR = require('./_wks')('iterator');
+var ArrayProto = Array.prototype;
+
+module.exports = function (it) {
+  return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR] === it);
+};
+
+},{"./_iterators":"node_modules\\core-js\\library\\modules\\_iterators.js","./_wks":"node_modules\\core-js\\library\\modules\\_wks.js"}],"node_modules\\core-js\\library\\modules\\core.get-iterator-method.js":[function(require,module,exports) {
+var classof = require('./_classof');
+var ITERATOR = require('./_wks')('iterator');
+var Iterators = require('./_iterators');
+module.exports = require('./_core').getIteratorMethod = function (it) {
+  if (it != undefined) return it[ITERATOR]
+    || it['@@iterator']
+    || Iterators[classof(it)];
+};
+
+},{"./_classof":"node_modules\\core-js\\library\\modules\\_classof.js","./_wks":"node_modules\\core-js\\library\\modules\\_wks.js","./_iterators":"node_modules\\core-js\\library\\modules\\_iterators.js","./_core":"node_modules\\core-js\\library\\modules\\_core.js"}],"node_modules\\core-js\\library\\modules\\_for-of.js":[function(require,module,exports) {
+var ctx = require('./_ctx');
+var call = require('./_iter-call');
+var isArrayIter = require('./_is-array-iter');
+var anObject = require('./_an-object');
+var toLength = require('./_to-length');
+var getIterFn = require('./core.get-iterator-method');
+var BREAK = {};
+var RETURN = {};
+var exports = module.exports = function (iterable, entries, fn, that, ITERATOR) {
+  var iterFn = ITERATOR ? function () { return iterable; } : getIterFn(iterable);
+  var f = ctx(fn, that, entries ? 2 : 1);
+  var index = 0;
+  var length, step, iterator, result;
+  if (typeof iterFn != 'function') throw TypeError(iterable + ' is not iterable!');
+  // fast case for arrays with default iterator
+  if (isArrayIter(iterFn)) for (length = toLength(iterable.length); length > index; index++) {
+    result = entries ? f(anObject(step = iterable[index])[0], step[1]) : f(iterable[index]);
+    if (result === BREAK || result === RETURN) return result;
+  } else for (iterator = iterFn.call(iterable); !(step = iterator.next()).done;) {
+    result = call(iterator, f, step.value, entries);
+    if (result === BREAK || result === RETURN) return result;
+  }
+};
+exports.BREAK = BREAK;
+exports.RETURN = RETURN;
+
+},{"./_ctx":"node_modules\\core-js\\library\\modules\\_ctx.js","./_iter-call":"node_modules\\core-js\\library\\modules\\_iter-call.js","./_is-array-iter":"node_modules\\core-js\\library\\modules\\_is-array-iter.js","./_an-object":"node_modules\\core-js\\library\\modules\\_an-object.js","./_to-length":"node_modules\\core-js\\library\\modules\\_to-length.js","./core.get-iterator-method":"node_modules\\core-js\\library\\modules\\core.get-iterator-method.js"}],"node_modules\\core-js\\library\\modules\\_species-constructor.js":[function(require,module,exports) {
+// 7.3.20 SpeciesConstructor(O, defaultConstructor)
+var anObject = require('./_an-object');
+var aFunction = require('./_a-function');
+var SPECIES = require('./_wks')('species');
+module.exports = function (O, D) {
+  var C = anObject(O).constructor;
+  var S;
+  return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? D : aFunction(S);
+};
+
+},{"./_an-object":"node_modules\\core-js\\library\\modules\\_an-object.js","./_a-function":"node_modules\\core-js\\library\\modules\\_a-function.js","./_wks":"node_modules\\core-js\\library\\modules\\_wks.js"}],"node_modules\\core-js\\library\\modules\\_invoke.js":[function(require,module,exports) {
+// fast apply, http://jsperf.lnkit.com/fast-apply/5
+module.exports = function (fn, args, that) {
+  var un = that === undefined;
+  switch (args.length) {
+    case 0: return un ? fn()
+                      : fn.call(that);
+    case 1: return un ? fn(args[0])
+                      : fn.call(that, args[0]);
+    case 2: return un ? fn(args[0], args[1])
+                      : fn.call(that, args[0], args[1]);
+    case 3: return un ? fn(args[0], args[1], args[2])
+                      : fn.call(that, args[0], args[1], args[2]);
+    case 4: return un ? fn(args[0], args[1], args[2], args[3])
+                      : fn.call(that, args[0], args[1], args[2], args[3]);
+  } return fn.apply(that, args);
+};
+
+},{}],"node_modules\\core-js\\library\\modules\\_task.js":[function(require,module,exports) {
+
+
+var ctx = require('./_ctx');
+var invoke = require('./_invoke');
+var html = require('./_html');
+var cel = require('./_dom-create');
+var global = require('./_global');
+var process = global.process;
+var setTask = global.setImmediate;
+var clearTask = global.clearImmediate;
+var MessageChannel = global.MessageChannel;
+var Dispatch = global.Dispatch;
+var counter = 0;
+var queue = {};
+var ONREADYSTATECHANGE = 'onreadystatechange';
+var defer, channel, port;
+var run = function () {
+  var id = +this;
+  // eslint-disable-next-line no-prototype-builtins
+  if (queue.hasOwnProperty(id)) {
+    var fn = queue[id];
+    delete queue[id];
+    fn();
+  }
+};
+var listener = function (event) {
+  run.call(event.data);
+};
+// Node.js 0.9+ & IE10+ has setImmediate, otherwise:
+if (!setTask || !clearTask) {
+  setTask = function setImmediate(fn) {
+    var args = [];
+    var i = 1;
+    while (arguments.length > i) args.push(arguments[i++]);
+    queue[++counter] = function () {
+      // eslint-disable-next-line no-new-func
+      invoke(typeof fn == 'function' ? fn : Function(fn), args);
+    };
+    defer(counter);
+    return counter;
+  };
+  clearTask = function clearImmediate(id) {
+    delete queue[id];
+  };
+  // Node.js 0.8-
+  if (require('./_cof')(process) == 'process') {
+    defer = function (id) {
+      process.nextTick(ctx(run, id, 1));
+    };
+  // Sphere (JS game engine) Dispatch API
+  } else if (Dispatch && Dispatch.now) {
+    defer = function (id) {
+      Dispatch.now(ctx(run, id, 1));
+    };
+  // Browsers with MessageChannel, includes WebWorkers
+  } else if (MessageChannel) {
+    channel = new MessageChannel();
+    port = channel.port2;
+    channel.port1.onmessage = listener;
+    defer = ctx(port.postMessage, port, 1);
+  // Browsers with postMessage, skip WebWorkers
+  // IE8 has postMessage, but it's sync & typeof its postMessage is 'object'
+  } else if (global.addEventListener && typeof postMessage == 'function' && !global.importScripts) {
+    defer = function (id) {
+      global.postMessage(id + '', '*');
+    };
+    global.addEventListener('message', listener, false);
+  // IE8-
+  } else if (ONREADYSTATECHANGE in cel('script')) {
+    defer = function (id) {
+      html.appendChild(cel('script'))[ONREADYSTATECHANGE] = function () {
+        html.removeChild(this);
+        run.call(id);
+      };
+    };
+  // Rest old browsers
+  } else {
+    defer = function (id) {
+      setTimeout(ctx(run, id, 1), 0);
+    };
+  }
+}
+module.exports = {
+  set: setTask,
+  clear: clearTask
+};
+
+},{"./_ctx":"node_modules\\core-js\\library\\modules\\_ctx.js","./_invoke":"node_modules\\core-js\\library\\modules\\_invoke.js","./_html":"node_modules\\core-js\\library\\modules\\_html.js","./_dom-create":"node_modules\\core-js\\library\\modules\\_dom-create.js","./_global":"node_modules\\core-js\\library\\modules\\_global.js","./_cof":"node_modules\\core-js\\library\\modules\\_cof.js"}],"node_modules\\core-js\\library\\modules\\_microtask.js":[function(require,module,exports) {
+
+
+var global = require('./_global');
+var macrotask = require('./_task').set;
+var Observer = global.MutationObserver || global.WebKitMutationObserver;
+var process = global.process;
+var Promise = global.Promise;
+var isNode = require('./_cof')(process) == 'process';
+
+module.exports = function () {
+  var head, last, notify;
+
+  var flush = function () {
+    var parent, fn;
+    if (isNode && (parent = process.domain)) parent.exit();
+    while (head) {
+      fn = head.fn;
+      head = head.next;
+      try {
+        fn();
+      } catch (e) {
+        if (head) notify();
+        else last = undefined;
+        throw e;
+      }
+    } last = undefined;
+    if (parent) parent.enter();
+  };
+
+  // Node.js
+  if (isNode) {
+    notify = function () {
+      process.nextTick(flush);
+    };
+  // browsers with MutationObserver, except iOS Safari - https://github.com/zloirock/core-js/issues/339
+  } else if (Observer && !(global.navigator && global.navigator.standalone)) {
+    var toggle = true;
+    var node = document.createTextNode('');
+    new Observer(flush).observe(node, { characterData: true }); // eslint-disable-line no-new
+    notify = function () {
+      node.data = toggle = !toggle;
+    };
+  // environments with maybe non-completely correct, but existent Promise
+  } else if (Promise && Promise.resolve) {
+    // Promise.resolve without an argument throws an error in LG WebOS 2
+    var promise = Promise.resolve(undefined);
+    notify = function () {
+      promise.then(flush);
+    };
+  // for other environments - macrotask based on:
+  // - setImmediate
+  // - MessageChannel
+  // - window.postMessag
+  // - onreadystatechange
+  // - setTimeout
+  } else {
+    notify = function () {
+      // strange IE + webpack dev server bug - use .call(global)
+      macrotask.call(global, flush);
+    };
+  }
+
+  return function (fn) {
+    var task = { fn: fn, next: undefined };
+    if (last) last.next = task;
+    if (!head) {
+      head = task;
+      notify();
+    } last = task;
+  };
+};
+
+},{"./_global":"node_modules\\core-js\\library\\modules\\_global.js","./_task":"node_modules\\core-js\\library\\modules\\_task.js","./_cof":"node_modules\\core-js\\library\\modules\\_cof.js"}],"node_modules\\core-js\\library\\modules\\_new-promise-capability.js":[function(require,module,exports) {
+'use strict';
+// 25.4.1.5 NewPromiseCapability(C)
+var aFunction = require('./_a-function');
+
+function PromiseCapability(C) {
+  var resolve, reject;
+  this.promise = new C(function ($$resolve, $$reject) {
+    if (resolve !== undefined || reject !== undefined) throw TypeError('Bad Promise constructor');
+    resolve = $$resolve;
+    reject = $$reject;
+  });
+  this.resolve = aFunction(resolve);
+  this.reject = aFunction(reject);
+}
+
+module.exports.f = function (C) {
+  return new PromiseCapability(C);
+};
+
+},{"./_a-function":"node_modules\\core-js\\library\\modules\\_a-function.js"}],"node_modules\\core-js\\library\\modules\\_perform.js":[function(require,module,exports) {
+module.exports = function (exec) {
+  try {
+    return { e: false, v: exec() };
+  } catch (e) {
+    return { e: true, v: e };
+  }
+};
+
+},{}],"node_modules\\core-js\\library\\modules\\_user-agent.js":[function(require,module,exports) {
+
+var global = require('./_global');
+var navigator = global.navigator;
+
+module.exports = navigator && navigator.userAgent || '';
+
+},{"./_global":"node_modules\\core-js\\library\\modules\\_global.js"}],"node_modules\\core-js\\library\\modules\\_promise-resolve.js":[function(require,module,exports) {
+var anObject = require('./_an-object');
+var isObject = require('./_is-object');
+var newPromiseCapability = require('./_new-promise-capability');
+
+module.exports = function (C, x) {
+  anObject(C);
+  if (isObject(x) && x.constructor === C) return x;
+  var promiseCapability = newPromiseCapability.f(C);
+  var resolve = promiseCapability.resolve;
+  resolve(x);
+  return promiseCapability.promise;
+};
+
+},{"./_an-object":"node_modules\\core-js\\library\\modules\\_an-object.js","./_is-object":"node_modules\\core-js\\library\\modules\\_is-object.js","./_new-promise-capability":"node_modules\\core-js\\library\\modules\\_new-promise-capability.js"}],"node_modules\\core-js\\library\\modules\\_redefine-all.js":[function(require,module,exports) {
+var hide = require('./_hide');
+module.exports = function (target, src, safe) {
+  for (var key in src) {
+    if (safe && target[key]) target[key] = src[key];
+    else hide(target, key, src[key]);
+  } return target;
+};
+
+},{"./_hide":"node_modules\\core-js\\library\\modules\\_hide.js"}],"node_modules\\core-js\\library\\modules\\_set-species.js":[function(require,module,exports) {
+
+'use strict';
+var global = require('./_global');
+var core = require('./_core');
+var dP = require('./_object-dp');
+var DESCRIPTORS = require('./_descriptors');
+var SPECIES = require('./_wks')('species');
+
+module.exports = function (KEY) {
+  var C = typeof core[KEY] == 'function' ? core[KEY] : global[KEY];
+  if (DESCRIPTORS && C && !C[SPECIES]) dP.f(C, SPECIES, {
+    configurable: true,
+    get: function () { return this; }
+  });
+};
+
+},{"./_global":"node_modules\\core-js\\library\\modules\\_global.js","./_core":"node_modules\\core-js\\library\\modules\\_core.js","./_object-dp":"node_modules\\core-js\\library\\modules\\_object-dp.js","./_descriptors":"node_modules\\core-js\\library\\modules\\_descriptors.js","./_wks":"node_modules\\core-js\\library\\modules\\_wks.js"}],"node_modules\\core-js\\library\\modules\\_iter-detect.js":[function(require,module,exports) {
+var ITERATOR = require('./_wks')('iterator');
+var SAFE_CLOSING = false;
+
+try {
+  var riter = [7][ITERATOR]();
+  riter['return'] = function () { SAFE_CLOSING = true; };
+  // eslint-disable-next-line no-throw-literal
+  Array.from(riter, function () { throw 2; });
+} catch (e) { /* empty */ }
+
+module.exports = function (exec, skipClosing) {
+  if (!skipClosing && !SAFE_CLOSING) return false;
+  var safe = false;
+  try {
+    var arr = [7];
+    var iter = arr[ITERATOR]();
+    iter.next = function () { return { done: safe = true }; };
+    arr[ITERATOR] = function () { return iter; };
+    exec(arr);
+  } catch (e) { /* empty */ }
+  return safe;
+};
+
+},{"./_wks":"node_modules\\core-js\\library\\modules\\_wks.js"}],"node_modules\\core-js\\library\\modules\\es6.promise.js":[function(require,module,exports) {
+
+
+'use strict';
+var LIBRARY = require('./_library');
+var global = require('./_global');
+var ctx = require('./_ctx');
+var classof = require('./_classof');
+var $export = require('./_export');
+var isObject = require('./_is-object');
+var aFunction = require('./_a-function');
+var anInstance = require('./_an-instance');
+var forOf = require('./_for-of');
+var speciesConstructor = require('./_species-constructor');
+var task = require('./_task').set;
+var microtask = require('./_microtask')();
+var newPromiseCapabilityModule = require('./_new-promise-capability');
+var perform = require('./_perform');
+var userAgent = require('./_user-agent');
+var promiseResolve = require('./_promise-resolve');
+var PROMISE = 'Promise';
+var TypeError = global.TypeError;
+var process = global.process;
+var versions = process && process.versions;
+var v8 = versions && versions.v8 || '';
+var $Promise = global[PROMISE];
+var isNode = classof(process) == 'process';
+var empty = function () { /* empty */ };
+var Internal, newGenericPromiseCapability, OwnPromiseCapability, Wrapper;
+var newPromiseCapability = newGenericPromiseCapability = newPromiseCapabilityModule.f;
+
+var USE_NATIVE = !!function () {
+  try {
+    // correct subclassing with @@species support
+    var promise = $Promise.resolve(1);
+    var FakePromise = (promise.constructor = {})[require('./_wks')('species')] = function (exec) {
+      exec(empty, empty);
+    };
+    // unhandled rejections tracking support, NodeJS Promise without it fails @@species test
+    return (isNode || typeof PromiseRejectionEvent == 'function')
+      && promise.then(empty) instanceof FakePromise
+      // v8 6.6 (Node 10 and Chrome 66) have a bug with resolving custom thenables
+      // https://bugs.chromium.org/p/chromium/issues/detail?id=830565
+      // we can't detect it synchronously, so just check versions
+      && v8.indexOf('6.6') !== 0
+      && userAgent.indexOf('Chrome/66') === -1;
+  } catch (e) { /* empty */ }
+}();
+
+// helpers
+var isThenable = function (it) {
+  var then;
+  return isObject(it) && typeof (then = it.then) == 'function' ? then : false;
+};
+var notify = function (promise, isReject) {
+  if (promise._n) return;
+  promise._n = true;
+  var chain = promise._c;
+  microtask(function () {
+    var value = promise._v;
+    var ok = promise._s == 1;
+    var i = 0;
+    var run = function (reaction) {
+      var handler = ok ? reaction.ok : reaction.fail;
+      var resolve = reaction.resolve;
+      var reject = reaction.reject;
+      var domain = reaction.domain;
+      var result, then, exited;
+      try {
+        if (handler) {
+          if (!ok) {
+            if (promise._h == 2) onHandleUnhandled(promise);
+            promise._h = 1;
+          }
+          if (handler === true) result = value;
+          else {
+            if (domain) domain.enter();
+            result = handler(value); // may throw
+            if (domain) {
+              domain.exit();
+              exited = true;
+            }
+          }
+          if (result === reaction.promise) {
+            reject(TypeError('Promise-chain cycle'));
+          } else if (then = isThenable(result)) {
+            then.call(result, resolve, reject);
+          } else resolve(result);
+        } else reject(value);
+      } catch (e) {
+        if (domain && !exited) domain.exit();
+        reject(e);
+      }
+    };
+    while (chain.length > i) run(chain[i++]); // variable length - can't use forEach
+    promise._c = [];
+    promise._n = false;
+    if (isReject && !promise._h) onUnhandled(promise);
+  });
+};
+var onUnhandled = function (promise) {
+  task.call(global, function () {
+    var value = promise._v;
+    var unhandled = isUnhandled(promise);
+    var result, handler, console;
+    if (unhandled) {
+      result = perform(function () {
+        if (isNode) {
+          process.emit('unhandledRejection', value, promise);
+        } else if (handler = global.onunhandledrejection) {
+          handler({ promise: promise, reason: value });
+        } else if ((console = global.console) && console.error) {
+          console.error('Unhandled promise rejection', value);
+        }
+      });
+      // Browsers should not trigger `rejectionHandled` event if it was handled here, NodeJS - should
+      promise._h = isNode || isUnhandled(promise) ? 2 : 1;
+    } promise._a = undefined;
+    if (unhandled && result.e) throw result.v;
+  });
+};
+var isUnhandled = function (promise) {
+  return promise._h !== 1 && (promise._a || promise._c).length === 0;
+};
+var onHandleUnhandled = function (promise) {
+  task.call(global, function () {
+    var handler;
+    if (isNode) {
+      process.emit('rejectionHandled', promise);
+    } else if (handler = global.onrejectionhandled) {
+      handler({ promise: promise, reason: promise._v });
+    }
+  });
+};
+var $reject = function (value) {
+  var promise = this;
+  if (promise._d) return;
+  promise._d = true;
+  promise = promise._w || promise; // unwrap
+  promise._v = value;
+  promise._s = 2;
+  if (!promise._a) promise._a = promise._c.slice();
+  notify(promise, true);
+};
+var $resolve = function (value) {
+  var promise = this;
+  var then;
+  if (promise._d) return;
+  promise._d = true;
+  promise = promise._w || promise; // unwrap
+  try {
+    if (promise === value) throw TypeError("Promise can't be resolved itself");
+    if (then = isThenable(value)) {
+      microtask(function () {
+        var wrapper = { _w: promise, _d: false }; // wrap
+        try {
+          then.call(value, ctx($resolve, wrapper, 1), ctx($reject, wrapper, 1));
+        } catch (e) {
+          $reject.call(wrapper, e);
+        }
+      });
+    } else {
+      promise._v = value;
+      promise._s = 1;
+      notify(promise, false);
+    }
+  } catch (e) {
+    $reject.call({ _w: promise, _d: false }, e); // wrap
+  }
+};
+
+// constructor polyfill
+if (!USE_NATIVE) {
+  // 25.4.3.1 Promise(executor)
+  $Promise = function Promise(executor) {
+    anInstance(this, $Promise, PROMISE, '_h');
+    aFunction(executor);
+    Internal.call(this);
+    try {
+      executor(ctx($resolve, this, 1), ctx($reject, this, 1));
+    } catch (err) {
+      $reject.call(this, err);
+    }
+  };
+  // eslint-disable-next-line no-unused-vars
+  Internal = function Promise(executor) {
+    this._c = [];             // <- awaiting reactions
+    this._a = undefined;      // <- checked in isUnhandled reactions
+    this._s = 0;              // <- state
+    this._d = false;          // <- done
+    this._v = undefined;      // <- value
+    this._h = 0;              // <- rejection state, 0 - default, 1 - handled, 2 - unhandled
+    this._n = false;          // <- notify
+  };
+  Internal.prototype = require('./_redefine-all')($Promise.prototype, {
+    // 25.4.5.3 Promise.prototype.then(onFulfilled, onRejected)
+    then: function then(onFulfilled, onRejected) {
+      var reaction = newPromiseCapability(speciesConstructor(this, $Promise));
+      reaction.ok = typeof onFulfilled == 'function' ? onFulfilled : true;
+      reaction.fail = typeof onRejected == 'function' && onRejected;
+      reaction.domain = isNode ? process.domain : undefined;
+      this._c.push(reaction);
+      if (this._a) this._a.push(reaction);
+      if (this._s) notify(this, false);
+      return reaction.promise;
+    },
+    // 25.4.5.1 Promise.prototype.catch(onRejected)
+    'catch': function (onRejected) {
+      return this.then(undefined, onRejected);
+    }
+  });
+  OwnPromiseCapability = function () {
+    var promise = new Internal();
+    this.promise = promise;
+    this.resolve = ctx($resolve, promise, 1);
+    this.reject = ctx($reject, promise, 1);
+  };
+  newPromiseCapabilityModule.f = newPromiseCapability = function (C) {
+    return C === $Promise || C === Wrapper
+      ? new OwnPromiseCapability(C)
+      : newGenericPromiseCapability(C);
+  };
+}
+
+$export($export.G + $export.W + $export.F * !USE_NATIVE, { Promise: $Promise });
+require('./_set-to-string-tag')($Promise, PROMISE);
+require('./_set-species')(PROMISE);
+Wrapper = require('./_core')[PROMISE];
+
+// statics
+$export($export.S + $export.F * !USE_NATIVE, PROMISE, {
+  // 25.4.4.5 Promise.reject(r)
+  reject: function reject(r) {
+    var capability = newPromiseCapability(this);
+    var $$reject = capability.reject;
+    $$reject(r);
+    return capability.promise;
+  }
+});
+$export($export.S + $export.F * (LIBRARY || !USE_NATIVE), PROMISE, {
+  // 25.4.4.6 Promise.resolve(x)
+  resolve: function resolve(x) {
+    return promiseResolve(LIBRARY && this === Wrapper ? $Promise : this, x);
+  }
+});
+$export($export.S + $export.F * !(USE_NATIVE && require('./_iter-detect')(function (iter) {
+  $Promise.all(iter)['catch'](empty);
+})), PROMISE, {
+  // 25.4.4.1 Promise.all(iterable)
+  all: function all(iterable) {
+    var C = this;
+    var capability = newPromiseCapability(C);
+    var resolve = capability.resolve;
+    var reject = capability.reject;
+    var result = perform(function () {
+      var values = [];
+      var index = 0;
+      var remaining = 1;
+      forOf(iterable, false, function (promise) {
+        var $index = index++;
+        var alreadyCalled = false;
+        values.push(undefined);
+        remaining++;
+        C.resolve(promise).then(function (value) {
+          if (alreadyCalled) return;
+          alreadyCalled = true;
+          values[$index] = value;
+          --remaining || resolve(values);
+        }, reject);
+      });
+      --remaining || resolve(values);
+    });
+    if (result.e) reject(result.v);
+    return capability.promise;
+  },
+  // 25.4.4.4 Promise.race(iterable)
+  race: function race(iterable) {
+    var C = this;
+    var capability = newPromiseCapability(C);
+    var reject = capability.reject;
+    var result = perform(function () {
+      forOf(iterable, false, function (promise) {
+        C.resolve(promise).then(capability.resolve, reject);
+      });
+    });
+    if (result.e) reject(result.v);
+    return capability.promise;
+  }
+});
+
+},{"./_library":"node_modules\\core-js\\library\\modules\\_library.js","./_global":"node_modules\\core-js\\library\\modules\\_global.js","./_ctx":"node_modules\\core-js\\library\\modules\\_ctx.js","./_classof":"node_modules\\core-js\\library\\modules\\_classof.js","./_export":"node_modules\\core-js\\library\\modules\\_export.js","./_is-object":"node_modules\\core-js\\library\\modules\\_is-object.js","./_a-function":"node_modules\\core-js\\library\\modules\\_a-function.js","./_an-instance":"node_modules\\core-js\\library\\modules\\_an-instance.js","./_for-of":"node_modules\\core-js\\library\\modules\\_for-of.js","./_species-constructor":"node_modules\\core-js\\library\\modules\\_species-constructor.js","./_task":"node_modules\\core-js\\library\\modules\\_task.js","./_microtask":"node_modules\\core-js\\library\\modules\\_microtask.js","./_new-promise-capability":"node_modules\\core-js\\library\\modules\\_new-promise-capability.js","./_perform":"node_modules\\core-js\\library\\modules\\_perform.js","./_user-agent":"node_modules\\core-js\\library\\modules\\_user-agent.js","./_promise-resolve":"node_modules\\core-js\\library\\modules\\_promise-resolve.js","./_wks":"node_modules\\core-js\\library\\modules\\_wks.js","./_redefine-all":"node_modules\\core-js\\library\\modules\\_redefine-all.js","./_set-to-string-tag":"node_modules\\core-js\\library\\modules\\_set-to-string-tag.js","./_set-species":"node_modules\\core-js\\library\\modules\\_set-species.js","./_core":"node_modules\\core-js\\library\\modules\\_core.js","./_iter-detect":"node_modules\\core-js\\library\\modules\\_iter-detect.js"}],"node_modules\\core-js\\library\\modules\\es7.promise.finally.js":[function(require,module,exports) {
+
+// https://github.com/tc39/proposal-promise-finally
+'use strict';
+var $export = require('./_export');
+var core = require('./_core');
+var global = require('./_global');
+var speciesConstructor = require('./_species-constructor');
+var promiseResolve = require('./_promise-resolve');
+
+$export($export.P + $export.R, 'Promise', { 'finally': function (onFinally) {
+  var C = speciesConstructor(this, core.Promise || global.Promise);
+  var isFunction = typeof onFinally == 'function';
+  return this.then(
+    isFunction ? function (x) {
+      return promiseResolve(C, onFinally()).then(function () { return x; });
+    } : onFinally,
+    isFunction ? function (e) {
+      return promiseResolve(C, onFinally()).then(function () { throw e; });
+    } : onFinally
+  );
+} });
+
+},{"./_export":"node_modules\\core-js\\library\\modules\\_export.js","./_core":"node_modules\\core-js\\library\\modules\\_core.js","./_global":"node_modules\\core-js\\library\\modules\\_global.js","./_species-constructor":"node_modules\\core-js\\library\\modules\\_species-constructor.js","./_promise-resolve":"node_modules\\core-js\\library\\modules\\_promise-resolve.js"}],"node_modules\\core-js\\library\\modules\\es7.promise.try.js":[function(require,module,exports) {
+'use strict';
+// https://github.com/tc39/proposal-promise-try
+var $export = require('./_export');
+var newPromiseCapability = require('./_new-promise-capability');
+var perform = require('./_perform');
+
+$export($export.S, 'Promise', { 'try': function (callbackfn) {
+  var promiseCapability = newPromiseCapability.f(this);
+  var result = perform(callbackfn);
+  (result.e ? promiseCapability.reject : promiseCapability.resolve)(result.v);
+  return promiseCapability.promise;
+} });
+
+},{"./_export":"node_modules\\core-js\\library\\modules\\_export.js","./_new-promise-capability":"node_modules\\core-js\\library\\modules\\_new-promise-capability.js","./_perform":"node_modules\\core-js\\library\\modules\\_perform.js"}],"node_modules\\core-js\\library\\fn\\promise.js":[function(require,module,exports) {
+require('../modules/es6.object.to-string');
+require('../modules/es6.string.iterator');
+require('../modules/web.dom.iterable');
+require('../modules/es6.promise');
+require('../modules/es7.promise.finally');
+require('../modules/es7.promise.try');
+module.exports = require('../modules/_core').Promise;
+
+},{"../modules/es6.object.to-string":"node_modules\\core-js\\library\\modules\\es6.object.to-string.js","../modules/es6.string.iterator":"node_modules\\core-js\\library\\modules\\es6.string.iterator.js","../modules/web.dom.iterable":"node_modules\\core-js\\library\\modules\\web.dom.iterable.js","../modules/es6.promise":"node_modules\\core-js\\library\\modules\\es6.promise.js","../modules/es7.promise.finally":"node_modules\\core-js\\library\\modules\\es7.promise.finally.js","../modules/es7.promise.try":"node_modules\\core-js\\library\\modules\\es7.promise.try.js","../modules/_core":"node_modules\\core-js\\library\\modules\\_core.js"}],"node_modules\\babel-runtime\\core-js\\promise.js":[function(require,module,exports) {
+module.exports = { "default": require("core-js/library/fn/promise"), __esModule: true };
+},{"core-js/library/fn/promise":"node_modules\\core-js\\library\\fn\\promise.js"}],"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\node_modules\\base64-js\\index.js":[function(require,module,exports) {
 'use strict'
 
 exports.byteLength = byteLength
@@ -33903,280 +35279,7 @@ Object.keys(_tfjsConverter).forEach(function (key) {
 var version = "0.12.7",
     version$1 = { "tfjs-core": _tfjsCore.version_core, "tfjs-layers": _tfjsLayers.version_layers, "tfjs-converter": _tfjsConverter.version_converter, tfjs: version };exports.version = version$1;
 //# sourceMappingURL=tf.esm.js.map
-},{"@tensorflow/tfjs-core":"node_modules\\@tensorflow\\tfjs-core\\dist\\tf-core.esm.js","@tensorflow/tfjs-layers":"node_modules\\@tensorflow\\tfjs-layers\\dist\\tf-layers.esm.js","@tensorflow/tfjs-converter":"node_modules\\@tensorflow\\tfjs-converter\\dist\\tf-converter.esm.js"}],"node_modules\\@tensorflow-models\\mobilenet\\dist\\mobilenet.esm.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.MobileNet = exports.load = undefined;
-
-var _tfjs = require("@tensorflow/tfjs");
-
-var tf = _interopRequireWildcard(_tfjs);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-// @tensorflow/tfjs-models Copyright 2018 Google
-function __awaiter(e, a, r, o) {
-  return new (r || (r = Promise))(function (i, t) {
-    function n(e) {
-      try {
-        l(o.next(e));
-      } catch (e) {
-        t(e);
-      }
-    }function s(e) {
-      try {
-        l(o.throw(e));
-      } catch (e) {
-        t(e);
-      }
-    }function l(e) {
-      e.done ? i(e.value) : new r(function (a) {
-        a(e.value);
-      }).then(n, s);
-    }l((o = o.apply(e, a || [])).next());
-  });
-}function __generator(e, a) {
-  var r,
-      o,
-      i,
-      t,
-      n = { label: 0, sent: function () {
-      if (1 & i[0]) throw i[1];return i[1];
-    }, trys: [], ops: [] };return t = { next: s(0), throw: s(1), return: s(2) }, "function" == typeof Symbol && (t[Symbol.iterator] = function () {
-    return this;
-  }), t;function s(t) {
-    return function (s) {
-      return function (t) {
-        if (r) throw new TypeError("Generator is already executing.");for (; n;) try {
-          if (r = 1, o && (i = 2 & t[0] ? o.return : t[0] ? o.throw || ((i = o.return) && i.call(o), 0) : o.next) && !(i = i.call(o, t[1])).done) return i;switch (o = 0, i && (t = [2 & t[0], i.value]), t[0]) {case 0:case 1:
-              i = t;break;case 4:
-              return n.label++, { value: t[1], done: !1 };case 5:
-              n.label++, o = t[1], t = [0];continue;case 7:
-              t = n.ops.pop(), n.trys.pop();continue;default:
-              if (!(i = (i = n.trys).length > 0 && i[i.length - 1]) && (6 === t[0] || 2 === t[0])) {
-                n = 0;continue;
-              }if (3 === t[0] && (!i || t[1] > i[0] && t[1] < i[3])) {
-                n.label = t[1];break;
-              }if (6 === t[0] && n.label < i[1]) {
-                n.label = i[1], i = t;break;
-              }if (i && n.label < i[2]) {
-                n.label = i[2], n.ops.push(t);break;
-              }i[2] && n.ops.pop(), n.trys.pop();continue;}t = a.call(e, n);
-        } catch (e) {
-          t = [6, e], o = 0;
-        } finally {
-          r = i = 0;
-        }if (5 & t[0]) throw t[1];return { value: t[0] ? t[1] : void 0, done: !0 };
-      }([t, s]);
-    };
-  }
-}var IMAGENET_CLASSES = { 0: "tench, Tinca tinca", 1: "goldfish, Carassius auratus", 2: "great white shark, white shark, man-eater, man-eating shark, Carcharodon carcharias", 3: "tiger shark, Galeocerdo cuvieri", 4: "hammerhead, hammerhead shark", 5: "electric ray, crampfish, numbfish, torpedo", 6: "stingray", 7: "cock", 8: "hen", 9: "ostrich, Struthio camelus", 10: "brambling, Fringilla montifringilla", 11: "goldfinch, Carduelis carduelis", 12: "house finch, linnet, Carpodacus mexicanus", 13: "junco, snowbird", 14: "indigo bunting, indigo finch, indigo bird, Passerina cyanea", 15: "robin, American robin, Turdus migratorius", 16: "bulbul", 17: "jay", 18: "magpie", 19: "chickadee", 20: "water ouzel, dipper", 21: "kite", 22: "bald eagle, American eagle, Haliaeetus leucocephalus", 23: "vulture", 24: "great grey owl, great gray owl, Strix nebulosa", 25: "European fire salamander, Salamandra salamandra", 26: "common newt, Triturus vulgaris", 27: "eft", 28: "spotted salamander, Ambystoma maculatum", 29: "axolotl, mud puppy, Ambystoma mexicanum", 30: "bullfrog, Rana catesbeiana", 31: "tree frog, tree-frog", 32: "tailed frog, bell toad, ribbed toad, tailed toad, Ascaphus trui", 33: "loggerhead, loggerhead turtle, Caretta caretta", 34: "leatherback turtle, leatherback, leathery turtle, Dermochelys coriacea", 35: "mud turtle", 36: "terrapin", 37: "box turtle, box tortoise", 38: "banded gecko", 39: "common iguana, iguana, Iguana iguana", 40: "American chameleon, anole, Anolis carolinensis", 41: "whiptail, whiptail lizard", 42: "agama", 43: "frilled lizard, Chlamydosaurus kingi", 44: "alligator lizard", 45: "Gila monster, Heloderma suspectum", 46: "green lizard, Lacerta viridis", 47: "African chameleon, Chamaeleo chamaeleon", 48: "Komodo dragon, Komodo lizard, dragon lizard, giant lizard, Varanus komodoensis", 49: "African crocodile, Nile crocodile, Crocodylus niloticus", 50: "American alligator, Alligator mississipiensis", 51: "triceratops", 52: "thunder snake, worm snake, Carphophis amoenus", 53: "ringneck snake, ring-necked snake, ring snake", 54: "hognose snake, puff adder, sand viper", 55: "green snake, grass snake", 56: "king snake, kingsnake", 57: "garter snake, grass snake", 58: "water snake", 59: "vine snake", 60: "night snake, Hypsiglena torquata", 61: "boa constrictor, Constrictor constrictor", 62: "rock python, rock snake, Python sebae", 63: "Indian cobra, Naja naja", 64: "green mamba", 65: "sea snake", 66: "horned viper, cerastes, sand viper, horned asp, Cerastes cornutus", 67: "diamondback, diamondback rattlesnake, Crotalus adamanteus", 68: "sidewinder, horned rattlesnake, Crotalus cerastes", 69: "trilobite", 70: "harvestman, daddy longlegs, Phalangium opilio", 71: "scorpion", 72: "black and gold garden spider, Argiope aurantia", 73: "barn spider, Araneus cavaticus", 74: "garden spider, Aranea diademata", 75: "black widow, Latrodectus mactans", 76: "tarantula", 77: "wolf spider, hunting spider", 78: "tick", 79: "centipede", 80: "black grouse", 81: "ptarmigan", 82: "ruffed grouse, partridge, Bonasa umbellus", 83: "prairie chicken, prairie grouse, prairie fowl", 84: "peacock", 85: "quail", 86: "partridge", 87: "African grey, African gray, Psittacus erithacus", 88: "macaw", 89: "sulphur-crested cockatoo, Kakatoe galerita, Cacatua galerita", 90: "lorikeet", 91: "coucal", 92: "bee eater", 93: "hornbill", 94: "hummingbird", 95: "jacamar", 96: "toucan", 97: "drake", 98: "red-breasted merganser, Mergus serrator", 99: "goose", 100: "black swan, Cygnus atratus", 101: "tusker", 102: "echidna, spiny anteater, anteater", 103: "platypus, duckbill, duckbilled platypus, duck-billed platypus, Ornithorhynchus anatinus", 104: "wallaby, brush kangaroo", 105: "koala, koala bear, kangaroo bear, native bear, Phascolarctos cinereus", 106: "wombat", 107: "jelly fish", 108: "sea anemone, anemone", 109: "brain coral", 110: "flatworm, platyhelminth", 111: "nematode, nematode worm, roundworm", 112: "conch", 113: "snail", 114: "slug", 115: "sea slug, nudibranch", 116: "chiton, coat-of-mail shell, sea cradle, polyplacophore", 117: "chambered nautilus, pearly nautilus, nautilus", 118: "Dungeness crab, Cancer magister", 119: "rock crab, Cancer irroratus", 120: "fiddler crab", 121: "king crab, Alaska crab, Alaskan king crab, Alaska king crab, Paralithodes camtschatica", 122: "American lobster, Northern lobster, Maine lobster, Homarus americanus", 123: "spiny lobster, langouste, rock lobster, crawfish, crayfish, sea crawfish", 124: "crayfish, crawfish, crawdad, crawdaddy", 125: "hermit crab", 126: "isopod", 127: "white stork, Ciconia ciconia", 128: "black stork, Ciconia nigra", 129: "spoonbill", 130: "flamingo", 131: "little blue heron, Egretta caerulea", 132: "American egret, great white heron, Egretta albus", 133: "bittern", 134: "crane", 135: "limpkin, Aramus pictus", 136: "European gallinule, Porphyrio porphyrio", 137: "American coot, marsh hen, mud hen, water hen, Fulica americana", 138: "bustard", 139: "ruddy turnstone, Arenaria interpres", 140: "red-backed sandpiper, dunlin, Erolia alpina", 141: "redshank, Tringa totanus", 142: "dowitcher", 143: "oystercatcher, oyster catcher", 144: "pelican", 145: "king penguin, Aptenodytes patagonica", 146: "albatross, mollymawk", 147: "grey whale, gray whale, devilfish, Eschrichtius gibbosus, Eschrichtius robustus", 148: "killer whale, killer, orca, grampus, sea wolf, Orcinus orca", 149: "dugong, Dugong dugon", 150: "sea lion", 151: "Chihuahua", 152: "Japanese spaniel", 153: "Maltese dog, Maltese terrier, Maltese", 154: "Pekinese, Pekingese, Peke", 155: "Shih-Tzu", 156: "Blenheim spaniel", 157: "papillon", 158: "toy terrier", 159: "Rhodesian ridgeback", 160: "Afghan hound, Afghan", 161: "basset, basset hound", 162: "beagle", 163: "bloodhound, sleuthhound", 164: "bluetick", 165: "black-and-tan coonhound", 166: "Walker hound, Walker foxhound", 167: "English foxhound", 168: "redbone", 169: "borzoi, Russian wolfhound", 170: "Irish wolfhound", 171: "Italian greyhound", 172: "whippet", 173: "Ibizan hound, Ibizan Podenco", 174: "Norwegian elkhound, elkhound", 175: "otterhound, otter hound", 176: "Saluki, gazelle hound", 177: "Scottish deerhound, deerhound", 178: "Weimaraner", 179: "Staffordshire bullterrier, Staffordshire bull terrier", 180: "American Staffordshire terrier, Staffordshire terrier, American pit bull terrier, pit bull terrier", 181: "Bedlington terrier", 182: "Border terrier", 183: "Kerry blue terrier", 184: "Irish terrier", 185: "Norfolk terrier", 186: "Norwich terrier", 187: "Yorkshire terrier", 188: "wire-haired fox terrier", 189: "Lakeland terrier", 190: "Sealyham terrier, Sealyham", 191: "Airedale, Airedale terrier", 192: "cairn, cairn terrier", 193: "Australian terrier", 194: "Dandie Dinmont, Dandie Dinmont terrier", 195: "Boston bull, Boston terrier", 196: "miniature schnauzer", 197: "giant schnauzer", 198: "standard schnauzer", 199: "Scotch terrier, Scottish terrier, Scottie", 200: "Tibetan terrier, chrysanthemum dog", 201: "silky terrier, Sydney silky", 202: "soft-coated wheaten terrier", 203: "West Highland white terrier", 204: "Lhasa, Lhasa apso", 205: "flat-coated retriever", 206: "curly-coated retriever", 207: "golden retriever", 208: "Labrador retriever", 209: "Chesapeake Bay retriever", 210: "German short-haired pointer", 211: "vizsla, Hungarian pointer", 212: "English setter", 213: "Irish setter, red setter", 214: "Gordon setter", 215: "Brittany spaniel", 216: "clumber, clumber spaniel", 217: "English springer, English springer spaniel", 218: "Welsh springer spaniel", 219: "cocker spaniel, English cocker spaniel, cocker", 220: "Sussex spaniel", 221: "Irish water spaniel", 222: "kuvasz", 223: "schipperke", 224: "groenendael", 225: "malinois", 226: "briard", 227: "kelpie", 228: "komondor", 229: "Old English sheepdog, bobtail", 230: "Shetland sheepdog, Shetland sheep dog, Shetland", 231: "collie", 232: "Border collie", 233: "Bouvier des Flandres, Bouviers des Flandres", 234: "Rottweiler", 235: "German shepherd, German shepherd dog, German police dog, alsatian", 236: "Doberman, Doberman pinscher", 237: "miniature pinscher", 238: "Greater Swiss Mountain dog", 239: "Bernese mountain dog", 240: "Appenzeller", 241: "EntleBucher", 242: "boxer", 243: "bull mastiff", 244: "Tibetan mastiff", 245: "French bulldog", 246: "Great Dane", 247: "Saint Bernard, St Bernard", 248: "Eskimo dog, husky", 249: "malamute, malemute, Alaskan malamute", 250: "Siberian husky", 251: "dalmatian, coach dog, carriage dog", 252: "affenpinscher, monkey pinscher, monkey dog", 253: "basenji", 254: "pug, pug-dog", 255: "Leonberg", 256: "Newfoundland, Newfoundland dog", 257: "Great Pyrenees", 258: "Samoyed, Samoyede", 259: "Pomeranian", 260: "chow, chow chow", 261: "keeshond", 262: "Brabancon griffon", 263: "Pembroke, Pembroke Welsh corgi", 264: "Cardigan, Cardigan Welsh corgi", 265: "toy poodle", 266: "miniature poodle", 267: "standard poodle", 268: "Mexican hairless", 269: "timber wolf, grey wolf, gray wolf, Canis lupus", 270: "white wolf, Arctic wolf, Canis lupus tundrarum", 271: "red wolf, maned wolf, Canis rufus, Canis niger", 272: "coyote, prairie wolf, brush wolf, Canis latrans", 273: "dingo, warrigal, warragal, Canis dingo", 274: "dhole, Cuon alpinus", 275: "African hunting dog, hyena dog, Cape hunting dog, Lycaon pictus", 276: "hyena, hyaena", 277: "red fox, Vulpes vulpes", 278: "kit fox, Vulpes macrotis", 279: "Arctic fox, white fox, Alopex lagopus", 280: "grey fox, gray fox, Urocyon cinereoargenteus", 281: "tabby, tabby cat", 282: "tiger cat", 283: "Persian cat", 284: "Siamese cat, Siamese", 285: "Egyptian cat", 286: "cougar, puma, catamount, mountain lion, painter, panther, Felis concolor", 287: "lynx, catamount", 288: "leopard, Panthera pardus", 289: "snow leopard, ounce, Panthera uncia", 290: "jaguar, panther, Panthera onca, Felis onca", 291: "lion, king of beasts, Panthera leo", 292: "tiger, Panthera tigris", 293: "cheetah, chetah, Acinonyx jubatus", 294: "brown bear, bruin, Ursus arctos", 295: "American black bear, black bear, Ursus americanus, Euarctos americanus", 296: "ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus", 297: "sloth bear, Melursus ursinus, Ursus ursinus", 298: "mongoose", 299: "meerkat, mierkat", 300: "tiger beetle", 301: "ladybug, ladybeetle, lady beetle, ladybird, ladybird beetle", 302: "ground beetle, carabid beetle", 303: "long-horned beetle, longicorn, longicorn beetle", 304: "leaf beetle, chrysomelid", 305: "dung beetle", 306: "rhinoceros beetle", 307: "weevil", 308: "fly", 309: "bee", 310: "ant, emmet, pismire", 311: "grasshopper, hopper", 312: "cricket", 313: "walking stick, walkingstick, stick insect", 314: "cockroach, roach", 315: "mantis, mantid", 316: "cicada, cicala", 317: "leafhopper", 318: "lacewing, lacewing fly", 319: "dragonfly, darning needle, devil's darning needle, sewing needle, snake feeder, snake doctor, mosquito hawk, skeeter hawk", 320: "damselfly", 321: "admiral", 322: "ringlet, ringlet butterfly", 323: "monarch, monarch butterfly, milkweed butterfly, Danaus plexippus", 324: "cabbage butterfly", 325: "sulphur butterfly, sulfur butterfly", 326: "lycaenid, lycaenid butterfly", 327: "starfish, sea star", 328: "sea urchin", 329: "sea cucumber, holothurian", 330: "wood rabbit, cottontail, cottontail rabbit", 331: "hare", 332: "Angora, Angora rabbit", 333: "hamster", 334: "porcupine, hedgehog", 335: "fox squirrel, eastern fox squirrel, Sciurus niger", 336: "marmot", 337: "beaver", 338: "guinea pig, Cavia cobaya", 339: "sorrel", 340: "zebra", 341: "hog, pig, grunter, squealer, Sus scrofa", 342: "wild boar, boar, Sus scrofa", 343: "warthog", 344: "hippopotamus, hippo, river horse, Hippopotamus amphibius", 345: "ox", 346: "water buffalo, water ox, Asiatic buffalo, Bubalus bubalis", 347: "bison", 348: "ram, tup", 349: "bighorn, bighorn sheep, cimarron, Rocky Mountain bighorn, Rocky Mountain sheep, Ovis canadensis", 350: "ibex, Capra ibex", 351: "hartebeest", 352: "impala, Aepyceros melampus", 353: "gazelle", 354: "Arabian camel, dromedary, Camelus dromedarius", 355: "llama", 356: "weasel", 357: "mink", 358: "polecat, fitch, foulmart, foumart, Mustela putorius", 359: "black-footed ferret, ferret, Mustela nigripes", 360: "otter", 361: "skunk, polecat, wood pussy", 362: "badger", 363: "armadillo", 364: "three-toed sloth, ai, Bradypus tridactylus", 365: "orangutan, orang, orangutang, Pongo pygmaeus", 366: "gorilla, Gorilla gorilla", 367: "chimpanzee, chimp, Pan troglodytes", 368: "gibbon, Hylobates lar", 369: "siamang, Hylobates syndactylus, Symphalangus syndactylus", 370: "guenon, guenon monkey", 371: "patas, hussar monkey, Erythrocebus patas", 372: "baboon", 373: "macaque", 374: "langur", 375: "colobus, colobus monkey", 376: "proboscis monkey, Nasalis larvatus", 377: "marmoset", 378: "capuchin, ringtail, Cebus capucinus", 379: "howler monkey, howler", 380: "titi, titi monkey", 381: "spider monkey, Ateles geoffroyi", 382: "squirrel monkey, Saimiri sciureus", 383: "Madagascar cat, ring-tailed lemur, Lemur catta", 384: "indri, indris, Indri indri, Indri brevicaudatus", 385: "Indian elephant, Elephas maximus", 386: "African elephant, Loxodonta africana", 387: "lesser panda, red panda, panda, bear cat, cat bear, Ailurus fulgens", 388: "giant panda, panda, panda bear, coon bear, Ailuropoda melanoleuca", 389: "barracouta, snoek", 390: "eel", 391: "coho, cohoe, coho salmon, blue jack, silver salmon, Oncorhynchus kisutch", 392: "rock beauty, Holocanthus tricolor", 393: "anemone fish", 394: "sturgeon", 395: "gar, garfish, garpike, billfish, Lepisosteus osseus", 396: "lionfish", 397: "puffer, pufferfish, blowfish, globefish", 398: "abacus", 399: "abaya", 400: "academic gown, academic robe, judge's robe", 401: "accordion, piano accordion, squeeze box", 402: "acoustic guitar", 403: "aircraft carrier, carrier, flattop, attack aircraft carrier", 404: "airliner", 405: "airship, dirigible", 406: "altar", 407: "ambulance", 408: "amphibian, amphibious vehicle", 409: "analog clock", 410: "apiary, bee house", 411: "apron", 412: "ashcan, trash can, garbage can, wastebin, ash bin, ash-bin, ashbin, dustbin, trash barrel, trash bin", 413: "assault rifle, assault gun", 414: "backpack, back pack, knapsack, packsack, rucksack, haversack", 415: "bakery, bakeshop, bakehouse", 416: "balance beam, beam", 417: "balloon", 418: "ballpoint, ballpoint pen, ballpen, Biro", 419: "Band Aid", 420: "banjo", 421: "bannister, banister, balustrade, balusters, handrail", 422: "barbell", 423: "barber chair", 424: "barbershop", 425: "barn", 426: "barometer", 427: "barrel, cask", 428: "barrow, garden cart, lawn cart, wheelbarrow", 429: "baseball", 430: "basketball", 431: "bassinet", 432: "bassoon", 433: "bathing cap, swimming cap", 434: "bath towel", 435: "bathtub, bathing tub, bath, tub", 436: "beach wagon, station wagon, wagon, estate car, beach waggon, station waggon, waggon", 437: "beacon, lighthouse, beacon light, pharos", 438: "beaker", 439: "bearskin, busby, shako", 440: "beer bottle", 441: "beer glass", 442: "bell cote, bell cot", 443: "bib", 444: "bicycle-built-for-two, tandem bicycle, tandem", 445: "bikini, two-piece", 446: "binder, ring-binder", 447: "binoculars, field glasses, opera glasses", 448: "birdhouse", 449: "boathouse", 450: "bobsled, bobsleigh, bob", 451: "bolo tie, bolo, bola tie, bola", 452: "bonnet, poke bonnet", 453: "bookcase", 454: "bookshop, bookstore, bookstall", 455: "bottlecap", 456: "bow", 457: "bow tie, bow-tie, bowtie", 458: "brass, memorial tablet, plaque", 459: "brassiere, bra, bandeau", 460: "breakwater, groin, groyne, mole, bulwark, seawall, jetty", 461: "breastplate, aegis, egis", 462: "broom", 463: "bucket, pail", 464: "buckle", 465: "bulletproof vest", 466: "bullet train, bullet", 467: "butcher shop, meat market", 468: "cab, hack, taxi, taxicab", 469: "caldron, cauldron", 470: "candle, taper, wax light", 471: "cannon", 472: "canoe", 473: "can opener, tin opener", 474: "cardigan", 475: "car mirror", 476: "carousel, carrousel, merry-go-round, roundabout, whirligig", 477: "carpenter's kit, tool kit", 478: "carton", 479: "car wheel", 480: "cash machine, cash dispenser, automated teller machine, automatic teller machine, automated teller, automatic teller, ATM", 481: "cassette", 482: "cassette player", 483: "castle", 484: "catamaran", 485: "CD player", 486: "cello, violoncello", 487: "cellular telephone, cellular phone, cellphone, cell, mobile phone", 488: "chain", 489: "chainlink fence", 490: "chain mail, ring mail, mail, chain armor, chain armour, ring armor, ring armour", 491: "chain saw, chainsaw", 492: "chest", 493: "chiffonier, commode", 494: "chime, bell, gong", 495: "china cabinet, china closet", 496: "Christmas stocking", 497: "church, church building", 498: "cinema, movie theater, movie theatre, movie house, picture palace", 499: "cleaver, meat cleaver, chopper", 500: "cliff dwelling", 501: "cloak", 502: "clog, geta, patten, sabot", 503: "cocktail shaker", 504: "coffee mug", 505: "coffeepot", 506: "coil, spiral, volute, whorl, helix", 507: "combination lock", 508: "computer keyboard, keypad", 509: "confectionery, confectionary, candy store", 510: "container ship, containership, container vessel", 511: "convertible", 512: "corkscrew, bottle screw", 513: "cornet, horn, trumpet, trump", 514: "cowboy boot", 515: "cowboy hat, ten-gallon hat", 516: "cradle", 517: "crane", 518: "crash helmet", 519: "crate", 520: "crib, cot", 521: "Crock Pot", 522: "croquet ball", 523: "crutch", 524: "cuirass", 525: "dam, dike, dyke", 526: "desk", 527: "desktop computer", 528: "dial telephone, dial phone", 529: "diaper, nappy, napkin", 530: "digital clock", 531: "digital watch", 532: "dining table, board", 533: "dishrag, dishcloth", 534: "dishwasher, dish washer, dishwashing machine", 535: "disk brake, disc brake", 536: "dock, dockage, docking facility", 537: "dogsled, dog sled, dog sleigh", 538: "dome", 539: "doormat, welcome mat", 540: "drilling platform, offshore rig", 541: "drum, membranophone, tympan", 542: "drumstick", 543: "dumbbell", 544: "Dutch oven", 545: "electric fan, blower", 546: "electric guitar", 547: "electric locomotive", 548: "entertainment center", 549: "envelope", 550: "espresso maker", 551: "face powder", 552: "feather boa, boa", 553: "file, file cabinet, filing cabinet", 554: "fireboat", 555: "fire engine, fire truck", 556: "fire screen, fireguard", 557: "flagpole, flagstaff", 558: "flute, transverse flute", 559: "folding chair", 560: "football helmet", 561: "forklift", 562: "fountain", 563: "fountain pen", 564: "four-poster", 565: "freight car", 566: "French horn, horn", 567: "frying pan, frypan, skillet", 568: "fur coat", 569: "garbage truck, dustcart", 570: "gasmask, respirator, gas helmet", 571: "gas pump, gasoline pump, petrol pump, island dispenser", 572: "goblet", 573: "go-kart", 574: "golf ball", 575: "golfcart, golf cart", 576: "gondola", 577: "gong, tam-tam", 578: "gown", 579: "grand piano, grand", 580: "greenhouse, nursery, glasshouse", 581: "grille, radiator grille", 582: "grocery store, grocery, food market, market", 583: "guillotine", 584: "hair slide", 585: "hair spray", 586: "half track", 587: "hammer", 588: "hamper", 589: "hand blower, blow dryer, blow drier, hair dryer, hair drier", 590: "hand-held computer, hand-held microcomputer", 591: "handkerchief, hankie, hanky, hankey", 592: "hard disc, hard disk, fixed disk", 593: "harmonica, mouth organ, harp, mouth harp", 594: "harp", 595: "harvester, reaper", 596: "hatchet", 597: "holster", 598: "home theater, home theatre", 599: "honeycomb", 600: "hook, claw", 601: "hoopskirt, crinoline", 602: "horizontal bar, high bar", 603: "horse cart, horse-cart", 604: "hourglass", 605: "iPod", 606: "iron, smoothing iron", 607: "jack-o'-lantern", 608: "jean, blue jean, denim", 609: "jeep, landrover", 610: "jersey, T-shirt, tee shirt", 611: "jigsaw puzzle", 612: "jinrikisha, ricksha, rickshaw", 613: "joystick", 614: "kimono", 615: "knee pad", 616: "knot", 617: "lab coat, laboratory coat", 618: "ladle", 619: "lampshade, lamp shade", 620: "laptop, laptop computer", 621: "lawn mower, mower", 622: "lens cap, lens cover", 623: "letter opener, paper knife, paperknife", 624: "library", 625: "lifeboat", 626: "lighter, light, igniter, ignitor", 627: "limousine, limo", 628: "liner, ocean liner", 629: "lipstick, lip rouge", 630: "Loafer", 631: "lotion", 632: "loudspeaker, speaker, speaker unit, loudspeaker system, speaker system", 633: "loupe, jeweler's loupe", 634: "lumbermill, sawmill", 635: "magnetic compass", 636: "mailbag, postbag", 637: "mailbox, letter box", 638: "maillot", 639: "maillot, tank suit", 640: "manhole cover", 641: "maraca", 642: "marimba, xylophone", 643: "mask", 644: "matchstick", 645: "maypole", 646: "maze, labyrinth", 647: "measuring cup", 648: "medicine chest, medicine cabinet", 649: "megalith, megalithic structure", 650: "microphone, mike", 651: "microwave, microwave oven", 652: "military uniform", 653: "milk can", 654: "minibus", 655: "miniskirt, mini", 656: "minivan", 657: "missile", 658: "mitten", 659: "mixing bowl", 660: "mobile home, manufactured home", 661: "Model T", 662: "modem", 663: "monastery", 664: "monitor", 665: "moped", 666: "mortar", 667: "mortarboard", 668: "mosque", 669: "mosquito net", 670: "motor scooter, scooter", 671: "mountain bike, all-terrain bike, off-roader", 672: "mountain tent", 673: "mouse, computer mouse", 674: "mousetrap", 675: "moving van", 676: "muzzle", 677: "nail", 678: "neck brace", 679: "necklace", 680: "nipple", 681: "notebook, notebook computer", 682: "obelisk", 683: "oboe, hautboy, hautbois", 684: "ocarina, sweet potato", 685: "odometer, hodometer, mileometer, milometer", 686: "oil filter", 687: "organ, pipe organ", 688: "oscilloscope, scope, cathode-ray oscilloscope, CRO", 689: "overskirt", 690: "oxcart", 691: "oxygen mask", 692: "packet", 693: "paddle, boat paddle", 694: "paddlewheel, paddle wheel", 695: "padlock", 696: "paintbrush", 697: "pajama, pyjama, pj's, jammies", 698: "palace", 699: "panpipe, pandean pipe, syrinx", 700: "paper towel", 701: "parachute, chute", 702: "parallel bars, bars", 703: "park bench", 704: "parking meter", 705: "passenger car, coach, carriage", 706: "patio, terrace", 707: "pay-phone, pay-station", 708: "pedestal, plinth, footstall", 709: "pencil box, pencil case", 710: "pencil sharpener", 711: "perfume, essence", 712: "Petri dish", 713: "photocopier", 714: "pick, plectrum, plectron", 715: "pickelhaube", 716: "picket fence, paling", 717: "pickup, pickup truck", 718: "pier", 719: "piggy bank, penny bank", 720: "pill bottle", 721: "pillow", 722: "ping-pong ball", 723: "pinwheel", 724: "pirate, pirate ship", 725: "pitcher, ewer", 726: "plane, carpenter's plane, woodworking plane", 727: "planetarium", 728: "plastic bag", 729: "plate rack", 730: "plow, plough", 731: "plunger, plumber's helper", 732: "Polaroid camera, Polaroid Land camera", 733: "pole", 734: "police van, police wagon, paddy wagon, patrol wagon, wagon, black Maria", 735: "poncho", 736: "pool table, billiard table, snooker table", 737: "pop bottle, soda bottle", 738: "pot, flowerpot", 739: "potter's wheel", 740: "power drill", 741: "prayer rug, prayer mat", 742: "printer", 743: "prison, prison house", 744: "projectile, missile", 745: "projector", 746: "puck, hockey puck", 747: "punching bag, punch bag, punching ball, punchball", 748: "purse", 749: "quill, quill pen", 750: "quilt, comforter, comfort, puff", 751: "racer, race car, racing car", 752: "racket, racquet", 753: "radiator", 754: "radio, wireless", 755: "radio telescope, radio reflector", 756: "rain barrel", 757: "recreational vehicle, RV, R.V.", 758: "reel", 759: "reflex camera", 760: "refrigerator, icebox", 761: "remote control, remote", 762: "restaurant, eating house, eating place, eatery", 763: "revolver, six-gun, six-shooter", 764: "rifle", 765: "rocking chair, rocker", 766: "rotisserie", 767: "rubber eraser, rubber, pencil eraser", 768: "rugby ball", 769: "rule, ruler", 770: "running shoe", 771: "safe", 772: "safety pin", 773: "saltshaker, salt shaker", 774: "sandal", 775: "sarong", 776: "sax, saxophone", 777: "scabbard", 778: "scale, weighing machine", 779: "school bus", 780: "schooner", 781: "scoreboard", 782: "screen, CRT screen", 783: "screw", 784: "screwdriver", 785: "seat belt, seatbelt", 786: "sewing machine", 787: "shield, buckler", 788: "shoe shop, shoe-shop, shoe store", 789: "shoji", 790: "shopping basket", 791: "shopping cart", 792: "shovel", 793: "shower cap", 794: "shower curtain", 795: "ski", 796: "ski mask", 797: "sleeping bag", 798: "slide rule, slipstick", 799: "sliding door", 800: "slot, one-armed bandit", 801: "snorkel", 802: "snowmobile", 803: "snowplow, snowplough", 804: "soap dispenser", 805: "soccer ball", 806: "sock", 807: "solar dish, solar collector, solar furnace", 808: "sombrero", 809: "soup bowl", 810: "space bar", 811: "space heater", 812: "space shuttle", 813: "spatula", 814: "speedboat", 815: "spider web, spider's web", 816: "spindle", 817: "sports car, sport car", 818: "spotlight, spot", 819: "stage", 820: "steam locomotive", 821: "steel arch bridge", 822: "steel drum", 823: "stethoscope", 824: "stole", 825: "stone wall", 826: "stopwatch, stop watch", 827: "stove", 828: "strainer", 829: "streetcar, tram, tramcar, trolley, trolley car", 830: "stretcher", 831: "studio couch, day bed", 832: "stupa, tope", 833: "submarine, pigboat, sub, U-boat", 834: "suit, suit of clothes", 835: "sundial", 836: "sunglass", 837: "sunglasses, dark glasses, shades", 838: "sunscreen, sunblock, sun blocker", 839: "suspension bridge", 840: "swab, swob, mop", 841: "sweatshirt", 842: "swimming trunks, bathing trunks", 843: "swing", 844: "switch, electric switch, electrical switch", 845: "syringe", 846: "table lamp", 847: "tank, army tank, armored combat vehicle, armoured combat vehicle", 848: "tape player", 849: "teapot", 850: "teddy, teddy bear", 851: "television, television system", 852: "tennis ball", 853: "thatch, thatched roof", 854: "theater curtain, theatre curtain", 855: "thimble", 856: "thresher, thrasher, threshing machine", 857: "throne", 858: "tile roof", 859: "toaster", 860: "tobacco shop, tobacconist shop, tobacconist", 861: "toilet seat", 862: "torch", 863: "totem pole", 864: "tow truck, tow car, wrecker", 865: "toyshop", 866: "tractor", 867: "trailer truck, tractor trailer, trucking rig, rig, articulated lorry, semi", 868: "tray", 869: "trench coat", 870: "tricycle, trike, velocipede", 871: "trimaran", 872: "tripod", 873: "triumphal arch", 874: "trolleybus, trolley coach, trackless trolley", 875: "trombone", 876: "tub, vat", 877: "turnstile", 878: "typewriter keyboard", 879: "umbrella", 880: "unicycle, monocycle", 881: "upright, upright piano", 882: "vacuum, vacuum cleaner", 883: "vase", 884: "vault", 885: "velvet", 886: "vending machine", 887: "vestment", 888: "viaduct", 889: "violin, fiddle", 890: "volleyball", 891: "waffle iron", 892: "wall clock", 893: "wallet, billfold, notecase, pocketbook", 894: "wardrobe, closet, press", 895: "warplane, military plane", 896: "washbasin, handbasin, washbowl, lavabo, wash-hand basin", 897: "washer, automatic washer, washing machine", 898: "water bottle", 899: "water jug", 900: "water tower", 901: "whiskey jug", 902: "whistle", 903: "wig", 904: "window screen", 905: "window shade", 906: "Windsor tie", 907: "wine bottle", 908: "wing", 909: "wok", 910: "wooden spoon", 911: "wool, woolen, woollen", 912: "worm fence, snake fence, snake-rail fence, Virginia fence", 913: "wreck", 914: "yawl", 915: "yurt", 916: "web site, website, internet site, site", 917: "comic book", 918: "crossword puzzle, crossword", 919: "street sign", 920: "traffic light, traffic signal, stoplight", 921: "book jacket, dust cover, dust jacket, dust wrapper", 922: "menu", 923: "plate", 924: "guacamole", 925: "consomme", 926: "hot pot, hotpot", 927: "trifle", 928: "ice cream, icecream", 929: "ice lolly, lolly, lollipop, popsicle", 930: "French loaf", 931: "bagel, beigel", 932: "pretzel", 933: "cheeseburger", 934: "hotdog, hot dog, red hot", 935: "mashed potato", 936: "head cabbage", 937: "broccoli", 938: "cauliflower", 939: "zucchini, courgette", 940: "spaghetti squash", 941: "acorn squash", 942: "butternut squash", 943: "cucumber, cuke", 944: "artichoke, globe artichoke", 945: "bell pepper", 946: "cardoon", 947: "mushroom", 948: "Granny Smith", 949: "strawberry", 950: "orange", 951: "lemon", 952: "fig", 953: "pineapple, ananas", 954: "banana", 955: "jackfruit, jak, jack", 956: "custard apple", 957: "pomegranate", 958: "hay", 959: "carbonara", 960: "chocolate sauce, chocolate syrup", 961: "dough", 962: "meat loaf, meatloaf", 963: "pizza, pizza pie", 964: "potpie", 965: "burrito", 966: "red wine", 967: "espresso", 968: "cup", 969: "eggnog", 970: "alp", 971: "bubble", 972: "cliff, drop, drop-off", 973: "coral reef", 974: "geyser", 975: "lakeside, lakeshore", 976: "promontory, headland, head, foreland", 977: "sandbar, sand bar", 978: "seashore, coast, seacoast, sea-coast", 979: "valley, vale", 980: "volcano", 981: "ballplayer, baseball player", 982: "groom, bridegroom", 983: "scuba diver", 984: "rapeseed", 985: "daisy", 986: "yellow lady's slipper, yellow lady-slipper, Cypripedium calceolus, Cypripedium parviflorum", 987: "corn", 988: "acorn", 989: "hip, rose hip, rosehip", 990: "buckeye, horse chestnut, conker", 991: "coral fungus", 992: "agaric", 993: "gyromitra", 994: "stinkhorn, carrion fungus", 995: "earthstar", 996: "hen-of-the-woods, hen of the woods, Polyporus frondosus, Grifola frondosa", 997: "bolete", 998: "ear, spike, capitulum", 999: "toilet tissue, toilet paper, bathroom tissue" },
-    BASE_PATH = "https://storage.googleapis.com/tfjs-models/tfjs/",
-    IMAGE_SIZE = 224;function load(e, a) {
-  return void 0 === e && (e = 1), void 0 === a && (a = 1), __awaiter(this, void 0, void 0, function () {
-    var r;return __generator(this, function (o) {
-      switch (o.label) {case 0:
-          if (null == tf) throw new Error("Cannot find TensorFlow.js. If you are using a <script> tag, please also include @tensorflow/tfjs on the page before using this model.");if (1 !== e) throw new Error("Currently only MobileNet V1 is supported. Got version " + e + ".");if (-1 === [.25, .5, .75, 1].indexOf(a)) throw new Error("MobileNet constructed with invalid alpha " + a + ". Valid multipliers are 0.25, 0.50, 0.75, and 1.0.");return [4, (r = new MobileNet(e, a)).load()];case 1:
-          return o.sent(), [2, r];}
-    });
-  });
-}var MobileNet = function () {
-  function e(e, a) {
-    this.intermediateModels = {};var r = { .25: "0.25", .5: "0.50", .75: "0.75", 1: "1.0" }[a];this.path = BASE_PATH + "mobilenet_v" + e + "_" + r + "_" + IMAGE_SIZE + "/model.json", this.normalizationOffset = (0, _tfjs.scalar)(127.5);
-  }return e.prototype.load = function () {
-    return __awaiter(this, void 0, void 0, function () {
-      var e,
-          a,
-          r = this;return __generator(this, function (o) {
-        switch (o.label) {case 0:
-            return e = this, [4, (0, _tfjs.loadModel)(this.path)];case 1:
-            return e.model = o.sent(), this.endpoints = this.model.layers.map(function (e) {
-              return e.name;
-            }), [4, (a = (0, _tfjs.tidy)(function () {
-              return r.model.predict((0, _tfjs.zeros)([1, IMAGE_SIZE, IMAGE_SIZE, 3]));
-            })).data()];case 2:
-            return o.sent(), a.dispose(), [2];}
-      });
-    });
-  }, e.prototype.infer = function (e, a) {
-    var r = this;if (null != a && -1 === this.endpoints.indexOf(a)) throw new Error("Unknown endpoint " + a + ". Available endpoints: " + this.endpoints + ".");return (0, _tfjs.tidy)(function () {
-      e instanceof _tfjs.Tensor || (e = (0, _tfjs.fromPixels)(e));var o = e.toFloat().sub(r.normalizationOffset).div(r.normalizationOffset),
-          i = o;if (e.shape[0] !== IMAGE_SIZE || e.shape[1] !== IMAGE_SIZE) {
-        i = _tfjs.image.resizeBilinear(o, [IMAGE_SIZE, IMAGE_SIZE], !0);
-      }var t,
-          n = i.reshape([1, IMAGE_SIZE, IMAGE_SIZE, 3]);if (null == a) t = r.model;else {
-        if (null == r.intermediateModels[a]) {
-          var s = r.model.layers.find(function (e) {
-            return e.name === a;
-          });r.intermediateModels[a] = (0, _tfjs.model)({ inputs: r.model.inputs, outputs: s.output });
-        }t = r.intermediateModels[a];
-      }return t.predict(n);
-    });
-  }, e.prototype.classify = function (e, a) {
-    return void 0 === a && (a = 3), __awaiter(this, void 0, void 0, function () {
-      var r, o;return __generator(this, function (i) {
-        switch (i.label) {case 0:
-            return [4, getTopKClasses(r = this.infer(e), a)];case 1:
-            return o = i.sent(), r.dispose(), [2, o];}
-      });
-    });
-  }, e;
-}();function getTopKClasses(e, a) {
-  return __awaiter(this, void 0, void 0, function () {
-    var r, o, i, t, n, s;return __generator(this, function (l) {
-      switch (l.label) {case 0:
-          return [4, e.data()];case 1:
-          for (r = l.sent(), o = [], s = 0; s < r.length; s++) o.push({ value: r[s], index: s });for (o.sort(function (e, a) {
-            return a.value - e.value;
-          }), i = new Float32Array(a), t = new Int32Array(a), s = 0; s < a; s++) i[s] = o[s].value, t[s] = o[s].index;for (n = [], s = 0; s < t.length; s++) n.push({ className: IMAGENET_CLASSES[t[s]], probability: i[s] });return [2, n];}
-    });
-  });
-}exports.load = load;
-exports.MobileNet = MobileNet;
-},{"@tensorflow/tfjs":"node_modules\\@tensorflow\\tfjs\\dist\\tf.esm.js"}],"node_modules\\@tensorflow-models\\knn-classifier\\dist\\knn-classifier.esm.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.create = exports.KNNClassifier = undefined;
-
-var _tfjs = require("@tensorflow/tfjs");
-
-function __awaiter(t, a, e, s) {
-  return new (e || (e = Promise))(function (r, n) {
-    function i(t) {
-      try {
-        o(s.next(t));
-      } catch (t) {
-        n(t);
-      }
-    }function l(t) {
-      try {
-        o(s.throw(t));
-      } catch (t) {
-        n(t);
-      }
-    }function o(t) {
-      t.done ? r(t.value) : new e(function (a) {
-        a(t.value);
-      }).then(i, l);
-    }o((s = s.apply(t, a || [])).next());
-  });
-} // @tensorflow/tfjs-models Copyright 2018 Google
-function __generator(t, a) {
-  var e,
-      s,
-      r,
-      n,
-      i = { label: 0, sent: function () {
-      if (1 & r[0]) throw r[1];return r[1];
-    }, trys: [], ops: [] };return n = { next: l(0), throw: l(1), return: l(2) }, "function" == typeof Symbol && (n[Symbol.iterator] = function () {
-    return this;
-  }), n;function l(n) {
-    return function (l) {
-      return function (n) {
-        if (e) throw new TypeError("Generator is already executing.");for (; i;) try {
-          if (e = 1, s && (r = 2 & n[0] ? s.return : n[0] ? s.throw || ((r = s.return) && r.call(s), 0) : s.next) && !(r = r.call(s, n[1])).done) return r;switch (s = 0, r && (n = [2 & n[0], r.value]), n[0]) {case 0:case 1:
-              r = n;break;case 4:
-              return i.label++, { value: n[1], done: !1 };case 5:
-              i.label++, s = n[1], n = [0];continue;case 7:
-              n = i.ops.pop(), i.trys.pop();continue;default:
-              if (!(r = (r = i.trys).length > 0 && r[r.length - 1]) && (6 === n[0] || 2 === n[0])) {
-                i = 0;continue;
-              }if (3 === n[0] && (!r || n[1] > r[0] && n[1] < r[3])) {
-                i.label = n[1];break;
-              }if (6 === n[0] && i.label < r[1]) {
-                i.label = r[1], r = n;break;
-              }if (r && i.label < r[2]) {
-                i.label = r[2], i.ops.push(n);break;
-              }r[2] && i.ops.pop(), i.trys.pop();continue;}n = a.call(t, i);
-        } catch (t) {
-          n = [6, t], s = 0;
-        } finally {
-          e = r = 0;
-        }if (5 & n[0]) throw n[1];return { value: n[0] ? n[1] : void 0, done: !0 };
-      }([n, l]);
-    };
-  }
-}function concatWithNulls(t, a) {
-  return null == t && null == a ? null : null == t ? a.clone() : null === a ? t.clone() : t.concat(a, 0);
-}function topK(t, a) {
-  for (var e = [], s = 0; s < t.length; s++) e.push({ value: t[s], index: s });e.sort(function (t, a) {
-    return a.value - t.value;
-  });var r = new Float32Array(a),
-      n = new Int32Array(a);for (s = 0; s < a; s++) r[s] = e[s].value, n[s] = e[s].index;return { values: r, indices: n };
-}var KNNClassifier = function () {
-  function t() {
-    this.classDatasetMatrices = {}, this.classExampleCount = {};
-  }return t.prototype.addExample = function (t, a) {
-    var e = this;if (null == this.exampleShape && (this.exampleShape = t.shape), !_tfjs.util.arraysEqual(this.exampleShape, t.shape)) throw new Error("Example shape provided, " + t.shape + " does not match previously provided example shapes " + this.exampleShape + ".");if (!Number.isInteger(a)) throw new Error("classIndex must be an integer, got " + a + ".");this.clearTrainDatasetMatrix(), (0, _tfjs.tidy)(function () {
-      var s = e.normalizeVectorToUnitLength(t.flatten()),
-          r = s.shape[0];if (null == e.classDatasetMatrices[a]) e.classDatasetMatrices[a] = s.as2D(1, r);else {
-        var n = e.classDatasetMatrices[a].as2D(e.classExampleCount[a], r).concat(s.as2D(1, r), 0);e.classDatasetMatrices[a].dispose(), e.classDatasetMatrices[a] = n;
-      }(0, _tfjs.keep)(e.classDatasetMatrices[a]), null == e.classExampleCount[a] && (e.classExampleCount[a] = 0), e.classExampleCount[a]++;
-    });
-  }, t.prototype.similarities = function (t) {
-    var a = this;return (0, _tfjs.tidy)(function () {
-      var e = a.normalizeVectorToUnitLength(t.flatten()),
-          s = e.shape[0];if (null == a.trainDatasetMatrix) {
-        var r = null;for (var n in a.classDatasetMatrices) r = concatWithNulls(r, a.classDatasetMatrices[n]);a.trainDatasetMatrix = r;
-      }if (null == a.trainDatasetMatrix) return console.warn("Cannot predict without providing training examples."), null;(0, _tfjs.keep)(a.trainDatasetMatrix);var i = a.getNumExamples();return a.trainDatasetMatrix.as2D(i, s).matMul(e.as2D(s, 1)).as1D();
-    });
-  }, t.prototype.predictClass = function (t, a) {
-    return void 0 === a && (a = 3), __awaiter(this, void 0, void 0, function () {
-      var e,
-          s,
-          r,
-          n,
-          i = this;return __generator(this, function (l) {
-        switch (l.label) {case 0:
-            if (a < 1) throw new Error("Please provide a positive integer k value to predictClass.");if (0 === this.getNumExamples()) throw new Error("You have not added any exaples to the KNN classifier. Please add examples before calling predictClass.");return e = (0, _tfjs.tidy)(function () {
-              return i.similarities(t).asType("float32");
-            }), s = Math.min(a, this.getNumExamples()), n = topK, [4, e.data()];case 1:
-            return r = n.apply(void 0, [l.sent(), s]).indices, e.dispose(), [2, this.calculateTopClass(r, s)];}
-      });
-    });
-  }, t.prototype.clearClass = function (t) {
-    if (null == this.classDatasetMatrices[t]) throw new Error("Cannot clear invalid class ${classIndex}");delete this.classDatasetMatrices[t], delete this.classExampleCount[t], this.clearTrainDatasetMatrix();
-  }, t.prototype.clearAllClasses = function () {
-    for (var t in this.classDatasetMatrices) this.clearClass(+t);
-  }, t.prototype.getClassExampleCount = function () {
-    return this.classExampleCount;
-  }, t.prototype.getClassifierDataset = function () {
-    return this.classDatasetMatrices;
-  }, t.prototype.getNumClasses = function () {
-    return Object.keys(this.classExampleCount).length;
-  }, t.prototype.setClassifierDataset = function (t) {
-    for (var a in this.clearTrainDatasetMatrix(), this.classDatasetMatrices = t, t) this.classExampleCount[a] = t[a].shape[0];
-  }, t.prototype.calculateTopClass = function (t, a) {
-    var e = -1,
-        s = {};if (null == t) return { classIndex: e, confidences: s };var r = [];for (var n in this.classDatasetMatrices) {
-      var i = this.classExampleCount[n];+n > 0 && (i += r[+n - 1]), r.push(i);
-    }var l = Array(Object.keys(this.classDatasetMatrices).length).fill(0);for (n = 0; n < t.length; n++) for (var o = 0; o < r.length; o++) if (t[n] < r[o]) {
-      l[o]++;break;
-    }var c = 0;for (var n in this.classDatasetMatrices) {
-      var u = l[n] / a;u > c && (c = u, e = +n), s[n] = u;
-    }return { classIndex: e, confidences: s };
-  }, t.prototype.clearTrainDatasetMatrix = function () {
-    null != this.trainDatasetMatrix && (this.trainDatasetMatrix.dispose(), this.trainDatasetMatrix = null);
-  }, t.prototype.normalizeVectorToUnitLength = function (t) {
-    return (0, _tfjs.tidy)(function () {
-      var a = t.norm();return (0, _tfjs.div)(t, a);
-    });
-  }, t.prototype.getNumExamples = function () {
-    var t = 0;for (var a in this.classDatasetMatrices) t += this.classExampleCount[+a];return t;
-  }, t.prototype.dispose = function () {
-    for (var t in this.clearTrainDatasetMatrix(), this.classDatasetMatrices) this.classDatasetMatrices[t].dispose();
-  }, t;
-}();function create() {
-  return new KNNClassifier();
-}exports.KNNClassifier = KNNClassifier;
-exports.create = create;
-},{"@tensorflow/tfjs":"node_modules\\@tensorflow\\tfjs\\dist\\tf.esm.js"}],"node_modules\\@tensorflow-models\\posenet\\dist\\posenet.esm.js":[function(require,module,exports) {
+},{"@tensorflow/tfjs-core":"node_modules\\@tensorflow\\tfjs-core\\dist\\tf-core.esm.js","@tensorflow/tfjs-layers":"node_modules\\@tensorflow\\tfjs-layers\\dist\\tf-layers.esm.js","@tensorflow/tfjs-converter":"node_modules\\@tensorflow\\tfjs-converter\\dist\\tf-converter.esm.js"}],"node_modules\\@tensorflow-models\\posenet\\dist\\posenet.esm.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34634,365 +35737,110 @@ exports.poseChain = poseChain;
 exports.getAdjacentKeyPoints = getAdjacentKeyPoints;
 exports.getBoundingBox = getBoundingBox;
 exports.getBoundingBoxPoints = getBoundingBoxPoints;
-},{"@tensorflow/tfjs":"node_modules\\@tensorflow\\tfjs\\dist\\tf.esm.js"}],"node_modules\\stats.js\\build\\stats.min.js":[function(require,module,exports) {
-var define;
-// stats.js - http://github.com/mrdoob/stats.js
-(function(f,e){"object"===typeof exports&&"undefined"!==typeof module?module.exports=e():"function"===typeof define&&define.amd?define(e):f.Stats=e()})(this,function(){var f=function(){function e(a){c.appendChild(a.dom);return a}function u(a){for(var d=0;d<c.children.length;d++)c.children[d].style.display=d===a?"block":"none";l=a}var l=0,c=document.createElement("div");c.style.cssText="position:fixed;top:0;left:0;cursor:pointer;opacity:0.9;z-index:10000";c.addEventListener("click",function(a){a.preventDefault();
-u(++l%c.children.length)},!1);var k=(performance||Date).now(),g=k,a=0,r=e(new f.Panel("FPS","#0ff","#002")),h=e(new f.Panel("MS","#0f0","#020"));if(self.performance&&self.performance.memory)var t=e(new f.Panel("MB","#f08","#201"));u(0);return{REVISION:16,dom:c,addPanel:e,showPanel:u,begin:function(){k=(performance||Date).now()},end:function(){a++;var c=(performance||Date).now();h.update(c-k,200);if(c>g+1E3&&(r.update(1E3*a/(c-g),100),g=c,a=0,t)){var d=performance.memory;t.update(d.usedJSHeapSize/
-1048576,d.jsHeapSizeLimit/1048576)}return c},update:function(){k=this.end()},domElement:c,setMode:u}};f.Panel=function(e,f,l){var c=Infinity,k=0,g=Math.round,a=g(window.devicePixelRatio||1),r=80*a,h=48*a,t=3*a,v=2*a,d=3*a,m=15*a,n=74*a,p=30*a,q=document.createElement("canvas");q.width=r;q.height=h;q.style.cssText="width:80px;height:48px";var b=q.getContext("2d");b.font="bold "+9*a+"px Helvetica,Arial,sans-serif";b.textBaseline="top";b.fillStyle=l;b.fillRect(0,0,r,h);b.fillStyle=f;b.fillText(e,t,v);
-b.fillRect(d,m,n,p);b.fillStyle=l;b.globalAlpha=.9;b.fillRect(d,m,n,p);return{dom:q,update:function(h,w){c=Math.min(c,h);k=Math.max(k,h);b.fillStyle=l;b.globalAlpha=1;b.fillRect(0,0,r,m);b.fillStyle=f;b.fillText(g(h)+" "+e+" ("+g(c)+"-"+g(k)+")",t,v);b.drawImage(q,d+a,m,n-a,p,d,m,n-a,p);b.fillRect(d+n-a,m,a,p);b.fillStyle=l;b.globalAlpha=.9;b.fillRect(d+n-a,m,a,g((1-h/w)*p))}}};return f});
-
-},{}],"demo_util.js":[function(require,module,exports) {
+},{"@tensorflow/tfjs":"node_modules\\@tensorflow\\tfjs\\dist\\tf.esm.js"}],"options.js":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.drawPoint = drawPoint;
-exports.drawSegment = drawSegment;
-exports.drawSkeleton = drawSkeleton;
-exports.drawKeypoints = drawKeypoints;
-exports.drawBoundingBox = drawBoundingBox;
-exports.renderToCanvas = renderToCanvas;
-exports.renderImageToCanvas = renderImageToCanvas;
-exports.drawHeatMapValues = drawHeatMapValues;
-exports.drawOffsetVectors = drawOffsetVectors;
 
-var _tfjs = require('@tensorflow/tfjs');
+var _promise = require('babel-runtime/core-js/promise');
 
-var tf = _interopRequireWildcard(_tfjs);
+var _promise2 = _interopRequireDefault(_promise);
+
+exports.bindPage = bindPage;
 
 var _posenet = require('@tensorflow-models/posenet');
 
 var posenet = _interopRequireWildcard(_posenet);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-/**
- * @license
- * Copyright 2018 Google Inc. All Rights Reserved.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * =============================================================================
- */
-const color = 'aqua';
-const lineWidth = 2;
-
-function toTuple({ y, x }) {
-  return [y, x];
-}
-
-function drawPoint(ctx, y, x, r, color) {
-  ctx.beginPath();
-  ctx.arc(x, y, r, 0, 2 * Math.PI);
-  ctx.fillStyle = color;
-  ctx.fill();
-}
-
-/**
- * Draws a line on a canvas, i.e. a joint
- */
-function drawSegment([ay, ax], [by, bx], color, scale, ctx) {
-  ctx.beginPath();
-  ctx.moveTo(ax * scale, ay * scale);
-  ctx.lineTo(bx * scale, by * scale);
-  ctx.lineWidth = lineWidth;
-  ctx.strokeStyle = color;
-  ctx.stroke();
-}
-
-/**
- * Draws a pose skeleton by looking up all adjacent keypoints/joints
- */
-function drawSkeleton(keypoints, minConfidence, ctx, scale = 1) {
-  const adjacentKeyPoints = posenet.getAdjacentKeyPoints(keypoints, minConfidence);
-
-  adjacentKeyPoints.forEach(keypoints => {
-    drawSegment(toTuple(keypoints[0].position), toTuple(keypoints[1].position), color, scale, ctx);
-  });
-}
-
-/**
- * Draw pose keypoints onto a canvas
- */
-function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
-  for (let i = 0; i < keypoints.length; i++) {
-    const keypoint = keypoints[i];
-
-    if (keypoint.score < minConfidence) {
-      continue;
-    }
-
-    const { y, x } = keypoint.position;
-    drawPoint(ctx, y * scale, x * scale, 3, color);
-  }
-}
-
-/**
- * Draw the bounding box of a pose. For example, for a whole person standing
- * in an image, the bounding box will begin at the nose and extend to one of
- * ankles
- */
-function drawBoundingBox(keypoints, ctx) {
-  const boundingBox = posenet.getBoundingBox(keypoints);
-
-  ctx.rect(boundingBox.minX, boundingBox.minY, boundingBox.maxX - boundingBox.minX, boundingBox.maxY - boundingBox.minY);
-
-  ctx.stroke();
-}
-
-/**
- * Converts an arary of pixel data into an ImageData object
- */
-async function renderToCanvas(a, ctx) {
-  const [height, width] = a.shape;
-  const imageData = new ImageData(width, height);
-
-  const data = await a.data();
-
-  for (let i = 0; i < height * width; ++i) {
-    const j = i * 4;
-    const k = i * 3;
-
-    imageData.data[j + 0] = data[k + 0];
-    imageData.data[j + 1] = data[k + 1];
-    imageData.data[j + 2] = data[k + 2];
-    imageData.data[j + 3] = 255;
-  }
-
-  ctx.putImageData(imageData, 0, 0);
-}
-
-/**
- * Draw an image on a canvas
- */
-function renderImageToCanvas(image, size, canvas) {
-  canvas.width = size[0];
-  canvas.height = size[1];
-  const ctx = canvas.getContext('2d');
-
-  ctx.drawImage(image, 0, 0);
-}
-
-/**
- * Draw heatmap values, one of the model outputs, on to the canvas
- * Read our blog post for a description of PoseNet's heatmap outputs
- * https://medium.com/tensorflow/real-time-human-pose-estimation-in-the-browser-with-tensorflow-js-7dd0bc881cd5
- */
-function drawHeatMapValues(heatMapValues, outputStride, canvas) {
-  const ctx = canvas.getContext('2d');
-  const radius = 5;
-  const scaledValues = heatMapValues.mul(tf.scalar(outputStride, 'int32'));
-
-  drawPoints(ctx, scaledValues, radius, color);
-}
-
-/**
- * Used by the drawHeatMapValues method to draw heatmap points on to
- * the canvas
- */
-function drawPoints(ctx, points, radius, color) {
-  const data = points.buffer().values;
-
-  for (let i = 0; i < data.length; i += 2) {
-    const pointY = data[i];
-    const pointX = data[i + 1];
-
-    if (pointX !== 0 && pointY !== 0) {
-      ctx.beginPath();
-      ctx.arc(pointX, pointY, radius, 0, 2 * Math.PI);
-      ctx.fillStyle = color;
-      ctx.fill();
-    }
-  }
-}
-
-/**
- * Draw offset vector values, one of the model outputs, on to the canvas
- * Read our blog post for a description of PoseNet's offset vector outputs
- * https://medium.com/tensorflow/real-time-human-pose-estimation-in-the-browser-with-tensorflow-js-7dd0bc881cd5
- */
-function drawOffsetVectors(heatMapValues, offsets, outputStride, scale = 1, ctx) {
-  const offsetPoints = posenet.singlePose.getOffsetPoints(heatMapValues, outputStride, offsets);
-
-  const heatmapData = heatMapValues.buffer().values;
-  const offsetPointsData = offsetPoints.buffer().values;
-
-  for (let i = 0; i < heatmapData.length; i += 2) {
-    const heatmapY = heatmapData[i] * outputStride;
-    const heatmapX = heatmapData[i + 1] * outputStride;
-    const offsetPointY = offsetPointsData[i];
-    const offsetPointX = offsetPointsData[i + 1];
-
-    drawSegment([heatmapY, heatmapX], [offsetPointY, offsetPointX], color, scale, ctx);
-  }
-}
-},{"@tensorflow/tfjs":"node_modules\\@tensorflow\\tfjs\\dist\\tf.esm.js","@tensorflow-models/posenet":"node_modules\\@tensorflow-models\\posenet\\dist\\posenet.esm.js"}],"content.js":[function(require,module,exports) {
-'use strict';
-
-var _mobilenet = require('@tensorflow-models/mobilenet');
-
-var mobilenetModule = _interopRequireWildcard(_mobilenet);
-
-var _tfjs = require('@tensorflow/tfjs');
-
-var tf = _interopRequireWildcard(_tfjs);
-
-var _knnClassifier = require('@tensorflow-models/knn-classifier');
-
-var knnClassifier = _interopRequireWildcard(_knnClassifier);
-
-var _posenet = require('@tensorflow-models/posenet');
-
-var posenet = _interopRequireWildcard(_posenet);
-
-var _stats = require('stats.js');
-
-var _stats2 = _interopRequireDefault(_stats);
-
-var _demo_util = require('./demo_util');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+const videoWidth = 600;
+const videoHeight = 500;
+const stats = new Stats();
 
-//global variables
-const stats = new _stats2.default();
-let isDetecting;
-let stream;
-let video;
-let canvas;
-let ctx;
-let knn;
-let mobilenet;
-//classifiers
-const NUM_CLASSES = 7;
-const TOPK = 10;
+navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+// kick off the demo
+bindPage();
 
-//save& load
-let myIncomingClassifier = [];
-let myGroups = [];
+async function bindPage() {
+  // Load the PoseNet model weights with architecture 0.75
+  const net = await posenet.load(0.75);
 
-/*
- * 프로그램이 실행되면 실행되는 코드
- */
-async function setup() {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('main').style.display = 'block';
+
+  let video;
+
+  try {
     video = await loadVideo();
-    await loadCanvas();
-    // console.log(video);
-    const model = await posenet.load(1.01);
-    knn = knnClassifier.create();
-    // console.log(knn);
-    mobilenet = await mobilenetModule.load();
-    // console.log(mobilenet);
-    await myloadModel();
-    console.log(knn);
-    let playAlert = setInterval(async function () {
-        if (isDetecting === true) {
-            // const pose = await 
-            let pose = await model.estimateSinglePose(video, 0.35, true, 16);
-            // console.log(pose);
-            ctx.clearRect(0, 0, 640, 480);
-            if (pose.score >= 0.1) {
-                (0, _demo_util.drawKeypoints)(pose.keypoints, 0.5, ctx);
-                (0, _demo_util.drawSkeleton)(pose.keypoints, 0.5, ctx);
-            }
-            let logits;
-            const image = tf.fromPixels(canvas);
+  } catch (e) {
+    let info = document.getElementById('info');
+    info.textContent = 'this browser does not support video capture,' + 'or this device does not have a camera';
+    info.style.display = 'block';
+    throw e;
+  }
 
-            // 'conv_preds' is the logits activation of MobileNet.
-            const infer = () => mobilenet.infer(image, 'conv_preds');
+  // setupGui([], net);
+  // setupFPS();
+  // detectPoseInRealTime(video, net);
+}
 
-            const numClasses = knn.getNumClasses();
-            if (numClasses > 0) {
+function isAndroid() {
+  return (/Android/i.test(navigator.userAgent)
+  );
+}
 
-                // If classes have been added run predict
-                logits = infer();
-                const res = await knn.predictClass(logits, TOPK);
-                console.log(res.classIndex + " " + res.confidences[res.classIndex] * 100);
-            }
+function isiOS() {
+  return (/iPhone|iPad|iPod/i.test(navigator.userAgent)
+  );
+}
 
-            // Dispose image when done
-            image.dispose();
-            if (logits != null) {
-                logits.dispose();
-            }
-            // console.log(pose);
-        }
-    }, 500);
+function isMobile() {
+  return isAndroid() || isiOS();
 }
 
 /**
- * 카메라가 활성화된 HTMLVideoElement를 생성후 리턴
+ * Loads a the camera to be used in the demo
+ *
  */
+async function setupCamera() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    throw new Error('Browser API navigator.mediaDevices.getUserMedia not available');
+  }
+
+  const video = document.getElementById('video');
+  video.width = videoWidth;
+  video.height = videoHeight;
+
+  const mobile = isMobile();
+  const stream = await navigator.mediaDevices.getUserMedia({
+    'audio': false,
+    'video': {
+      facingMode: 'user',
+      width: mobile ? undefined : videoWidth,
+      height: mobile ? undefined : videoHeight
+    }
+  });
+  video.srcObject = stream;
+
+  return new _promise2.default(resolve => {
+    video.onloadedmetadata = () => {
+      resolve(video);
+    };
+  });
+}
+
 async function loadVideo() {
-    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-    let video = document.createElement('video');
-    video.height = 480;
-    video.width = 640;
-    video.srcObject = stream;
-    video.play();
-    return video;
+  const video = await setupCamera();
+  video.play();
+
+  return video;
 }
-
-async function loadCanvas() {
-    canvas = document.createElement('canvas');
-    ctx = canvas.getContext('2d');
-    // document.body.appendChild(canvas);
-    canvas.width = 640;
-    canvas.height = 480;
-}
-
-async function myloadModel() {
-    const myLoadedModel = await tf.loadModel('https://ujoy7851.github.io/Capstone/model/model.json');
-    // console.log('myLoadedModel.layers.length');
-    // console.log(myLoadedModel.layers.length);
-
-    const myMaxLayers = myLoadedModel.layers.length;
-    const myDenseEnd = myMaxLayers - 2;
-    const myDenseStart = myDenseEnd / 2;
-    for (let myWeightLoop = myDenseStart; myWeightLoop < myDenseEnd; myWeightLoop++) {
-        // console.log('myLoadedModel.layers['+myWeightLoop+'].getWeights()[0].print(true)');
-        myIncomingClassifier[myWeightLoop - myDenseStart] = myLoadedModel.layers[myWeightLoop].getWeights()[0];
-        myGroups[myWeightLoop - myDenseStart] = myLoadedModel.layers[myWeightLoop].name;
-    }
-    // console.log('Printing all the incoming classifiers');
-    for (let x = 0; x < myIncomingClassifier.length; x++) {
-        myIncomingClassifier[x].print(true);
-    }
-    // console.log('Activating Classifier');
-    knn.dispose();
-    knn.setClassifierDataset(myIncomingClassifier);
-    // console.log('Classifier loaded');
-}
-
-setup();
-chrome.runtime.onMessage.addListener(gotMessage);
-
-async function gotMessage(message, sender, sendResponse) {
-    console.log(message.data);
-    if (message.data === "OFF") {
-        isDetecting = false;
-        // video.pause();
-        video.srcObject = null;
-        stream.getTracks().forEach(track => {
-            track.stop();
-        });
-    } else if (message.data === "ON") {
-        video = await loadVideo();
-        isDetecting = true;
-    }
-}
-},{"@tensorflow-models/mobilenet":"node_modules\\@tensorflow-models\\mobilenet\\dist\\mobilenet.esm.js","@tensorflow/tfjs":"node_modules\\@tensorflow\\tfjs\\dist\\tf.esm.js","@tensorflow-models/knn-classifier":"node_modules\\@tensorflow-models\\knn-classifier\\dist\\knn-classifier.esm.js","@tensorflow-models/posenet":"node_modules\\@tensorflow-models\\posenet\\dist\\posenet.esm.js","stats.js":"node_modules\\stats.js\\build\\stats.min.js","./demo_util":"demo_util.js"}],"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js":[function(require,module,exports) {
+},{"babel-runtime/core-js/promise":"node_modules\\babel-runtime\\core-js\\promise.js","@tensorflow-models/posenet":"node_modules\\@tensorflow-models\\posenet\\dist\\posenet.esm.js"}],"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -35021,7 +35869,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '62180' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '55761' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
@@ -35162,5 +36010,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},["C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js","content.js"], null)
-//# sourceMappingURL=/content.map
+},{}]},{},["C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js","options.js"], null)
+//# sourceMappingURL=/options.5c22aad7.map
