@@ -1,3 +1,23 @@
+
+let video;
+const height = 480;
+const width = 640;
+
+function setup(){
+    video = loadVideo();
+}
+
+async function loadVideo(){
+    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+    let video = document.createElement('video');
+    video.height = 480;
+    video.width = 640;
+    video.srcObject = stream;
+    video.play();
+    return video;
+}
+
+
 chrome.runtime.onMessage.addListener(gotMessage);
 
 function buttonClicked(tab) {

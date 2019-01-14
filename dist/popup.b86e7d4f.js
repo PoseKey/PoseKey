@@ -103,22 +103,31 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   // Override the current require with this new one
   return newRequire;
-})({"background.js":[function(require,module,exports) {
-console.log('background running');
+})({"popup.js":[function(require,module,exports) {
 
-let is = true;
-let lastTab;
-let lastWindow;
-chrome.browserAction.onClicked.addListener(buttonClicked);
-chrome.tabs.onUpdated.addListener(onLoad);
-chrome.tabs.onCreated.addListener(onLoad);
-chrome.tabs.onActivated.addListener(active); //active는 하나밖에 없음
-chrome.windows.onFocusChanged.addListener(window);
-// chrome.tabs.onHighlighted.addListener(highlight);
+let video;
+const height = 480;
+const width = 640;
+
+function setup() {
+    video = loadVideo();
+}
+
+async function loadVideo() {
+    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    let video = document.createElement('video');
+    video.height = 480;
+    video.width = 640;
+    video.srcObject = stream;
+    video.play();
+    return video;
+}
+
+chrome.runtime.onMessage.addListener(gotMessage);
 
 function buttonClicked(tab) {
     console.log("button clicked!");
-    console.log(tab);
+    // console.log(tab);
     let msg = {
         data: "ON"
     };
@@ -126,91 +135,11 @@ function buttonClicked(tab) {
         msg.data = "OFF";
         is = false;
         chrome.browserAction.setIcon({ path: "likeR.png" });
-        /* 모든 탭에 OFF하라고 보냄*/
-        chrome.tabs.query({}, function (tabs) {
-            for (let i = 0; i < tabs.length; i++) {
-                chrome.tabs.sendMessage(tabs[i].id, msg);
-            }
-        });
     } else {
         is = true;
         chrome.browserAction.setIcon({ path: "likeG.png" });
-        chrome.tabs.sendMessage(tab.id, msg); // 현재 탭에만 ON하라고 보냄
     }
-}
-
-function onLoad(id) {
-    console.log("onLoad!");
-    // console.log(id);
-    let msg;
-    if (is === true) {
-        msg = {
-            data: "ON"
-        };
-    } else {
-        msg = {
-            data: "OFF"
-        };
-    }
-    chrome.tabs.sendMessage(id, msg);
-}
-
-function active(tab) {
-    // console.log("tab changed!");
-    // console.log(tab.tabId);
-    let msg = {
-        data: "ON"
-    };
-    let msg2 = {
-        data: "OFF"
-    };
-    if (is === false) {
-        msg.data = "OFF";
-    }
-    chrome.tabs.query({}, function (tabs) {
-        for (let i = 0; i < tabs.length; i++) {
-            chrome.tabs.sendMessage(tabs[i].id, msg2);
-        }
-    });
-    chrome.tabs.sendMessage(tab.tabId, msg);
-    // if(lastTab){
-    //     chrome.tabs.sendMessage(lastTab, msg2);
-    // }
-    // lastTab = tab.tabId;
-}
-
-function window(windowId) {
-    let msg = {
-        data: "ON"
-    };
-    let msg2 = {
-        data: "OFF"
-    };
-    if (is === false) {
-        msg.data = "OFF";
-    }
-    chrome.tabs.query({}, function (tabs) {
-        for (let i = 0; i < tabs.length; i++) {
-            chrome.tabs.sendMessage(tabs[i].id, msg2);
-        }
-    });
-
-    // console.log("window changed!");
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        var current = tabs[0].id;
-        // console.log(windowId + ", " + current);
-        chrome.tabs.sendMessage(current, msg);
-        // chrome.tabs.sendMessage(lastTab, msg2);
-        lastTab = current;
-        // lastWindow=windowId;
-    });
-    // if(lastWindow!=windowId){
-    //     chrome.tabs.sendMessage(lastTab, msg2);
-    // }
-}
-
-function highlight(tab) {
-    console.log("highlight!");
+    chrome.tabs.sendMessage(tab.id, msg);
 }
 },{}],"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -382,5 +311,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},["C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js","background.js"], null)
-//# sourceMappingURL=/background.map
+},{}]},{},["C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js","popup.js"], null)
+//# sourceMappingURL=/popup.b86e7d4f.map
