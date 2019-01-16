@@ -109,13 +109,41 @@ console.log('background running');
 let is = true;
 let lastTab;
 let lastWindow;
-chrome.browserAction.onClicked.addListener(buttonClicked);
+// chrome.browserAction.onClicked.addListener(buttonClicked);
 chrome.tabs.onUpdated.addListener(onLoad);
 chrome.tabs.onCreated.addListener(onLoad);
 chrome.tabs.onActivated.addListener(active); //active는 하나밖에 없음
 chrome.windows.onFocusChanged.addListener(window);
+chrome.runtime.onMessage.addListener(gotMessage);
 // chrome.tabs.onHighlighted.addListener(highlight);
 
+function gotMessage(message, sender, sendResponse) {
+    console.log(message);
+    if (message.data == "trigger") {
+        let msg = {
+            data: "ON"
+        };
+        if (is === true) {
+            msg.data = "OFF";
+            is = false;
+            chrome.browserAction.setIcon({ path: "likeR.png" });
+            /* 모든 탭에 OFF하라고 보냄*/
+            chrome.tabs.query({}, function (tabs) {
+                for (let i = 0; i < tabs.length; i++) {
+                    chrome.tabs.sendMessage(tabs[i].id, msg);
+                }
+            });
+        } else {
+            is = true;
+            chrome.browserAction.setIcon({ path: "likeG.png" });
+            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                var current = tabs[0].id;
+                chrome.tabs.sendMessage(current, msg);
+            }); // 현재 탭에만 ON하라고 보냄
+        }
+    }
+    sendResponse({ data: is });
+}
 function buttonClicked(tab) {
     console.log("button clicked!");
     console.log(tab);
@@ -241,7 +269,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '60767' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '59727' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
