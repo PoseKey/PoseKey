@@ -34919,6 +34919,27 @@ async function setup() {
                 logits = infer();
                 const res = await knn.predictClass(logits, TOPK);
                 console.log(res.classIndex + " " + res.confidences[res.classIndex] * 100);
+                // chrome.tabs.executeScript(null,{code:"scrollBy(0,200);"});
+                //control
+                if (res.confidences[res.classIndex] * 100 > 60) {
+                    switch (res.classIndex) {
+                        case 0:
+                            break;
+                        case 1:
+                            scrollBy(0, 200);
+                            break;
+                        case 2:
+                            scrollBy(0, -200);
+                            break;
+                        case 3:
+                            break;
+                        case 4:
+                            break;
+                        case 5:
+                            break;
+                        default:
+                    }
+                }
             }
 
             // Dispose image when done
@@ -35021,7 +35042,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '59727' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '62623' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 

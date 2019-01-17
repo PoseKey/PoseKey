@@ -58,6 +58,27 @@ async function setup(){
                 logits = infer();
                 const res = await knn.predictClass(logits, TOPK);
                 console.log(res.classIndex + " " + res.confidences[res.classIndex]*100);
+                // chrome.tabs.executeScript(null,{code:"scrollBy(0,200);"});
+                //control
+                if(res.confidences[res.classIndex]*100 > 60){
+                    switch(res.classIndex){
+                        case 0:
+                        break;
+                        case 1:
+                        scrollBy(0,200);
+                        break;
+                        case 2:
+                        scrollBy(0,-200);
+                        break;
+                        case 3:
+                        break;
+                        case 4:
+                        break;
+                        case 5:
+                        break;
+                        default:
+                    }
+                }
             }
 
             // Dispose image when done
