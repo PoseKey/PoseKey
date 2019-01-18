@@ -5,7 +5,8 @@
     "version": "1.0",
     "permissions":[
         "activeTab",
-        "tabs"
+        "tabs",
+        "identity"
     ],
     "content_scripts": [
         {
@@ -24,5 +25,5 @@
         "default_popup":"index.html"
     },
     "options_page":"options.html",
-    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+    "content_security_policy": "script-src 'self' 'unsafe-eval' https://apis.google.com; object-src 'self'"
 }
