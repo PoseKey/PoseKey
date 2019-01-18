@@ -34634,15 +34634,7 @@ exports.poseChain = poseChain;
 exports.getAdjacentKeyPoints = getAdjacentKeyPoints;
 exports.getBoundingBox = getBoundingBox;
 exports.getBoundingBoxPoints = getBoundingBoxPoints;
-},{"@tensorflow/tfjs":"node_modules\\@tensorflow\\tfjs\\dist\\tf.esm.js"}],"node_modules\\stats.js\\build\\stats.min.js":[function(require,module,exports) {
-var define;
-// stats.js - http://github.com/mrdoob/stats.js
-(function(f,e){"object"===typeof exports&&"undefined"!==typeof module?module.exports=e():"function"===typeof define&&define.amd?define(e):f.Stats=e()})(this,function(){var f=function(){function e(a){c.appendChild(a.dom);return a}function u(a){for(var d=0;d<c.children.length;d++)c.children[d].style.display=d===a?"block":"none";l=a}var l=0,c=document.createElement("div");c.style.cssText="position:fixed;top:0;left:0;cursor:pointer;opacity:0.9;z-index:10000";c.addEventListener("click",function(a){a.preventDefault();
-u(++l%c.children.length)},!1);var k=(performance||Date).now(),g=k,a=0,r=e(new f.Panel("FPS","#0ff","#002")),h=e(new f.Panel("MS","#0f0","#020"));if(self.performance&&self.performance.memory)var t=e(new f.Panel("MB","#f08","#201"));u(0);return{REVISION:16,dom:c,addPanel:e,showPanel:u,begin:function(){k=(performance||Date).now()},end:function(){a++;var c=(performance||Date).now();h.update(c-k,200);if(c>g+1E3&&(r.update(1E3*a/(c-g),100),g=c,a=0,t)){var d=performance.memory;t.update(d.usedJSHeapSize/
-1048576,d.jsHeapSizeLimit/1048576)}return c},update:function(){k=this.end()},domElement:c,setMode:u}};f.Panel=function(e,f,l){var c=Infinity,k=0,g=Math.round,a=g(window.devicePixelRatio||1),r=80*a,h=48*a,t=3*a,v=2*a,d=3*a,m=15*a,n=74*a,p=30*a,q=document.createElement("canvas");q.width=r;q.height=h;q.style.cssText="width:80px;height:48px";var b=q.getContext("2d");b.font="bold "+9*a+"px Helvetica,Arial,sans-serif";b.textBaseline="top";b.fillStyle=l;b.fillRect(0,0,r,h);b.fillStyle=f;b.fillText(e,t,v);
-b.fillRect(d,m,n,p);b.fillStyle=l;b.globalAlpha=.9;b.fillRect(d,m,n,p);return{dom:q,update:function(h,w){c=Math.min(c,h);k=Math.max(k,h);b.fillStyle=l;b.globalAlpha=1;b.fillRect(0,0,r,m);b.fillStyle=f;b.fillText(g(h)+" "+e+" ("+g(c)+"-"+g(k)+")",t,v);b.drawImage(q,d+a,m,n-a,p,d,m,n-a,p);b.fillRect(d+n-a,m,a,p);b.fillStyle=l;b.globalAlpha=.9;b.fillRect(d+n-a,m,a,g((1-h/w)*p))}}};return f});
-
-},{}],"demo_util.js":[function(require,module,exports) {
+},{"@tensorflow/tfjs":"node_modules\\@tensorflow\\tfjs\\dist\\tf.esm.js"}],"demo_util.js":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34855,47 +34847,54 @@ var _posenet = require('@tensorflow-models/posenet');
 
 var posenet = _interopRequireWildcard(_posenet);
 
-var _stats = require('stats.js');
-
-var _stats2 = _interopRequireDefault(_stats);
-
 var _demo_util = require('./demo_util');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 //global variables
-const stats = new _stats2.default();
 let isDetecting;
+let loading = false;
+let loaded = false;
+let videoErr = false;
+
 let stream;
 let video;
 let canvas;
 let ctx;
+
+let model;
 let knn;
 let mobilenet;
 //classifiers
-const NUM_CLASSES = 7;
 const TOPK = 10;
 
 //save& load
 let myIncomingClassifier = [];
 let myGroups = [];
-
 /*
  * 프로그램이 실행되면 실행되는 코드
  */
 async function setup() {
-    video = await loadVideo();
-    await loadCanvas();
+    video = await loadVideo().catch(error => {
+        if (error) {
+            videoErr = true;
+            console.log('Pose-Detector(Chrome:Extension) has been stopped because the site is insecure for camera permission!');
+        }
+    });
     // console.log(video);
-    const model = await posenet.load(1.01);
+    await loadCanvas();
+    // if(model) model.dispose();
+    model = await posenet.load(1.01);
+    // console.log(model);
+    // if(knn) knn.dispose();
     knn = knnClassifier.create();
     // console.log(knn);
+    // if(!mobilenet)
     mobilenet = await mobilenetModule.load();
     // console.log(mobilenet);
     await myloadModel();
-    console.log(knn);
+}
+async function detect() {
     let playAlert = setInterval(async function () {
         if (isDetecting === true) {
             // const pose = await 
@@ -34908,13 +34907,10 @@ async function setup() {
             }
             let logits;
             const image = tf.fromPixels(canvas);
-
             // 'conv_preds' is the logits activation of MobileNet.
             const infer = () => mobilenet.infer(image, 'conv_preds');
-
             const numClasses = knn.getNumClasses();
             if (numClasses > 0) {
-
                 // If classes have been added run predict
                 logits = infer();
                 const res = await knn.predictClass(logits, TOPK);
@@ -34938,25 +34934,25 @@ async function setup() {
                         case 5:
                             break;
                         default:
+                            break;
                     }
                 }
             }
-
             // Dispose image when done
             image.dispose();
             if (logits != null) {
                 logits.dispose();
             }
             // console.log(pose);
-        }
+        } else clearInterval(playAlert);
     }, 500);
 }
-
 /**
  * 카메라가 활성화된 HTMLVideoElement를 생성후 리턴
  */
 async function loadVideo() {
     stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    // console.log(stream);
     let video = document.createElement('video');
     video.height = 480;
     video.width = 640;
@@ -34975,6 +34971,7 @@ async function loadCanvas() {
 
 async function myloadModel() {
     const myLoadedModel = await tf.loadModel('https://ujoy7851.github.io/Capstone/model/model.json');
+    // console.log(myLoadedModel);
     // console.log('myLoadedModel.layers.length');
     // console.log(myLoadedModel.layers.length);
 
@@ -34987,33 +34984,41 @@ async function myloadModel() {
         myGroups[myWeightLoop - myDenseStart] = myLoadedModel.layers[myWeightLoop].name;
     }
     // console.log('Printing all the incoming classifiers');
-    for (let x = 0; x < myIncomingClassifier.length; x++) {
-        myIncomingClassifier[x].print(true);
-    }
+    // for (let x=0;  x < myIncomingClassifier.length; x++){
+    //   myIncomingClassifier[x].print(true);
+    // }
     // console.log('Activating Classifier');
     knn.dispose();
     knn.setClassifierDataset(myIncomingClassifier);
+    // console.log(knn);
     // console.log('Classifier loaded');
 }
 
-setup();
+// setup();
 chrome.runtime.onMessage.addListener(gotMessage);
-
 async function gotMessage(message, sender, sendResponse) {
     console.log(message.data);
     if (message.data === "OFF") {
         isDetecting = false;
-        // video.pause();
+        //video.pause();
         video.srcObject = null;
         stream.getTracks().forEach(track => {
             track.stop();
         });
     } else if (message.data === "ON") {
-        video = await loadVideo();
-        isDetecting = true;
+        // video = await loadVideo();
+        if (!loading) {
+            loading = true;
+            await setup();
+            loaded = true;
+        }
+        if (!isDetecting && loaded && !videoErr) {
+            isDetecting = true;
+            detect();
+        }
     }
 }
-},{"@tensorflow-models/mobilenet":"node_modules\\@tensorflow-models\\mobilenet\\dist\\mobilenet.esm.js","@tensorflow/tfjs":"node_modules\\@tensorflow\\tfjs\\dist\\tf.esm.js","@tensorflow-models/knn-classifier":"node_modules\\@tensorflow-models\\knn-classifier\\dist\\knn-classifier.esm.js","@tensorflow-models/posenet":"node_modules\\@tensorflow-models\\posenet\\dist\\posenet.esm.js","stats.js":"node_modules\\stats.js\\build\\stats.min.js","./demo_util":"demo_util.js"}],"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js":[function(require,module,exports) {
+},{"@tensorflow-models/mobilenet":"node_modules\\@tensorflow-models\\mobilenet\\dist\\mobilenet.esm.js","@tensorflow/tfjs":"node_modules\\@tensorflow\\tfjs\\dist\\tf.esm.js","@tensorflow-models/knn-classifier":"node_modules\\@tensorflow-models\\knn-classifier\\dist\\knn-classifier.esm.js","@tensorflow-models/posenet":"node_modules\\@tensorflow-models\\posenet\\dist\\posenet.esm.js","./demo_util":"demo_util.js"}],"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -35042,7 +35047,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '62623' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '62260' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
