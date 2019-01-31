@@ -2,7 +2,7 @@ import * as mobilenetModule from '@tensorflow-models/mobilenet';
 import * as tf from '@tensorflow/tfjs';
 import * as knnClassifier from '@tensorflow-models/knn-classifier';
 import * as posenet from '@tensorflow-models/posenet';
-import {drawKeypoints, drawSkeleton, drawBoundingBox} from './demo_util';
+import {drawKeypoints, drawSkeleton} from './demo_util';
 //global variables
 let isDetecting;
 let loading = false;
