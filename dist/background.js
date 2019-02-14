@@ -106,10 +106,26 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"background.js":[function(require,module,exports) {
 console.log('background running');
 
-let is = true;
+let is = null;
 let lastTab;
 let lastWindow;
+
+let secondImage = "standing-up-man-.png";
+let firstImage = "man-celebrating1.png";
 // chrome.browserAction.onClicked.addListener(buttonClicked);
+
+function save() {
+    if (is == true) chrome.storage.sync.set({ power: true });else chrome.storage.sync.set({ power: false });
+}
+function load() {
+    chrome.storage.sync.get('power', function (data) {
+        is = data.power;
+        console.log(data.power);
+        if (is) chrome.browserAction.setIcon({ path: firstImage });else chrome.browserAction.setIcon({ path: secondImage });
+    });
+}
+load();
+
 chrome.tabs.onUpdated.addListener(onLoad);
 chrome.tabs.onCreated.addListener(onLoad);
 chrome.tabs.onActivated.addListener(active); //active는 하나밖에 없음
@@ -126,7 +142,7 @@ function gotMessage(message, sender, sendResponse) {
         if (is === true) {
             msg.data = "OFF";
             is = false;
-            chrome.browserAction.setIcon({ path: "likeR.png" });
+            chrome.browserAction.setIcon({ path: secondImage });
             /* 모든 탭에 OFF하라고 보냄*/
             chrome.tabs.query({}, function (tabs) {
                 for (let i = 0; i < tabs.length; i++) {
@@ -135,13 +151,32 @@ function gotMessage(message, sender, sendResponse) {
             });
         } else {
             is = true;
-            chrome.browserAction.setIcon({ path: "likeG.png" });
+            chrome.browserAction.setIcon({ path: firstImage });
             chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                 var current = tabs[0].id;
                 chrome.tabs.sendMessage(current, msg);
             }); // 현재 탭에만 ON하라고 보냄
         }
+    } else if (message.data == "?") {
+        console.log("?");
+    } else if (message.data == "ON") {
+        is = true;
+        chrome.browserAction.setIcon({ path: firstImage });
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            var current = tabs[0].id;
+            chrome.tabs.sendMessage(current, msg);
+        });
+    } else if (message.data == "OFF") {
+        is = false;
+        chrome.browserAction.setIcon({ path: secondImage });
+        /* 모든 탭에 OFF하라고 보냄*/
+        chrome.tabs.query({}, function (tabs) {
+            for (let i = 0; i < tabs.length; i++) {
+                chrome.tabs.sendMessage(tabs[i].id, msg);
+            }
+        });
     }
+    save();
     sendResponse({ data: is });
 }
 function buttonClicked(tab) {
@@ -153,7 +188,7 @@ function buttonClicked(tab) {
     if (is === true) {
         msg.data = "OFF";
         is = false;
-        chrome.browserAction.setIcon({ path: "likeR.png" });
+        chrome.browserAction.setIcon({ path: secondImage });
         /* 모든 탭에 OFF하라고 보냄*/
         chrome.tabs.query({}, function (tabs) {
             for (let i = 0; i < tabs.length; i++) {
@@ -162,9 +197,10 @@ function buttonClicked(tab) {
         });
     } else {
         is = true;
-        chrome.browserAction.setIcon({ path: "likeG.png" });
+        chrome.browserAction.setIcon({ path: firstImage });
         chrome.tabs.sendMessage(tab.id, msg); // 현재 탭에만 ON하라고 보냄
     }
+    save();
 }
 
 function onLoad(id) {
@@ -180,6 +216,7 @@ function onLoad(id) {
             data: "OFF"
         };
     }
+    save();
     chrome.tabs.sendMessage(id, msg);
 }
 
@@ -201,6 +238,7 @@ function active(tab) {
         }
     });
     chrome.tabs.sendMessage(tab.tabId, msg);
+    save();
     // if(lastTab){
     //     chrome.tabs.sendMessage(lastTab, msg2);
     // }
@@ -235,6 +273,7 @@ function window(windowId) {
     // if(lastWindow!=windowId){
     //     chrome.tabs.sendMessage(lastTab, msg2);
     // }
+    save();
 }
 
 function highlight(tab) {
@@ -269,7 +308,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '54944' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '50825' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 

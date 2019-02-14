@@ -34868,6 +34868,8 @@ let mobilenet;
 //classifiers
 const TOPK = 10;
 
+let count = 0;
+let hit = [0, 0, 0, 0, 0, 0, 0];
 //save& load
 let myIncomingClassifier = [];
 let myGroups = [];
@@ -34884,7 +34886,7 @@ async function setup() {
     // console.log(video);
     await loadCanvas();
     // if(model) model.dispose();
-    model = await posenet.load(1.01);
+    model = await posenet.load(0.75);
     // console.log(model);
     // if(knn) knn.dispose();
     knn = knnClassifier.create();
@@ -34896,9 +34898,9 @@ async function setup() {
 }
 async function detect() {
     let playAlert = setInterval(async function () {
-        if (isDetecting === true) {
+        if (isDetecting === true && count == 0) {
             // const pose = await 
-            let pose = await model.estimateSinglePose(video, 0.35, true, 16);
+            let pose = await model.estimateSinglePose(video, 0.4, true, 16);
             // console.log(pose);
             ctx.clearRect(0, 0, 640, 480);
             if (pose.score >= 0.1) {
@@ -34914,28 +34916,52 @@ async function detect() {
                 // If classes have been added run predict
                 logits = infer();
                 const res = await knn.predictClass(logits, TOPK);
-                console.log(res.classIndex + " " + res.confidences[res.classIndex] * 100);
+                console.clear();
+                console.log("%c" + res.classIndex + " " + res.confidences[res.classIndex] * 100, "color: blue; font-size: 100pt");
                 // chrome.tabs.executeScript(null,{code:"scrollBy(0,200);"});
                 //control
+                var ytb_video = document.getElementsByTagName("video")[0];
+                var nextButton = document.getElementsByClassName("ytp-next-button")[0];
+
                 if (res.confidences[res.classIndex] * 100 > 60) {
                     switch (res.classIndex) {
-                        case 0:
-                            break;
                         case 1:
-                            scrollBy(0, 200);
+                            if (ytb_video.volume < 0.2) {
+                                ytb_video.volume = 0.2;
+                            } else {
+                                ytb_video.volume -= 0.2;
+                            }
                             break;
                         case 2:
-                            scrollBy(0, -200);
+                            if (ytb_video.volume > 0.8) {
+                                ytb_video.volume = 1;
+                            } else {
+                                ytb_video.volume += 0.1;
+                            }
                             break;
                         case 3:
+                            //scrollBy(0,200);
+                            if (ytb_video.paused) {
+                                ytb_video.play();
+                            } else {
+                                ytb_video.pause();
+                            }
+                            count = 5;
                             break;
                         case 4:
+                            ytb_video.currentTime -= 10;
                             break;
                         case 5:
+                            ytb_video.currentTime += 10;
+                            break;
+                        case 6:
+                            //scrollBy(0,-200);
+                            nextButton.click();
                             break;
                         default:
                             break;
                     }
+                    // if(res.classIndex != 0) count = 5;
                 }
             }
             // Dispose image when done
@@ -34944,6 +34970,8 @@ async function detect() {
                 logits.dispose();
             }
             // console.log(pose);
+        } else if (count != 0) {
+            count--;
         } else clearInterval(playAlert);
     }, 500);
 }
@@ -34970,7 +34998,7 @@ async function loadCanvas() {
 }
 
 async function myloadModel() {
-    const myLoadedModel = await tf.loadModel('https://ujoy7851.github.io/Capstone/model/model.json');
+    const myLoadedModel = await tf.loadModel('https://posekey.github.io/youtube/model/model.json');
     // console.log(myLoadedModel);
     // console.log('myLoadedModel.layers.length');
     // console.log(myLoadedModel.layers.length);
@@ -35013,6 +35041,7 @@ async function gotMessage(message, sender, sendResponse) {
             loaded = true;
         }
         if (!isDetecting && loaded && !videoErr) {
+            video = await loadVideo();
             isDetecting = true;
             detect();
         }
@@ -35047,7 +35076,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '54944' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '50825' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 

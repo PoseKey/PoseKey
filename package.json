@@ -14,7 +14,7 @@
     "@tensorflow-models/posenet": "^0.2.2",
     "@tensorflow/tfjs": "^0.12.7",
     "stats.js": "^0.17.0",
-    "vue": "^2.5.22",
+    "vue": "^2.6.6",
     "vue-router": "^3.0.2"
   },
   "scripts": {
@@ -30,8 +30,8 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2017": "^6.24.1",
     "clang-format": "^1.2.4",
-    "dat.gui": "^0.7.2",
-    "eslint": "^5.5.0",
+    "dat.gui": "^0.7.5",
+    "eslint": "^5.13.0",
     "eslint-config-google": "^0.10.0",
     "parcel-bundler": "^1.9.7"
   },
