@@ -3,6 +3,7 @@ import * as tf from '@tensorflow/tfjs';
 import * as knnClassifier from '@tensorflow-models/knn-classifier';
 import * as posenet from '@tensorflow-models/posenet';
 import {drawKeypoints, drawSkeleton} from './demo_util';
+import { browserLocalStorage } from '@tensorflow/tfjs-core/dist/io/local_storage';
 //global variables
 let isDetecting;
 let loading = false;
@@ -21,10 +22,14 @@ let mobilenet;
 const TOPK = 10;
 
 let count = 0;
-let hit =[0,0,0,0,0,0,0];
 //save& load
 let myIncomingClassifier = [];
 let myGroups = []
+
+//setting values initialized by message from background
+let pm, sc, fq, ac;
+let mode;
+
 /*
  * 프로그램이 실행되면 실행되는 코드
  */
@@ -38,7 +43,17 @@ async function setup(){
     // console.log(video);
     await loadCanvas();
     // if(model) model.dispose();
-    model = await posenet.load(0.75);
+    switch (pm){
+        case 0: mode = 0.5;
+        break;
+        case 1: mode = 0.75;
+        break;
+        case 2: mode = 1.0;
+        break;
+        default: mode = 1.01;
+        break;
+    }
+    model = await posenet.load(mode);
     // console.log(model);
     // if(knn) knn.dispose();
     knn = knnClassifier.create();
@@ -52,7 +67,7 @@ async function detect(){
     let playAlert = setInterval(async function(){
         if(isDetecting === true&& count==0){
             // const pose = await 
-            let pose = await model.estimateSinglePose(video,0.4,true,16);
+            let pose = await model.estimateSinglePose(video,sc,true,16);
             // console.log(pose);
             ctx.clearRect(0,0,640,480);
             if (pose.score >= 0.1) {
@@ -75,7 +90,7 @@ async function detect(){
                 var ytb_video = document.getElementsByTagName("video")[0];
                 var nextButton = document.getElementsByClassName("ytp-next-button")[0];
 
-                if(res.confidences[res.classIndex]*100 > 60){
+                if(res.confidences[res.classIndex]*100 > ac){
                     switch(res.classIndex){
                         case 1:
                             if(ytb_video.volume < 0.2){
@@ -130,7 +145,7 @@ async function detect(){
             count--;
         }
         else clearInterval(playAlert);
-    },500);
+    },fq);
 }
 /**
  * 카메라가 활성화된 HTMLVideoElement를 생성후 리턴
@@ -182,7 +197,7 @@ async function myloadModel(){
 // setup();
 chrome.runtime.onMessage.addListener(gotMessage);
 async function gotMessage(message, sender, sendResponse){
-    console.log(message.data);
+    console.log(message);
     if(message.data === "OFF") {
         isDetecting = false;
         //video.pause();
@@ -193,6 +208,11 @@ async function gotMessage(message, sender, sendResponse){
     }
     else if (message.data === "ON"){
         // video = await loadVideo();
+        pm = message.pmm;
+        sc = message.scm;
+        fq = message.fqm;
+        ac = message.acm;
+        
         if(!loading){
             loading = true;
             await setup();

@@ -6,13 +6,37 @@ let lastWindow;
 
 let secondImage ="standing-up-man-.png";
 let firstImage ="man-celebrating1.png";
-// chrome.browserAction.onClicked.addListener(buttonClicked);
 
+//setting values initialized by message from background
+//pm = posenet model
+//sc = image scale
+//fq = frequency
+//ac = accuracy
+let pm, sc, fq, ac;
+
+load();
+loadS();
+//power
 function save(){
     if(is==true)
-        chrome.storage.sync.set({power:true});
+        chrome.storage.sync.set({
+            power: true,
+            sets:{
+                pmm: pm,
+                scm: sc,
+                fqm: fq,
+                acm: ac
+            }
+        });
     else
-        chrome.storage.sync.set({power:false});
+        chrome.storage.sync.set({
+            power: false,
+            sets:{
+                pmm: pm,
+                scm: sc,
+                fqm: fq,
+                acm: ac
+            }});
 }
 function load(){
     chrome.storage.sync.get('power',function(data){
@@ -22,8 +46,17 @@ function load(){
         else chrome.browserAction.setIcon({path: secondImage});
     });
 }
-load();
 
+function loadS(){
+    chrome.storage.sync.get('sets',function(data){
+        if(data.pm) pm = data.pm; else pm = 1;
+        if(data.sc) sc = data.sc; else sc = 0.4;
+        if(data.fq) fq = data.fq; else fq = 500;
+        if(data.ac) ac = data.ac; else ac = 70;
+    });
+}
+
+// chrome.browserAction.onClicked.addListener(buttonClicked);
 chrome.tabs.onUpdated.addListener(onLoad);
 chrome.tabs.onCreated.addListener(onLoad);
 chrome.tabs.onActivated.addListener(active);    //active는 하나밖에 없음
@@ -35,7 +68,7 @@ function gotMessage(message, sender, sendResponse){
     console.log(message);
     if(message.data=="trigger"){
         let msg = {
-            data: "ON"
+            data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac
         };
         if(is===true){
             msg.data = "OFF";
@@ -78,14 +111,21 @@ function gotMessage(message, sender, sendResponse){
             }
         });
     }
+    else if(message.data == "setting"){
+        console.log(message);
+        pm = message.pmm;
+        sc = message.scm;
+        fq = message.fqm;
+        ac = message.acm;
+    }
     save();
-    sendResponse({data:is});
+    sendResponse({data:is, pmm:pm, scm:sc, fqm:fq, acm:ac });
 }
 function buttonClicked(tab) {
     console.log("button clicked!");
     console.log(tab);
     let msg = {
-        data: "ON"
+        data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac
     };
     if(is===true){
         msg.data = "OFF";
@@ -112,12 +152,12 @@ function onLoad(id){
     let msg 
     if (is === true){
         msg = {
-            data: "ON"
+            data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac
         };
     }
     else {
         msg = {
-            data: "OFF"
+            data: "OFF", pmm:pm, scm:sc, fqm:fq, acm:ac
         };
     }
     save();
@@ -128,10 +168,10 @@ function active(tab){
     // console.log("tab changed!");
     // console.log(tab.tabId);
     let msg={
-        data: "ON"
+        data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac
     }
     let msg2={
-        data: "OFF"
+        data: "OFF", pmm:pm, scm:sc, fqm:fq, acm:ac
     }
     if (is === false){
         msg.data = "OFF";
@@ -151,10 +191,10 @@ function active(tab){
 
 function window(windowId){
     let msg={
-        data: "ON"
+        data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac
     }
     let msg2={
-        data: "OFF"
+        data: "OFF", pmm:pm, scm:sc, fqm:fq, acm:ac
     }
     if (is === false){
         msg.data = "OFF";

@@ -34828,7 +34828,3606 @@ function drawOffsetVectors(heatMapValues, offsets, outputStride, scale = 1, ctx)
     drawSegment([heatmapY, heatmapX], [offsetPointY, offsetPointX], color, scale, ctx);
   }
 }
-},{"@tensorflow/tfjs":"node_modules\\@tensorflow\\tfjs\\dist\\tf.esm.js","@tensorflow-models/posenet":"node_modules\\@tensorflow-models\\posenet\\dist\\posenet.esm.js"}],"content.js":[function(require,module,exports) {
+},{"@tensorflow/tfjs":"node_modules\\@tensorflow\\tfjs\\dist\\tf.esm.js","@tensorflow-models/posenet":"node_modules\\@tensorflow-models\\posenet\\dist\\posenet.esm.js"}],"node_modules\\@tensorflow\\tfjs-core\\dist\\device_util.js":[function(require,module,exports) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+function isMobile() {
+    var a = navigator.userAgent || navigator.vendor || window.opera;
+    return /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i
+        .test(a) ||
+        /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i
+            .test(a.substr(0, 4));
+}
+exports.isMobile = isMobile;
+//# sourceMappingURL=device_util.js.map
+},{}],"node_modules\\@tensorflow\\tfjs-core\\dist\\util.js":[function(require,module,exports) {
+var process = require("process");
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+function shuffle(array) {
+    var counter = array.length;
+    var temp = 0;
+    var index = 0;
+    while (counter > 0) {
+        index = (Math.random() * counter) | 0;
+        counter--;
+        temp = array[counter];
+        array[counter] = array[index];
+        array[index] = temp;
+    }
+}
+exports.shuffle = shuffle;
+function clamp(min, x, max) {
+    return Math.max(min, Math.min(x, max));
+}
+exports.clamp = clamp;
+function randUniform(a, b) {
+    var r = Math.random();
+    return (b * r) + (1 - r) * a;
+}
+exports.randUniform = randUniform;
+function distSquared(a, b) {
+    var result = 0;
+    for (var i = 0; i < a.length; i++) {
+        var diff = Number(a[i]) - Number(b[i]);
+        result += diff * diff;
+    }
+    return result;
+}
+exports.distSquared = distSquared;
+function assert(expr, msg) {
+    if (!expr) {
+        throw new Error(typeof msg === 'string' ? msg : msg());
+    }
+}
+exports.assert = assert;
+function assertShapesMatch(shapeA, shapeB, errorMessagePrefix) {
+    if (errorMessagePrefix === void 0) { errorMessagePrefix = ''; }
+    assert(arraysEqual(shapeA, shapeB), errorMessagePrefix + (" Shapes " + shapeA + " and " + shapeB + " must match"));
+}
+exports.assertShapesMatch = assertShapesMatch;
+function assertNonNull(a) {
+    assert(a != null, "The input to the tensor constructor must be a non-null value.");
+}
+exports.assertNonNull = assertNonNull;
+function flatten(arr, ret) {
+    if (ret === void 0) { ret = []; }
+    if (Array.isArray(arr)) {
+        for (var i = 0; i < arr.length; ++i) {
+            flatten(arr[i], ret);
+        }
+    }
+    else {
+        ret.push(arr);
+    }
+    return ret;
+}
+exports.flatten = flatten;
+function inferShape(val) {
+    var firstElem = val;
+    if (isTypedArray(val)) {
+        return [val.length];
+    }
+    if (!Array.isArray(val)) {
+        return [];
+    }
+    var shape = [];
+    while (firstElem instanceof Array) {
+        shape.push(firstElem.length);
+        firstElem = firstElem[0];
+    }
+    if (val instanceof Array) {
+        deepAssertShapeConsistency(val, shape, []);
+    }
+    return shape;
+}
+exports.inferShape = inferShape;
+function deepAssertShapeConsistency(val, shape, indices) {
+    indices = indices || [];
+    if (!(val instanceof Array)) {
+        assert(shape.length === 0, function () { return "Element arr[" + indices.join('][') + "] is a primitive, " +
+            ("but should be an array of " + shape[0] + " elements"); });
+        return;
+    }
+    assert(shape.length > 0, function () { return "Element arr[" + indices.join('][') + "] should be a primitive, " +
+        ("but is an array of " + val.length + " elements"); });
+    assert(val.length === shape[0], function () { return "Element arr[" + indices.join('][') + "] should have " + shape[0] + " " +
+        ("elements, but has " + val.length + " elements"); });
+    var subShape = shape.slice(1);
+    for (var i = 0; i < val.length; ++i) {
+        deepAssertShapeConsistency(val[i], subShape, indices.concat(i));
+    }
+}
+function sizeFromShape(shape) {
+    if (shape.length === 0) {
+        return 1;
+    }
+    var size = shape[0];
+    for (var i = 1; i < shape.length; i++) {
+        size *= shape[i];
+    }
+    return size;
+}
+exports.sizeFromShape = sizeFromShape;
+function isScalarShape(shape) {
+    return shape.length === 0;
+}
+exports.isScalarShape = isScalarShape;
+function arraysEqual(n1, n2) {
+    if (n1.length !== n2.length) {
+        return false;
+    }
+    for (var i = 0; i < n1.length; i++) {
+        if (n1[i] !== n2[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+exports.arraysEqual = arraysEqual;
+function isInt(a) {
+    return a % 1 === 0;
+}
+exports.isInt = isInt;
+function tanh(x) {
+    if (Math.tanh != null) {
+        return Math.tanh(x);
+    }
+    if (x === Infinity) {
+        return 1;
+    }
+    else if (x === -Infinity) {
+        return -1;
+    }
+    else {
+        var e2x = Math.exp(2 * x);
+        return (e2x - 1) / (e2x + 1);
+    }
+}
+exports.tanh = tanh;
+function sizeToSquarishShape(size) {
+    for (var a = Math.floor(Math.sqrt(size)); a > 1; --a) {
+        if (size % a === 0) {
+            return [a, size / a];
+        }
+    }
+    return [1, size];
+}
+exports.sizeToSquarishShape = sizeToSquarishShape;
+function createShuffledIndices(n) {
+    var shuffledIndices = new Uint32Array(n);
+    for (var i = 0; i < n; ++i) {
+        shuffledIndices[i] = i;
+    }
+    shuffle(shuffledIndices);
+    return shuffledIndices;
+}
+exports.createShuffledIndices = createShuffledIndices;
+function rightPad(a, size) {
+    if (size <= a.length) {
+        return a;
+    }
+    return a + ' '.repeat(size - a.length);
+}
+exports.rightPad = rightPad;
+function repeatedTry(checkFn, delayFn, maxCounter) {
+    if (delayFn === void 0) { delayFn = function (counter) { return 0; }; }
+    return new Promise(function (resolve, reject) {
+        var tryCount = 0;
+        var tryFn = function () {
+            if (checkFn()) {
+                resolve();
+                return;
+            }
+            tryCount++;
+            var nextBackoff = delayFn(tryCount);
+            if (maxCounter != null && tryCount >= maxCounter) {
+                reject();
+                return;
+            }
+            setTimeout(tryFn, nextBackoff);
+        };
+        tryFn();
+    });
+}
+exports.repeatedTry = repeatedTry;
+function inferFromImplicitShape(shape, size) {
+    var shapeProd = 1;
+    var implicitIdx = -1;
+    for (var i = 0; i < shape.length; ++i) {
+        if (shape[i] >= 0) {
+            shapeProd *= shape[i];
+        }
+        else if (shape[i] === -1) {
+            if (implicitIdx !== -1) {
+                throw Error("Shapes can only have 1 implicit size. " +
+                    ("Found -1 at dim " + implicitIdx + " and dim " + i));
+            }
+            implicitIdx = i;
+        }
+        else if (shape[i] < 0) {
+            throw Error("Shapes can not be < 0. Found " + shape[i] + " at dim " + i);
+        }
+    }
+    if (implicitIdx === -1) {
+        if (size > 0 && size !== shapeProd) {
+            throw Error("Size(" + size + ") must match the product of shape " + shape);
+        }
+        return shape;
+    }
+    if (shapeProd === 0) {
+        throw Error("Cannot infer the missing size in [" + shape + "] when " +
+            "there are 0 elements");
+    }
+    if (size % shapeProd !== 0) {
+        throw Error("The implicit shape can't be a fractional number. " +
+            ("Got " + size + " / " + shapeProd));
+    }
+    var newShape = shape.slice();
+    newShape[implicitIdx] = size / shapeProd;
+    return newShape;
+}
+exports.inferFromImplicitShape = inferFromImplicitShape;
+function squeezeShape(shape, axis) {
+    var newShape = [];
+    var keptDims = [];
+    var j = 0;
+    for (var i = 0; i < shape.length; ++i) {
+        if (axis != null) {
+            if (axis[j] === i && shape[i] !== 1) {
+                throw new Error("Can't squeeze axis " + i + " since its dim '" + shape[i] + "' is not 1");
+            }
+            if ((axis[j] == null || axis[j] > i) && shape[i] === 1) {
+                newShape.push(shape[i]);
+                keptDims.push(i);
+            }
+            if (axis[j] <= i) {
+                j++;
+            }
+        }
+        if (shape[i] !== 1) {
+            newShape.push(shape[i]);
+            keptDims.push(i);
+        }
+    }
+    return { newShape: newShape, keptDims: keptDims };
+}
+exports.squeezeShape = squeezeShape;
+function getTypedArrayFromDType(dtype, size) {
+    var values = null;
+    if (dtype == null || dtype === 'float32') {
+        values = new Float32Array(size);
+    }
+    else if (dtype === 'int32') {
+        values = new Int32Array(size);
+    }
+    else if (dtype === 'bool') {
+        values = new Uint8Array(size);
+    }
+    else {
+        throw new Error("Unknown data type " + dtype);
+    }
+    return values;
+}
+exports.getTypedArrayFromDType = getTypedArrayFromDType;
+function checkComputationForNaN(vals, dtype, name) {
+    if (dtype !== 'float32') {
+        return;
+    }
+    for (var i = 0; i < vals.length; i++) {
+        if (isNaN(vals[i])) {
+            throw Error("The result of the '" + name + "' has NaNs.");
+        }
+    }
+}
+exports.checkComputationForNaN = checkComputationForNaN;
+function checkConversionForNaN(vals, dtype) {
+    if (dtype === 'float32') {
+        return;
+    }
+    for (var i = 0; i < vals.length; i++) {
+        if (isNaN(vals[i])) {
+            throw Error("NaN is not a valid value for dtype: '" + dtype + "'.");
+        }
+    }
+}
+exports.checkConversionForNaN = checkConversionForNaN;
+function hasEncodingLoss(oldType, newType) {
+    if (newType === 'complex64') {
+        return false;
+    }
+    if (newType === 'float32' && oldType !== 'complex64') {
+        return false;
+    }
+    if (newType === 'int32' && oldType !== 'float32' && oldType !== 'complex64') {
+        return false;
+    }
+    if (newType === 'bool' && oldType === 'bool') {
+        return false;
+    }
+    return true;
+}
+exports.hasEncodingLoss = hasEncodingLoss;
+function copyTypedArray(array, dtype, debugMode) {
+    if (dtype == null || dtype === 'float32' || dtype === 'complex64') {
+        return new Float32Array(array);
+    }
+    else if (dtype === 'int32') {
+        if (debugMode) {
+            checkConversionForNaN(array, dtype);
+        }
+        return new Int32Array(array);
+    }
+    else if (dtype === 'bool') {
+        var bool = new Uint8Array(array.length);
+        for (var i = 0; i < bool.length; ++i) {
+            if (Math.round(array[i]) !== 0) {
+                bool[i] = 1;
+            }
+        }
+        return bool;
+    }
+    else {
+        throw new Error("Unknown data type " + dtype);
+    }
+}
+function isTypedArray(a) {
+    return a instanceof Float32Array || a instanceof Int32Array ||
+        a instanceof Uint8Array;
+}
+exports.isTypedArray = isTypedArray;
+function bytesPerElement(dtype) {
+    if (dtype === 'float32' || dtype === 'int32') {
+        return 4;
+    }
+    else if (dtype === 'complex64') {
+        return 8;
+    }
+    else if (dtype === 'bool') {
+        return 1;
+    }
+    else {
+        throw new Error("Unknown dtype " + dtype);
+    }
+}
+exports.bytesPerElement = bytesPerElement;
+function isFunction(f) {
+    return !!(f && f.constructor && f.call && f.apply);
+}
+exports.isFunction = isFunction;
+function nearestDivisor(size, start) {
+    for (var i = start; i < size; ++i) {
+        if (size % i === 0) {
+            return i;
+        }
+    }
+    return size;
+}
+exports.nearestDivisor = nearestDivisor;
+function computeStrides(shape) {
+    var rank = shape.length;
+    if (rank < 2) {
+        return [];
+    }
+    var strides = new Array(rank - 1);
+    strides[rank - 2] = shape[rank - 1];
+    for (var i = rank - 3; i >= 0; --i) {
+        strides[i] = strides[i + 1] * shape[i + 1];
+    }
+    return strides;
+}
+exports.computeStrides = computeStrides;
+function toTypedArray(a, dtype, debugMode) {
+    if (noConversionNeeded(a, dtype)) {
+        return a;
+    }
+    if (Array.isArray(a)) {
+        a = flatten(a);
+    }
+    return copyTypedArray(a, dtype, debugMode);
+}
+exports.toTypedArray = toTypedArray;
+function noConversionNeeded(a, dtype) {
+    return (a instanceof Float32Array && dtype === 'float32') ||
+        (a instanceof Int32Array && dtype === 'int32') ||
+        (a instanceof Uint8Array && dtype === 'bool');
+}
+function makeOnesTypedArray(size, dtype) {
+    var array = makeZerosTypedArray(size, dtype);
+    for (var i = 0; i < array.length; i++) {
+        array[i] = 1;
+    }
+    return array;
+}
+exports.makeOnesTypedArray = makeOnesTypedArray;
+function makeZerosTypedArray(size, dtype) {
+    if (dtype == null || dtype === 'float32' || dtype === 'complex64') {
+        return new Float32Array(size);
+    }
+    else if (dtype === 'int32') {
+        return new Int32Array(size);
+    }
+    else if (dtype === 'bool') {
+        return new Uint8Array(size);
+    }
+    else {
+        throw new Error("Unknown data type " + dtype);
+    }
+}
+exports.makeZerosTypedArray = makeZerosTypedArray;
+function now() {
+    if (typeof performance !== 'undefined') {
+        return performance.now();
+    }
+    else if (typeof process !== 'undefined') {
+        var time = process.hrtime();
+        return time[0] * 1000 + time[1] / 1000000;
+    }
+    else {
+        throw new Error('Cannot measure time in this environment. You should run tf.js ' +
+            'in the browser or in Node.js');
+    }
+}
+exports.now = now;
+//# sourceMappingURL=util.js.map
+},{"process":"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\node_modules\\process\\browser.js"}],"node_modules\\@tensorflow\\tfjs-core\\dist\\profiler.js":[function(require,module,exports) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var util = require("./util");
+var Profiler = (function () {
+    function Profiler(backendTimer, logger) {
+        this.backendTimer = backendTimer;
+        this.logger = logger;
+        if (logger == null) {
+            this.logger = new Logger();
+        }
+    }
+    Profiler.prototype.profileKernel = function (name, f) {
+        var _this = this;
+        var result;
+        var holdResultWrapperFn = function () {
+            result = f();
+        };
+        var timer = this.backendTimer.time(holdResultWrapperFn);
+        var results = Array.isArray(result) ? result : [result];
+        results.forEach(function (r) {
+            var vals = r.dataSync();
+            util.checkComputationForNaN(vals, r.dtype, name);
+            timer.then(function (timing) {
+                _this.logger.logKernelProfile(name, r, vals, timing.kernelMs);
+            });
+        });
+        return result;
+    };
+    return Profiler;
+}());
+exports.Profiler = Profiler;
+var Logger = (function () {
+    function Logger() {
+    }
+    Logger.prototype.logKernelProfile = function (name, result, vals, timeMs) {
+        var time = util.rightPad(timeMs + "ms", 9);
+        var paddedName = util.rightPad(name, 25);
+        var rank = result.rank;
+        var size = result.size;
+        var shape = util.rightPad(result.shape.toString(), 14);
+        console.log("%c" + paddedName + "\t%c" + time + "\t%c" + rank + "D " + shape + "\t%c" + size, 'font-weight:bold', 'color:red', 'color:blue', 'color: orange');
+    };
+    return Logger;
+}());
+exports.Logger = Logger;
+//# sourceMappingURL=profiler.js.map
+},{"./util":"node_modules\\@tensorflow\\tfjs-core\\dist\\util.js"}],"node_modules\\@tensorflow\\tfjs-core\\dist\\tensor_format.js":[function(require,module,exports) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var util_1 = require("./util");
+var FORMAT_LIMIT_NUM_VALS = 20;
+var FORMAT_NUM_FIRST_LAST_VALS = 3;
+var FORMAT_NUM_SIG_DIGITS = 7;
+function tensorToString(vals, shape, dtype, verbose) {
+    var strides = util_1.computeStrides(shape);
+    var padPerCol = computeMaxSizePerColumn(vals, shape, dtype, strides);
+    var rank = shape.length;
+    var valsLines = subTensorToString(vals, shape, dtype, strides, padPerCol);
+    var lines = ['Tensor'];
+    if (verbose) {
+        lines.push("  dtype: " + dtype);
+        lines.push("  rank: " + rank);
+        lines.push("  shape: [" + shape + "]");
+        lines.push("  values:");
+    }
+    lines.push(valsLines.map(function (l) { return '    ' + l; }).join('\n'));
+    return lines.join('\n');
+}
+exports.tensorToString = tensorToString;
+function computeMaxSizePerColumn(vals, shape, dtype, strides) {
+    var n = util_1.sizeFromShape(shape);
+    var numCols = strides[strides.length - 1];
+    var padPerCol = new Array(numCols).fill(0);
+    var rank = shape.length;
+    var valuesOrTuples = dtype === 'complex64' ? createComplexTuples(vals) : vals;
+    if (rank > 1) {
+        for (var row = 0; row < n / numCols; row++) {
+            var offset = row * numCols;
+            for (var j = 0; j < numCols; j++) {
+                padPerCol[j] = Math.max(padPerCol[j], valToString(valuesOrTuples[offset + j], 0).length);
+            }
+        }
+    }
+    return padPerCol;
+}
+function valToString(val, pad) {
+    var valStr;
+    if (Array.isArray(val)) {
+        valStr = parseFloat(val[0].toFixed(FORMAT_NUM_SIG_DIGITS)) + " + " +
+            (parseFloat(val[1].toFixed(FORMAT_NUM_SIG_DIGITS)) + "j");
+    }
+    else {
+        valStr = parseFloat(val.toFixed(FORMAT_NUM_SIG_DIGITS)).toString();
+    }
+    return util_1.rightPad(valStr, pad);
+}
+function subTensorToString(vals, shape, dtype, strides, padPerCol, isLast) {
+    if (isLast === void 0) { isLast = true; }
+    var storagePerElement = dtype === 'complex64' ? 2 : 1;
+    var size = shape[0];
+    var rank = shape.length;
+    if (rank === 0) {
+        if (dtype === 'complex64') {
+            var complexTuple = createComplexTuples(vals);
+            return [valToString(complexTuple[0], 0)];
+        }
+        return [vals[0].toString()];
+    }
+    if (rank === 1) {
+        if (size > FORMAT_LIMIT_NUM_VALS) {
+            var firstValsSize = FORMAT_NUM_FIRST_LAST_VALS * storagePerElement;
+            var firstVals = Array.from(vals.subarray(0, firstValsSize));
+            var lastVals = Array.from(vals.subarray(size - FORMAT_NUM_FIRST_LAST_VALS * storagePerElement, size));
+            if (dtype === 'complex64') {
+                firstVals = createComplexTuples(firstVals);
+                lastVals = createComplexTuples(lastVals);
+            }
+            return [
+                '[' + firstVals.map(function (x, i) { return valToString(x, padPerCol[i]); }).join(', ') +
+                    ', ..., ' +
+                    lastVals
+                        .map(function (x, i) { return valToString(x, padPerCol[size - FORMAT_NUM_FIRST_LAST_VALS + i]); })
+                        .join(', ') +
+                    ']'
+            ];
+        }
+        var displayVals = dtype === 'complex64' ? createComplexTuples(vals) : Array.from(vals);
+        return [
+            '[' + displayVals.map(function (x, i) { return valToString(x, padPerCol[i]); }).join(', ') +
+                ']'
+        ];
+    }
+    var subshape = shape.slice(1);
+    var substrides = strides.slice(1);
+    var stride = strides[0] * storagePerElement;
+    var lines = [];
+    if (size > FORMAT_LIMIT_NUM_VALS) {
+        for (var i = 0; i < FORMAT_NUM_FIRST_LAST_VALS; i++) {
+            var start = i * stride;
+            var end = start + stride;
+            lines.push.apply(lines, subTensorToString(vals.subarray(start, end), subshape, dtype, substrides, padPerCol, false));
+        }
+        lines.push('...');
+        for (var i = size - FORMAT_NUM_FIRST_LAST_VALS; i < size; i++) {
+            var start = i * stride;
+            var end = start + stride;
+            lines.push.apply(lines, subTensorToString(vals.subarray(start, end), subshape, dtype, substrides, padPerCol, i === size - 1));
+        }
+    }
+    else {
+        for (var i = 0; i < size; i++) {
+            var start = i * stride;
+            var end = start + stride;
+            lines.push.apply(lines, subTensorToString(vals.subarray(start, end), subshape, dtype, substrides, padPerCol, i === size - 1));
+        }
+    }
+    var sep = rank === 2 ? ',' : '';
+    lines[0] = '[' + lines[0] + sep;
+    for (var i = 1; i < lines.length - 1; i++) {
+        lines[i] = ' ' + lines[i] + sep;
+    }
+    var newLineSep = ',\n';
+    for (var i = 2; i < rank; i++) {
+        newLineSep += '\n';
+    }
+    lines[lines.length - 1] =
+        ' ' + lines[lines.length - 1] + ']' + (isLast ? '' : newLineSep);
+    return lines;
+}
+function createComplexTuples(vals) {
+    var complexTuples = [];
+    for (var i = 0; i < vals.length; i += 2) {
+        complexTuples.push([vals[i], vals[i + 1]]);
+    }
+    return complexTuples;
+}
+//# sourceMappingURL=tensor_format.js.map
+},{"./util":"node_modules\\@tensorflow\\tfjs-core\\dist\\util.js"}],"node_modules\\@tensorflow\\tfjs-core\\dist\\tensor.js":[function(require,module,exports) {
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var tensor_format_1 = require("./tensor_format");
+var util = require("./util");
+var util_1 = require("./util");
+var TensorBuffer = (function () {
+    function TensorBuffer(shape, dtype, values) {
+        this.dtype = dtype;
+        this.shape = shape.slice();
+        this.size = util.sizeFromShape(shape);
+        if (values != null) {
+            var n = values.length;
+            util.assert(n === this.size, "Length of values '" + n + "' does not match the size " +
+                ("inferred by the shape '" + this.size + "'."));
+        }
+        if (dtype === 'complex64') {
+            throw new Error("complex64 dtype TensorBuffers are not supported. Please create " +
+                "a TensorBuffer for the real and imaginary parts separately and " +
+                "call tf.complex(real, imag).");
+        }
+        this.values = values ||
+            util.getTypedArrayFromDType(dtype, util.sizeFromShape(this.shape));
+        this.strides = util_1.computeStrides(shape);
+    }
+    TensorBuffer.prototype.set = function (value) {
+        var locs = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            locs[_i - 1] = arguments[_i];
+        }
+        if (locs.length === 0) {
+            locs = [0];
+        }
+        util.assert(locs.length === this.rank, "The number of provided coordinates (" + locs.length + ") must " +
+            ("match the rank (" + this.rank + ")"));
+        var index = this.locToIndex(locs);
+        this.values[index] = value;
+    };
+    TensorBuffer.prototype.get = function () {
+        var locs = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            locs[_i] = arguments[_i];
+        }
+        if (locs.length === 0) {
+            locs = [0];
+        }
+        var index = locs[locs.length - 1];
+        for (var i = 0; i < locs.length - 1; ++i) {
+            index += this.strides[i] * locs[i];
+        }
+        return this.values[index];
+    };
+    TensorBuffer.prototype.locToIndex = function (locs) {
+        if (this.rank === 0) {
+            return 0;
+        }
+        else if (this.rank === 1) {
+            return locs[0];
+        }
+        var index = locs[locs.length - 1];
+        for (var i = 0; i < locs.length - 1; ++i) {
+            index += this.strides[i] * locs[i];
+        }
+        return index;
+    };
+    TensorBuffer.prototype.indexToLoc = function (index) {
+        if (this.rank === 0) {
+            return [];
+        }
+        else if (this.rank === 1) {
+            return [index];
+        }
+        var locs = new Array(this.shape.length);
+        for (var i = 0; i < locs.length - 1; ++i) {
+            locs[i] = Math.floor(index / this.strides[i]);
+            index -= locs[i] * this.strides[i];
+        }
+        locs[locs.length - 1] = index;
+        return locs;
+    };
+    Object.defineProperty(TensorBuffer.prototype, "rank", {
+        get: function () {
+            return this.shape.length;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TensorBuffer.prototype.toTensor = function () {
+        return Tensor.make(this.shape, { values: this.values }, this.dtype);
+    };
+    return TensorBuffer;
+}());
+exports.TensorBuffer = TensorBuffer;
+var trackerFn = null;
+var opHandler = null;
+function setTensorTracker(fn) {
+    trackerFn = fn;
+}
+exports.setTensorTracker = setTensorTracker;
+function setOpHandler(handler) {
+    opHandler = handler;
+}
+exports.setOpHandler = setOpHandler;
+var Tensor = (function () {
+    function Tensor(shape, dtype, values, dataId) {
+        this.isDisposedInternal = false;
+        this.shape = shape.slice();
+        this.dtype = dtype || 'float32';
+        this.size = util.sizeFromShape(shape);
+        if (values != null) {
+            util.assert(this.size === values.length, "Based on the provided shape, [" + shape + "], and dtype " +
+                (this.dtype + ", the tensor should have ") +
+                (this.size + " values but has " + values.length));
+        }
+        this.strides = util_1.computeStrides(shape);
+        this.dataId = dataId != null ? dataId : {};
+        this.id = Tensor.nextId++;
+        this.rankType = (this.rank < 5 ? this.rank.toString() : 'higher');
+        trackerFn().registerTensor(this);
+        if (values != null) {
+            trackerFn().write(this.dataId, values);
+        }
+    }
+    Tensor.make = function (shape, data, dtype) {
+        return new Tensor(shape, dtype, data.values, data.dataId);
+    };
+    Tensor.prototype.flatten = function () {
+        this.throwIfDisposed();
+        return this.as1D();
+    };
+    Tensor.prototype.asScalar = function () {
+        this.throwIfDisposed();
+        util.assert(this.size === 1, 'The array must have only 1 element.');
+        return this.reshape([]);
+    };
+    Tensor.prototype.as1D = function () {
+        this.throwIfDisposed();
+        return this.reshape([this.size]);
+    };
+    Tensor.prototype.as2D = function (rows, columns) {
+        this.throwIfDisposed();
+        return this.reshape([rows, columns]);
+    };
+    Tensor.prototype.as3D = function (rows, columns, depth) {
+        this.throwIfDisposed();
+        return this.reshape([rows, columns, depth]);
+    };
+    Tensor.prototype.as4D = function (rows, columns, depth, depth2) {
+        this.throwIfDisposed();
+        return this.reshape([rows, columns, depth, depth2]);
+    };
+    Tensor.prototype.asType = function (dtype) {
+        this.throwIfDisposed();
+        return opHandler.cast(this, dtype);
+    };
+    Object.defineProperty(Tensor.prototype, "rank", {
+        get: function () {
+            return this.shape.length;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Tensor.prototype.get = function () {
+        var locs = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            locs[_i] = arguments[_i];
+        }
+        util.assert(locs.length === this.rank, 'Number of coordinates in get() must match the rank of the tensor');
+        util.assert(this.dtype !== 'complex64', 'Tensor.get() is not supported for complex64 tensors yet.');
+        this.throwIfDisposed();
+        if (locs.length === 0) {
+            locs = [0];
+        }
+        var index = locs[locs.length - 1];
+        for (var i = 0; i < locs.length - 1; ++i) {
+            index += this.strides[i] * locs[i];
+        }
+        return this.dataSync()[index];
+    };
+    Tensor.prototype.buffer = function () {
+        return opHandler.buffer(this.shape, this.dtype, this.dataSync());
+    };
+    Tensor.prototype.data = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.throwIfDisposed();
+                return [2, trackerFn().read(this.dataId)];
+            });
+        });
+    };
+    Tensor.prototype.dataSync = function () {
+        this.throwIfDisposed();
+        return trackerFn().readSync(this.dataId);
+    };
+    Tensor.prototype.dispose = function () {
+        if (this.isDisposed) {
+            return;
+        }
+        trackerFn().disposeTensor(this);
+        this.isDisposedInternal = true;
+    };
+    Object.defineProperty(Tensor.prototype, "isDisposed", {
+        get: function () {
+            return this.isDisposedInternal;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Tensor.prototype.throwIfDisposed = function () {
+        if (this.isDisposed) {
+            throw new Error("Tensor is disposed.");
+        }
+    };
+    Tensor.prototype.toFloat = function () {
+        return this.asType('float32');
+    };
+    Tensor.prototype.toInt = function () {
+        return this.asType('int32');
+    };
+    Tensor.prototype.toBool = function () {
+        return this.asType('bool');
+    };
+    Tensor.prototype.print = function (verbose) {
+        if (verbose === void 0) { verbose = false; }
+        return opHandler.print(this, verbose);
+    };
+    Tensor.prototype.reshape = function (newShape) {
+        this.throwIfDisposed();
+        return opHandler.reshape(this, newShape);
+    };
+    Tensor.prototype.reshapeAs = function (x) {
+        this.throwIfDisposed();
+        return this.reshape(x.shape);
+    };
+    Tensor.prototype.expandDims = function (axis) {
+        if (axis === void 0) { axis = 0; }
+        return opHandler.expandDims(this, axis);
+    };
+    Tensor.prototype.cumsum = function (axis, exclusive, reverse) {
+        if (axis === void 0) { axis = 0; }
+        if (exclusive === void 0) { exclusive = false; }
+        if (reverse === void 0) { reverse = false; }
+        return opHandler.cumsum(this, axis, exclusive, reverse);
+    };
+    Tensor.prototype.squeeze = function (axis) {
+        this.throwIfDisposed();
+        return opHandler.squeeze(this, axis);
+    };
+    Tensor.prototype.clone = function () {
+        this.throwIfDisposed();
+        return opHandler.clone(this);
+    };
+    Tensor.prototype.toString = function (verbose) {
+        if (verbose === void 0) { verbose = false; }
+        var vals = this.dataSync();
+        return tensor_format_1.tensorToString(vals, this.shape, this.dtype, verbose);
+    };
+    Tensor.prototype.tile = function (reps) {
+        this.throwIfDisposed();
+        return opHandler.tile(this, reps);
+    };
+    Tensor.prototype.gather = function (indices, axis) {
+        if (axis === void 0) { axis = 0; }
+        this.throwIfDisposed();
+        return opHandler.gather(this, indices, axis);
+    };
+    Tensor.prototype.matMul = function (b, transposeA, transposeB) {
+        if (transposeA === void 0) { transposeA = false; }
+        if (transposeB === void 0) { transposeB = false; }
+        this.throwIfDisposed();
+        return opHandler.matMul(this, b, transposeA, transposeB);
+    };
+    Tensor.prototype.dot = function (b) {
+        this.throwIfDisposed();
+        return opHandler.dot(this, b);
+    };
+    Tensor.prototype.norm = function (ord, axis, keepDims) {
+        if (ord === void 0) { ord = 'euclidean'; }
+        if (axis === void 0) { axis = null; }
+        if (keepDims === void 0) { keepDims = false; }
+        this.throwIfDisposed();
+        return opHandler.norm(this, ord, axis, keepDims);
+    };
+    Tensor.prototype.slice = function (begin, size) {
+        this.throwIfDisposed();
+        return opHandler.slice(this, begin, size);
+    };
+    Tensor.prototype.reverse = function (axis) {
+        this.throwIfDisposed();
+        return opHandler.reverse(this, axis);
+    };
+    Tensor.prototype.concat = function (x, axis) {
+        if (axis === void 0) { axis = 0; }
+        this.throwIfDisposed();
+        return opHandler.concat([this, x], axis);
+    };
+    Tensor.prototype.split = function (numOrSizeSplits, axis) {
+        if (axis === void 0) { axis = 0; }
+        this.throwIfDisposed();
+        return opHandler.split(this, numOrSizeSplits, axis);
+    };
+    Tensor.prototype.stack = function (x, axis) {
+        if (axis === void 0) { axis = 0; }
+        return opHandler.stack([this, x], axis);
+    };
+    Tensor.prototype.unstack = function (x, axis) {
+        if (axis === void 0) { axis = 0; }
+        return opHandler.unstack(this, axis);
+    };
+    Tensor.prototype.pad = function (paddings, constantValue) {
+        if (constantValue === void 0) { constantValue = 0; }
+        return opHandler.pad(this, paddings, constantValue);
+    };
+    Tensor.prototype.batchNormalization = function (mean, variance, varianceEpsilon, scale, offset) {
+        if (varianceEpsilon === void 0) { varianceEpsilon = .001; }
+        this.throwIfDisposed();
+        return opHandler.batchNormalization(this, mean, variance, varianceEpsilon, scale, offset);
+    };
+    Tensor.prototype.all = function (axis, keepDims) {
+        if (axis === void 0) { axis = null; }
+        if (keepDims === void 0) { keepDims = false; }
+        this.throwIfDisposed();
+        return opHandler.all(this, axis, keepDims);
+    };
+    Tensor.prototype.any = function (axis, keepDims) {
+        if (axis === void 0) { axis = null; }
+        if (keepDims === void 0) { keepDims = false; }
+        this.throwIfDisposed();
+        return opHandler.any(this, axis, keepDims);
+    };
+    Tensor.prototype.logSumExp = function (axis, keepDims) {
+        if (axis === void 0) { axis = null; }
+        if (keepDims === void 0) { keepDims = false; }
+        this.throwIfDisposed();
+        return opHandler.logSumExp(this, axis, keepDims);
+    };
+    Tensor.prototype.sum = function (axis, keepDims) {
+        if (axis === void 0) { axis = null; }
+        if (keepDims === void 0) { keepDims = false; }
+        this.throwIfDisposed();
+        return opHandler.sum(this, axis, keepDims);
+    };
+    Tensor.prototype.mean = function (axis, keepDims) {
+        if (axis === void 0) { axis = null; }
+        if (keepDims === void 0) { keepDims = false; }
+        this.throwIfDisposed();
+        return opHandler.mean(this, axis, keepDims);
+    };
+    Tensor.prototype.min = function (axis, keepDims) {
+        if (axis === void 0) { axis = null; }
+        if (keepDims === void 0) { keepDims = false; }
+        this.throwIfDisposed();
+        return opHandler.min(this, axis, keepDims);
+    };
+    Tensor.prototype.max = function (axis, keepDims) {
+        if (axis === void 0) { axis = null; }
+        if (keepDims === void 0) { keepDims = false; }
+        this.throwIfDisposed();
+        return opHandler.max(this, axis, keepDims);
+    };
+    Tensor.prototype.argMin = function (axis) {
+        if (axis === void 0) { axis = null; }
+        this.throwIfDisposed();
+        return opHandler.argMin(this, axis);
+    };
+    Tensor.prototype.argMax = function (axis) {
+        if (axis === void 0) { axis = null; }
+        this.throwIfDisposed();
+        return opHandler.argMax(this, axis);
+    };
+    Tensor.prototype.cast = function (dtype) {
+        this.throwIfDisposed();
+        return opHandler.cast(this, dtype);
+    };
+    Tensor.prototype.add = function (x) {
+        this.throwIfDisposed();
+        return opHandler.add(this, x);
+    };
+    Tensor.prototype.addStrict = function (x) {
+        this.throwIfDisposed();
+        return opHandler.addStrict(this, x);
+    };
+    Tensor.prototype.atan2 = function (x) {
+        this.throwIfDisposed();
+        return opHandler.atan2(this, x);
+    };
+    Tensor.prototype.sub = function (x) {
+        this.throwIfDisposed();
+        return opHandler.sub(this, x);
+    };
+    Tensor.prototype.subStrict = function (x) {
+        this.throwIfDisposed();
+        return opHandler.subStrict(this, x);
+    };
+    Tensor.prototype.pow = function (exp) {
+        this.throwIfDisposed();
+        return opHandler.pow(this, exp);
+    };
+    Tensor.prototype.powStrict = function (exp) {
+        this.throwIfDisposed();
+        return opHandler.powStrict(this, exp);
+    };
+    Tensor.prototype.mul = function (x) {
+        this.throwIfDisposed();
+        return opHandler.mul(this, x);
+    };
+    Tensor.prototype.mulStrict = function (x) {
+        this.throwIfDisposed();
+        return opHandler.mulStrict(this, x);
+    };
+    Tensor.prototype.div = function (x) {
+        this.throwIfDisposed();
+        return opHandler.div(this, x);
+    };
+    Tensor.prototype.floorDiv = function (x) {
+        this.throwIfDisposed();
+        return opHandler.floorDiv(this, x);
+    };
+    Tensor.prototype.divStrict = function (x) {
+        this.throwIfDisposed();
+        return opHandler.divStrict(this, x);
+    };
+    Tensor.prototype.minimum = function (x) {
+        this.throwIfDisposed();
+        return opHandler.minimum(this, x);
+    };
+    Tensor.prototype.minimumStrict = function (x) {
+        this.throwIfDisposed();
+        return opHandler.minimumStrict(this, x);
+    };
+    Tensor.prototype.maximum = function (x) {
+        this.throwIfDisposed();
+        return opHandler.maximum(this, x);
+    };
+    Tensor.prototype.maximumStrict = function (x) {
+        this.throwIfDisposed();
+        return opHandler.maximumStrict(this, x);
+    };
+    Tensor.prototype.mod = function (x) {
+        this.throwIfDisposed();
+        return opHandler.mod(this, x);
+    };
+    Tensor.prototype.modStrict = function (x) {
+        this.throwIfDisposed();
+        return opHandler.modStrict(this, x);
+    };
+    Tensor.prototype.squaredDifference = function (x) {
+        this.throwIfDisposed();
+        return opHandler.squaredDifference(this, x);
+    };
+    Tensor.prototype.squaredDifferenceStrict = function (x) {
+        this.throwIfDisposed();
+        return opHandler.squaredDifferenceStrict(this, x);
+    };
+    Tensor.prototype.transpose = function (perm) {
+        this.throwIfDisposed();
+        return opHandler.transpose(this, perm);
+    };
+    Tensor.prototype.notEqual = function (x) {
+        this.throwIfDisposed();
+        return opHandler.notEqual(this, x);
+    };
+    Tensor.prototype.notEqualStrict = function (x) {
+        this.throwIfDisposed();
+        return opHandler.notEqualStrict(this, x);
+    };
+    Tensor.prototype.less = function (x) {
+        this.throwIfDisposed();
+        return opHandler.less(this, x);
+    };
+    Tensor.prototype.lessStrict = function (x) {
+        this.throwIfDisposed();
+        return opHandler.lessStrict(this, x);
+    };
+    Tensor.prototype.equal = function (x) {
+        this.throwIfDisposed();
+        return opHandler.equal(this, x);
+    };
+    Tensor.prototype.equalStrict = function (x) {
+        this.throwIfDisposed();
+        return opHandler.equalStrict(this, x);
+    };
+    Tensor.prototype.lessEqual = function (x) {
+        this.throwIfDisposed();
+        return opHandler.lessEqual(this, x);
+    };
+    Tensor.prototype.lessEqualStrict = function (x) {
+        this.throwIfDisposed();
+        return opHandler.lessEqualStrict(this, x);
+    };
+    Tensor.prototype.greater = function (x) {
+        this.throwIfDisposed();
+        return opHandler.greater(this, x);
+    };
+    Tensor.prototype.greaterStrict = function (x) {
+        this.throwIfDisposed();
+        return opHandler.greaterStrict(this, x);
+    };
+    Tensor.prototype.greaterEqual = function (x) {
+        this.throwIfDisposed();
+        return opHandler.greaterEqual(this, x);
+    };
+    Tensor.prototype.greaterEqualStrict = function (x) {
+        this.throwIfDisposed();
+        return opHandler.greaterEqualStrict(this, x);
+    };
+    Tensor.prototype.logicalAnd = function (x) {
+        this.throwIfDisposed();
+        return opHandler.logicalAnd(this, x);
+    };
+    Tensor.prototype.logicalOr = function (x) {
+        this.throwIfDisposed();
+        return opHandler.logicalOr(this, x);
+    };
+    Tensor.prototype.logicalNot = function () {
+        this.throwIfDisposed();
+        return opHandler.logicalNot(this);
+    };
+    Tensor.prototype.logicalXor = function (x) {
+        this.throwIfDisposed();
+        return opHandler.logicalXor(this, x);
+    };
+    Tensor.prototype.where = function (condition, x) {
+        this.throwIfDisposed();
+        return opHandler.where(condition, this, x);
+    };
+    Tensor.prototype.neg = function () {
+        this.throwIfDisposed();
+        return opHandler.neg(this);
+    };
+    Tensor.prototype.ceil = function () {
+        this.throwIfDisposed();
+        return opHandler.ceil(this);
+    };
+    Tensor.prototype.floor = function () {
+        this.throwIfDisposed();
+        return opHandler.floor(this);
+    };
+    Tensor.prototype.sign = function () {
+        this.throwIfDisposed();
+        return opHandler.sign(this);
+    };
+    Tensor.prototype.exp = function () {
+        this.throwIfDisposed();
+        return opHandler.exp(this);
+    };
+    Tensor.prototype.expm1 = function () {
+        this.throwIfDisposed();
+        return opHandler.expm1(this);
+    };
+    Tensor.prototype.log = function () {
+        this.throwIfDisposed();
+        return opHandler.log(this);
+    };
+    Tensor.prototype.log1p = function () {
+        this.throwIfDisposed();
+        return opHandler.log1p(this);
+    };
+    Tensor.prototype.sqrt = function () {
+        this.throwIfDisposed();
+        return opHandler.sqrt(this);
+    };
+    Tensor.prototype.rsqrt = function () {
+        this.throwIfDisposed();
+        return opHandler.rsqrt(this);
+    };
+    Tensor.prototype.square = function () {
+        this.throwIfDisposed();
+        return opHandler.square(this);
+    };
+    Tensor.prototype.reciprocal = function () {
+        this.throwIfDisposed();
+        return opHandler.reciprocal(this);
+    };
+    Tensor.prototype.abs = function () {
+        this.throwIfDisposed();
+        return opHandler.abs(this);
+    };
+    Tensor.prototype.clipByValue = function (min, max) {
+        this.throwIfDisposed();
+        return opHandler.clipByValue(this, min, max);
+    };
+    Tensor.prototype.relu = function () {
+        this.throwIfDisposed();
+        return opHandler.relu(this);
+    };
+    Tensor.prototype.elu = function () {
+        this.throwIfDisposed();
+        return opHandler.elu(this);
+    };
+    Tensor.prototype.selu = function () {
+        this.throwIfDisposed();
+        return opHandler.selu(this);
+    };
+    Tensor.prototype.leakyRelu = function (alpha) {
+        if (alpha === void 0) { alpha = 0.2; }
+        this.throwIfDisposed();
+        return opHandler.leakyRelu(this, alpha);
+    };
+    Tensor.prototype.prelu = function (alpha) {
+        this.throwIfDisposed();
+        return opHandler.prelu(this, alpha);
+    };
+    Tensor.prototype.sigmoid = function () {
+        this.throwIfDisposed();
+        return opHandler.sigmoid(this);
+    };
+    Tensor.prototype.logSigmoid = function () {
+        this.throwIfDisposed();
+        return opHandler.logSigmoid(this);
+    };
+    Tensor.prototype.softplus = function () {
+        this.throwIfDisposed();
+        return opHandler.softplus(this);
+    };
+    Tensor.prototype.zerosLike = function () {
+        this.throwIfDisposed();
+        return opHandler.zerosLike(this);
+    };
+    Tensor.prototype.onesLike = function () {
+        this.throwIfDisposed();
+        return opHandler.onesLike(this);
+    };
+    Tensor.prototype.sin = function () {
+        this.throwIfDisposed();
+        return opHandler.sin(this);
+    };
+    Tensor.prototype.cos = function () {
+        this.throwIfDisposed();
+        return opHandler.cos(this);
+    };
+    Tensor.prototype.tan = function () {
+        this.throwIfDisposed();
+        return opHandler.tan(this);
+    };
+    Tensor.prototype.asin = function () {
+        this.throwIfDisposed();
+        return opHandler.asin(this);
+    };
+    Tensor.prototype.acos = function () {
+        this.throwIfDisposed();
+        return opHandler.acos(this);
+    };
+    Tensor.prototype.atan = function () {
+        this.throwIfDisposed();
+        return opHandler.atan(this);
+    };
+    Tensor.prototype.sinh = function () {
+        this.throwIfDisposed();
+        return opHandler.sinh(this);
+    };
+    Tensor.prototype.cosh = function () {
+        this.throwIfDisposed();
+        return opHandler.cosh(this);
+    };
+    Tensor.prototype.tanh = function () {
+        this.throwIfDisposed();
+        return opHandler.tanh(this);
+    };
+    Tensor.prototype.asinh = function () {
+        this.throwIfDisposed();
+        return opHandler.asinh(this);
+    };
+    Tensor.prototype.acosh = function () {
+        this.throwIfDisposed();
+        return opHandler.acosh(this);
+    };
+    Tensor.prototype.atanh = function () {
+        this.throwIfDisposed();
+        return opHandler.atanh(this);
+    };
+    Tensor.prototype.erf = function () {
+        this.throwIfDisposed();
+        return opHandler.erf(this);
+    };
+    Tensor.prototype.round = function () {
+        this.throwIfDisposed();
+        return opHandler.round(this);
+    };
+    Tensor.prototype.step = function (alpha) {
+        if (alpha === void 0) { alpha = 0.0; }
+        this.throwIfDisposed();
+        return opHandler.step(this, alpha);
+    };
+    Tensor.prototype.softmax = function (dim) {
+        if (dim === void 0) { dim = -1; }
+        this.throwIfDisposed();
+        return opHandler.softmax(this, dim);
+    };
+    Tensor.prototype.resizeBilinear = function (newShape2D, alignCorners) {
+        if (alignCorners === void 0) { alignCorners = false; }
+        this.throwIfDisposed();
+        return opHandler.image.resizeBilinear(this, newShape2D, alignCorners);
+    };
+    Tensor.prototype.resizeNearestNeighbor = function (newShape2D, alignCorners) {
+        if (alignCorners === void 0) { alignCorners = false; }
+        this.throwIfDisposed();
+        return opHandler.image.resizeNearestNeighbor(this, newShape2D, alignCorners);
+    };
+    Tensor.prototype.conv1d = function (filter, stride, pad, dataFormat, dilation, dimRoundingMode) {
+        if (dataFormat === void 0) { dataFormat = 'NWC'; }
+        if (dilation === void 0) { dilation = 1; }
+        this.throwIfDisposed();
+        return opHandler.conv1d(this, filter, stride, pad, dataFormat, dilation, dimRoundingMode);
+    };
+    Tensor.prototype.conv2d = function (filter, strides, pad, dataFormat, dilations, dimRoundingMode) {
+        if (dataFormat === void 0) { dataFormat = 'NHWC'; }
+        if (dilations === void 0) { dilations = [1, 1]; }
+        this.throwIfDisposed();
+        return opHandler.conv2d(this, filter, strides, pad, dataFormat, dilations, dimRoundingMode);
+    };
+    Tensor.prototype.conv2dTranspose = function (filter, outputShape, strides, pad, dimRoundingMode) {
+        this.throwIfDisposed();
+        return opHandler.conv2dTranspose(this, filter, outputShape, strides, pad, dimRoundingMode);
+    };
+    Tensor.prototype.depthwiseConv2D = function (filter, strides, pad, dataFormat, dilations, dimRoundingMode) {
+        if (dataFormat === void 0) { dataFormat = 'NHWC'; }
+        if (dilations === void 0) { dilations = [1, 1]; }
+        this.throwIfDisposed();
+        return opHandler.depthwiseConv2d(this, filter, strides, pad, dataFormat, dilations, dimRoundingMode);
+    };
+    Tensor.prototype.separableConv2d = function (depthwiseFilter, pointwiseFilter, strides, pad, dilation, dataFormat) {
+        if (dilation === void 0) { dilation = [1, 1]; }
+        if (dataFormat === void 0) { dataFormat = 'NHWC'; }
+        this.throwIfDisposed();
+        return opHandler.separableConv2d(this, depthwiseFilter, pointwiseFilter, strides, pad, dilation, dataFormat);
+    };
+    Tensor.prototype.avgPool = function (filterSize, strides, pad, dimRoundingMode) {
+        this.throwIfDisposed();
+        return opHandler.avgPool(this, filterSize, strides, pad, dimRoundingMode);
+    };
+    Tensor.prototype.maxPool = function (filterSize, strides, pad, dimRoundingMode) {
+        this.throwIfDisposed();
+        return opHandler.maxPool(this, filterSize, strides, pad, dimRoundingMode);
+    };
+    Tensor.prototype.localResponseNormalization = function (radius, bias, alpha, beta) {
+        if (radius === void 0) { radius = 5; }
+        if (bias === void 0) { bias = 1; }
+        if (alpha === void 0) { alpha = 1; }
+        if (beta === void 0) { beta = 0.5; }
+        return opHandler.localResponseNormalization(this, radius, bias, alpha, beta);
+    };
+    Tensor.prototype.variable = function (trainable, name, dtype) {
+        if (trainable === void 0) { trainable = true; }
+        this.throwIfDisposed();
+        return Variable.variable(this, trainable, name, dtype);
+    };
+    Tensor.prototype.unsortedSegmentSum = function (segmentIds, numSegments) {
+        this.throwIfDisposed();
+        return opHandler.unsortedSegmentSum(this, segmentIds, numSegments);
+    };
+    Tensor.prototype.batchToSpaceND = function (blockShape, crops) {
+        this.throwIfDisposed();
+        return opHandler.batchToSpaceND(this, blockShape, crops);
+    };
+    Tensor.prototype.spaceToBatchND = function (blockShape, paddings) {
+        this.throwIfDisposed();
+        return opHandler.spaceToBatchND(this, blockShape, paddings);
+    };
+    Tensor.prototype.topk = function (k, sorted) {
+        if (k === void 0) { k = 1; }
+        if (sorted === void 0) { sorted = true; }
+        this.throwIfDisposed();
+        return opHandler.topk(this, k, sorted);
+    };
+    Tensor.prototype.stridedSlice = function (begin, end, strides, beginMask, endMask) {
+        if (beginMask === void 0) { beginMask = 0; }
+        if (endMask === void 0) { endMask = 0; }
+        this.throwIfDisposed();
+        return opHandler.stridedSlice(this, begin, end, strides, beginMask, endMask);
+    };
+    Tensor.prototype.depthToSpace = function (blockSize, dataFormat) {
+        this.throwIfDisposed();
+        return opHandler.depthToSpace(this, blockSize, dataFormat);
+    };
+    Tensor.nextId = 0;
+    return Tensor;
+}());
+exports.Tensor = Tensor;
+Object.defineProperty(Tensor, Symbol.hasInstance, {
+    value: function (instance) {
+        return !!instance && instance.shape != null && instance.dtype != null;
+    }
+});
+var Variable = (function (_super) {
+    __extends(Variable, _super);
+    function Variable(initialValue, trainable, name) {
+        if (trainable === void 0) { trainable = true; }
+        var _this = _super.call(this, initialValue.shape, initialValue.dtype, null, initialValue.dataId) || this;
+        _this.trainable = trainable;
+        _this.name = name;
+        if (_this.name == null) {
+            _this.name = Variable.nextVarId.toString();
+            Variable.nextVarId++;
+        }
+        try {
+            trackerFn().registerVariable(_this);
+        }
+        catch (ex) {
+            trackerFn().disposeTensor(_this);
+            throw ex;
+        }
+        return _this;
+    }
+    Variable.variable = function (initialValue, trainable, name, dtype) {
+        if (trainable === void 0) { trainable = true; }
+        if (dtype != null && dtype !== initialValue.dtype) {
+            initialValue = initialValue.asType(dtype);
+        }
+        return new Variable(initialValue, trainable, name);
+    };
+    Variable.prototype.assign = function (newValue) {
+        if (newValue.dtype !== this.dtype) {
+            throw new Error("dtype of the new value (" + newValue.dtype + ") and " +
+                ("previous value (" + this.dtype + ") must match"));
+        }
+        if (!util.arraysEqual(newValue.shape, this.shape)) {
+            throw new Error("shape of the new value (" + newValue.shape + ") and " +
+                ("previous value (" + this.shape + ") must match"));
+        }
+        trackerFn().disposeTensor(this);
+        this.dataId = newValue.dataId;
+        trackerFn().registerTensor(this);
+    };
+    Variable.nextVarId = 0;
+    return Variable;
+}(Tensor));
+exports.Variable = Variable;
+Object.defineProperty(Variable, Symbol.hasInstance, {
+    value: function (instance) {
+        return instance instanceof Tensor && instance.assign != null &&
+            instance.assign instanceof Function;
+    }
+});
+var variable = Variable.variable;
+exports.variable = variable;
+//# sourceMappingURL=tensor.js.map
+},{"./tensor_format":"node_modules\\@tensorflow\\tfjs-core\\dist\\tensor_format.js","./util":"node_modules\\@tensorflow\\tfjs-core\\dist\\util.js"}],"node_modules\\@tensorflow\\tfjs-core\\dist\\tape.js":[function(require,module,exports) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var tensor_1 = require("./tensor");
+var util = require("./util");
+function getFilteredNodesXToY(tape, xs, y) {
+    var tensorsFromX = {};
+    var nodesFromX = {};
+    for (var i = 0; i < xs.length; i++) {
+        tensorsFromX[xs[i].id] = true;
+    }
+    for (var i = 0; i < tape.length; i++) {
+        var node = tape[i];
+        var nodeInputs = node.inputs;
+        for (var inputName in nodeInputs) {
+            var input = nodeInputs[inputName];
+            var anyInputFromX = false;
+            for (var j = 0; j < xs.length; j++) {
+                if (tensorsFromX[input.id]) {
+                    node.outputs.forEach(function (output) { return tensorsFromX[output.id] = true; });
+                    anyInputFromX = true;
+                    nodesFromX[node.id] = true;
+                    break;
+                }
+            }
+            if (anyInputFromX) {
+                break;
+            }
+        }
+    }
+    var tensorsLeadToY = {};
+    tensorsLeadToY[y.id] = true;
+    var nodesToY = {};
+    for (var i = tape.length - 1; i >= 0; i--) {
+        var node = tape[i];
+        var nodeInputs = node.inputs;
+        for (var j = 0; j < node.outputs.length; j++) {
+            if (tensorsLeadToY[node.outputs[j].id]) {
+                for (var inputName in nodeInputs) {
+                    tensorsLeadToY[nodeInputs[inputName].id] = true;
+                    nodesToY[node.id] = true;
+                }
+                break;
+            }
+        }
+    }
+    var filteredTape = [];
+    for (var i = 0; i < tape.length; i++) {
+        var node = tape[i];
+        if (nodesFromX[node.id] && nodesToY[node.id]) {
+            var prunedInputs = {};
+            for (var inputName in node.inputs) {
+                var nodeInput = node.inputs[inputName];
+                if (tensorsFromX[nodeInput.id]) {
+                    prunedInputs[inputName] = nodeInput;
+                }
+            }
+            var prunedNode = Object.assign({}, node);
+            prunedNode.inputs = prunedInputs;
+            prunedNode.outputs = node.outputs;
+            filteredTape.push(prunedNode);
+        }
+    }
+    return filteredTape;
+}
+exports.getFilteredNodesXToY = getFilteredNodesXToY;
+function backpropagateGradients(tensorAccumulatedGradientMap, filteredTape) {
+    var _loop_1 = function (i) {
+        var node = filteredTape[i];
+        var dys = [];
+        node.outputs.forEach(function (o) {
+            var gradTensor = tensorAccumulatedGradientMap[o.id];
+            if (gradTensor != null) {
+                dys.push(gradTensor);
+            }
+            else {
+                var dy = tensor_1.Tensor.make(o.shape, { values: util.makeZerosTypedArray(o.size, o.dtype) }, o.dtype);
+                dys.push(dy);
+            }
+        });
+        if (node.gradient == null) {
+            throw new Error("Cannot compute gradient: gradient function not found " +
+                ("for " + node.name + "."));
+        }
+        var inputGradients = node.gradient(node.outputs.length === 1 ? dys[0] : dys);
+        for (var inputName in node.inputs) {
+            if (!(inputName in inputGradients)) {
+                throw new Error("Cannot backprop through input " + inputName + ". " +
+                    ("Available gradients found: " + Object.keys(inputGradients) + "."));
+            }
+            var dx = inputGradients[inputName]();
+            var x = node.inputs[inputName];
+            if (!util.arraysEqual(dx.shape, x.shape)) {
+                throw new Error("Error in gradient for op " + node.name + ". The gradient of input " +
+                    ("'" + inputName + "' has shape '" + dx.shape + "', which does not match ") +
+                    ("the shape of the input '" + x.shape + "'"));
+            }
+            if (tensorAccumulatedGradientMap[x.id] == null) {
+                tensorAccumulatedGradientMap[x.id] = dx;
+            }
+            else {
+                var curGradient = tensorAccumulatedGradientMap[x.id];
+                tensorAccumulatedGradientMap[x.id] = curGradient.add(dx);
+                curGradient.dispose();
+            }
+        }
+    };
+    for (var i = filteredTape.length - 1; i >= 0; i--) {
+        _loop_1(i);
+    }
+}
+exports.backpropagateGradients = backpropagateGradients;
+//# sourceMappingURL=tape.js.map
+},{"./tensor":"node_modules\\@tensorflow\\tfjs-core\\dist\\tensor.js","./util":"node_modules\\@tensorflow\\tfjs-core\\dist\\util.js"}],"node_modules\\@tensorflow\\tfjs-core\\dist\\tensor_util.js":[function(require,module,exports) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var tensor_1 = require("./tensor");
+var util_1 = require("./util");
+function assertTypesMatch(a, b) {
+    util_1.assert(a.dtype === b.dtype, "The dtypes of the first(" + a.dtype + ") and" +
+        (" second(" + b.dtype + ") input must match"));
+}
+exports.assertTypesMatch = assertTypesMatch;
+function isTensorInList(tensor, tensorList) {
+    for (var i = 0; i < tensorList.length; i++) {
+        if (tensorList[i].id === tensor.id) {
+            return true;
+        }
+    }
+    return false;
+}
+exports.isTensorInList = isTensorInList;
+function flattenNameArrayMap(nameArrayMap, keys) {
+    var xs = [];
+    if (nameArrayMap instanceof tensor_1.Tensor) {
+        xs.push(nameArrayMap);
+    }
+    else {
+        var xMap = nameArrayMap;
+        for (var i = 0; i < keys.length; i++) {
+            xs.push(xMap[keys[i]]);
+        }
+    }
+    return xs;
+}
+exports.flattenNameArrayMap = flattenNameArrayMap;
+function unflattenToNameArrayMap(keys, flatArrays) {
+    if (keys.length !== flatArrays.length) {
+        throw new Error("Cannot unflatten Tensor[], keys and arrays are not of same length.");
+    }
+    var result = {};
+    for (var i = 0; i < keys.length; i++) {
+        result[keys[i]] = flatArrays[i];
+    }
+    return result;
+}
+exports.unflattenToNameArrayMap = unflattenToNameArrayMap;
+function getTensorsInContainer(result) {
+    var list = [];
+    var seen = new Set();
+    walkTensorContainer(result, list, seen);
+    return list;
+}
+exports.getTensorsInContainer = getTensorsInContainer;
+function walkTensorContainer(container, list, seen) {
+    if (container == null) {
+        return;
+    }
+    if (container instanceof tensor_1.Tensor) {
+        list.push(container);
+        return;
+    }
+    if (!isIterable(container)) {
+        return;
+    }
+    var iterable = container;
+    for (var k in iterable) {
+        var val = iterable[k];
+        if (!seen.has(val)) {
+            seen.add(val);
+            walkTensorContainer(val, list, seen);
+        }
+    }
+}
+function isIterable(obj) {
+    return Array.isArray(obj) || typeof obj === 'object';
+}
+//# sourceMappingURL=tensor_util.js.map
+},{"./tensor":"node_modules\\@tensorflow\\tfjs-core\\dist\\tensor.js","./util":"node_modules\\@tensorflow\\tfjs-core\\dist\\util.js"}],"node_modules\\@tensorflow\\tfjs-core\\dist\\engine.js":[function(require,module,exports) {
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var profiler_1 = require("./profiler");
+var tape_1 = require("./tape");
+var tensor_1 = require("./tensor");
+var tensor_util_1 = require("./tensor_util");
+var util = require("./util");
+var util_1 = require("./util");
+var Engine = (function () {
+    function Engine(backend, safeMode, debugMode) {
+        this.backend = backend;
+        this.safeMode = safeMode;
+        this.debugMode = debugMode;
+        this.registeredVariables = {};
+        this.refCounter = new WeakMap();
+        this.nextTapeNodeId = 0;
+        this.numBytes = 0;
+        this.numTensors = 0;
+        this.numDataBuffers = 0;
+        this.gradientScopeCount = 0;
+        this.customGradientDepth = 0;
+        this.keepTensors = new Set();
+        this.activeScope = { track: [], name: 'default scope' };
+        this.scopeStack = [this.activeScope];
+        this.profiler = new profiler_1.Profiler(backend);
+    }
+    Engine.prototype.tidy = function (nameOrFn, fn, gradMode) {
+        var _this = this;
+        if (gradMode === void 0) { gradMode = false; }
+        var name = null;
+        if (fn == null) {
+            if (typeof nameOrFn !== 'function') {
+                throw new Error('Please provide a function to tidy()');
+            }
+            fn = nameOrFn;
+        }
+        else {
+            if (typeof nameOrFn !== 'string' && !(nameOrFn instanceof String)) {
+                throw new Error('When calling with two arguments, the first argument ' +
+                    'to tidy() must be a string');
+            }
+            if (typeof fn !== 'function') {
+                throw new Error('When calling with two arguments, the 2nd argument ' +
+                    'to tidy() must be a function');
+            }
+            name = nameOrFn;
+        }
+        var result;
+        return this.scopedRun(function () { return _this.startScope(name, gradMode); }, function () { return _this.endScope(result, gradMode); }, function () {
+            result = fn();
+            if (result instanceof Promise) {
+                console.error('Cannot return a Promise inside of tidy.');
+            }
+            return result;
+        });
+    };
+    Engine.prototype.scopedRun = function (start, end, f) {
+        start();
+        try {
+            var res = f();
+            end();
+            return res;
+        }
+        catch (ex) {
+            end();
+            throw ex;
+        }
+    };
+    Engine.prototype.runKernel = function (forwardFunc, inputs, backwardsFunc) {
+        var _this = this;
+        var result;
+        var saved = [];
+        var saveFunc = function (x) {
+            saved.push(x);
+            return x;
+        };
+        var scopeName = this.activeScope.name;
+        this.scopedRun(function () { return _this.customGradientDepth++; }, function () { return _this.customGradientDepth--; }, function () {
+            if (!_this.debugMode()) {
+                result = forwardFunc(_this.backend, saveFunc);
+            }
+            else {
+                result = _this.profiler.profileKernel(scopeName, function () { return forwardFunc(_this.backend, saveFunc); });
+            }
+        });
+        if (this.shouldRecord()) {
+            var tapeNode = {
+                id: this.nextTapeNodeId++,
+                name: scopeName,
+                inputs: inputs,
+                outputs: Array.isArray(result) ? result : [result]
+            };
+            if (backwardsFunc != null) {
+                tapeNode.gradient =
+                    (function (dy) { return backwardsFunc(dy, saved); });
+            }
+            this.activeTape.push(tapeNode);
+        }
+        return result;
+    };
+    Engine.prototype.registerTensor = function (a) {
+        var refCount = this.refCounter.has(a.dataId) ? this.refCounter.get(a.dataId) : 0;
+        this.numTensors++;
+        if (refCount === 0) {
+            this.numDataBuffers++;
+            if (a.dtype !== 'complex64') {
+                this.numBytes +=
+                    util.sizeFromShape(a.shape) * util.bytesPerElement(a.dtype);
+            }
+            this.backend.register(a.dataId, a.shape, a.dtype);
+        }
+        this.refCounter.set(a.dataId, refCount + 1);
+        if (!(a instanceof tensor_1.Variable)) {
+            this.track(a);
+        }
+    };
+    Engine.prototype.registerVariable = function (v) {
+        if (this.registeredVariables[v.name] != null) {
+            throw new Error("Variable with name " + v.name + " was already registered");
+        }
+        this.registeredVariables[v.name] = v;
+    };
+    Engine.prototype.disposeTensor = function (a) {
+        if (!this.refCounter.has(a.dataId)) {
+            return;
+        }
+        if (this.keepTensors.has(a.id)) {
+            this.keepTensors.delete(a.id);
+        }
+        this.numTensors--;
+        var refCount = this.refCounter.get(a.dataId);
+        if (refCount <= 1) {
+            this.refCounter.delete(a.dataId);
+            this.backend.disposeData(a.dataId);
+            this.numDataBuffers--;
+            if (a.dtype !== 'complex64') {
+                this.numBytes -=
+                    util.sizeFromShape(a.shape) * util.bytesPerElement(a.dtype);
+            }
+        }
+        else {
+            this.refCounter.set(a.dataId, refCount - 1);
+        }
+    };
+    Engine.prototype.disposeVariables = function () {
+        for (var varName in this.registeredVariables) {
+            var v = this.registeredVariables[varName];
+            this.disposeTensor(v);
+            delete this.registeredVariables[varName];
+        }
+    };
+    Engine.prototype.memory = function () {
+        var info = this.backend.memory();
+        info.numTensors = this.numTensors;
+        info.numDataBuffers = this.numDataBuffers;
+        info.numBytes = this.numBytes;
+        return info;
+    };
+    Engine.prototype.shouldRecord = function () {
+        return this.activeTape != null && this.customGradientDepth === 0;
+    };
+    Engine.prototype.addTapeNode = function (inputs, result, gradientsFunc) {
+        var inputsMap = {};
+        inputs.forEach(function (input, idx) {
+            inputsMap[idx] = input;
+        });
+        var gradient = function (dy) {
+            var res = gradientsFunc(dy);
+            var resMap = {};
+            res.forEach(function (r, idx) {
+                resMap[idx] = function () { return r; };
+            });
+            return resMap;
+        };
+        var tapeNode = {
+            id: this.nextTapeNodeId++,
+            name: this.activeScope.name,
+            inputs: inputsMap,
+            outputs: [result],
+            gradient: gradient
+        };
+        this.activeTape.push(tapeNode);
+    };
+    Engine.prototype.keep = function (result) {
+        if (this.scopeStack.length === 1 && this.safeMode) {
+            throw new Error('Safe mode is ON. Enclose all tensor operations inside tf.tidy(): ' +
+                'tf.tidy(() => {...}) to avoid memory leaks.');
+        }
+        this.keepTensors.add(result.id);
+        return result;
+    };
+    Engine.prototype.startScope = function (name, gradientsMode) {
+        if (gradientsMode === void 0) { gradientsMode = false; }
+        if (gradientsMode && this.gradientScopeCount === 0) {
+            this.activeTape = [];
+        }
+        if (gradientsMode) {
+            this.gradientScopeCount++;
+        }
+        var scopeInfo = { track: [], name: 'unnamed scope' };
+        if (name) {
+            scopeInfo.name = name;
+        }
+        this.scopeStack.push(scopeInfo);
+        this.activeScope = scopeInfo;
+    };
+    Engine.prototype.endScope = function (result, gradientsMode) {
+        var _this = this;
+        if (gradientsMode === void 0) { gradientsMode = false; }
+        if (gradientsMode) {
+            this.gradientScopeCount--;
+            if (this.gradientScopeCount === 0) {
+                this.activeTape = null;
+            }
+        }
+        var tensorsToKeep = new Set(this.keepTensors);
+        var tensorsToTrackInParent = tensor_util_1.getTensorsInContainer(result);
+        tensorsToTrackInParent.forEach(function (tensor) { return tensorsToKeep.add(tensor.id); });
+        for (var i = 0; i < this.activeScope.track.length; i++) {
+            var tensor = this.activeScope.track[i];
+            if (tensorsToKeep.has(tensor.id)) {
+                continue;
+            }
+            if (this.activeTape != null) {
+                tensorsToTrackInParent.push(tensor);
+            }
+            else {
+                tensor.dispose();
+            }
+        }
+        var oldScope = this.scopeStack.pop();
+        this.activeScope = this.scopeStack.length === 0 ?
+            { track: [], name: 'default scope' } :
+            this.scopeStack[this.scopeStack.length - 1];
+        tensorsToTrackInParent.forEach(function (tensor) {
+            if (!_this.keepTensors.has(tensor.id) &&
+                tensor_util_1.isTensorInList(tensor, oldScope.track)) {
+                _this.track(tensor);
+            }
+        });
+    };
+    Engine.prototype.gradients = function (f, xs, dy, allowNoGradients) {
+        var _this = this;
+        if (allowNoGradients === void 0) { allowNoGradients = false; }
+        util.assert(xs.length > 0, 'gradients() received an empty list of xs.');
+        return this.tidy('gradients', function () {
+            var y = f();
+            util.assert(y instanceof tensor_1.Tensor, 'The result y returned by f() must be a tensor.');
+            var filteredTape = tape_1.getFilteredNodesXToY(_this.activeTape, xs, y);
+            if (!allowNoGradients && filteredTape.length === 0 && xs.length > 0) {
+                throw new Error('Cannot compute gradient of y=f(x) with respect to x. Make sure ' +
+                    'that the f you passed encloses all operations that lead from x ' +
+                    'to y.');
+            }
+            var accumulatedGradientMap = {};
+            accumulatedGradientMap[y.id] = (dy == null) ? ones(y.shape) : dy;
+            tape_1.backpropagateGradients(accumulatedGradientMap, filteredTape);
+            var grads = xs.map(function (x) { return accumulatedGradientMap[x.id]; });
+            return { value: y, grads: grads };
+        }, true);
+    };
+    Engine.prototype.customGrad = function (f) {
+        var _this = this;
+        util.assert(util.isFunction(f), 'The f passed in customGrad(f) must be a function.');
+        return function () {
+            var inputs = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                inputs[_i] = arguments[_i];
+            }
+            util.assert(inputs.every(function (t) { return t instanceof tensor_1.Tensor; }), 'The args passed in customGrad(f)(x1, x2,...) must all be tensors');
+            var gradientsFunc;
+            var result;
+            _this.scopedRun(function () { return _this.customGradientDepth++; }, function () { return _this.customGradientDepth--; }, function () {
+                var gradientsMode = true;
+                result = _this.tidy(f.name, function () {
+                    var _a = f.apply(void 0, inputs), value = _a.value, gradFunc = _a.gradFunc;
+                    util.assert(value instanceof tensor_1.Tensor, 'The function f passed in customGrad(f) must return an ' +
+                        'object where `obj.value` is a tensor');
+                    util.assert(util.isFunction(gradFunc), 'The function f passed in customGrad(f) must return an ' +
+                        'object where `obj.gradFunc` is a function.');
+                    gradientsFunc = gradFunc;
+                    return value;
+                }, gradientsMode);
+            });
+            if (_this.shouldRecord()) {
+                var gradFunc = function (dy) {
+                    var res = gradientsFunc(dy);
+                    var grads = Array.isArray(res) ? res : [res];
+                    util.assert(grads.length === inputs.length, 'The function f passed in customGrad(f) must return an object ' +
+                        'where `obj.gradFunc` is a function that returns the same ' +
+                        'number of tensors as inputs passed to f(...).');
+                    util.assert(grads.every(function (t) { return t instanceof tensor_1.Tensor; }), 'The function f passed in customGrad(f) must return an object ' +
+                        'where `obj.gradFunc` is a function that returns a list of ' +
+                        'only tensors.');
+                    return grads;
+                };
+                _this.addTapeNode(inputs, result, gradFunc);
+            }
+            return result;
+        };
+    };
+    Engine.prototype.write = function (dataId, values) {
+        this.backend.write(dataId, values);
+    };
+    Engine.prototype.readSync = function (dataId) {
+        return this.backend.readSync(dataId);
+    };
+    Engine.prototype.read = function (dataId) {
+        return this.backend.read(dataId);
+    };
+    Engine.prototype.fromPixels = function (pixels, numChannels) {
+        return this.backend.fromPixels(pixels, numChannels);
+    };
+    Engine.prototype.time = function (query) {
+        return __awaiter(this, void 0, void 0, function () {
+            var start, timingInfo;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        start = util_1.now();
+                        return [4, this.backend.time(query)];
+                    case 1:
+                        timingInfo = _a.sent();
+                        timingInfo.wallMs = util_1.now() - start;
+                        return [2, timingInfo];
+                }
+            });
+        });
+    };
+    Engine.prototype.track = function (result) {
+        if (this.scopeStack.length === 1 && this.safeMode) {
+            throw new Error('Safe mode is ON. Enclose all tensor operations inside tf.tidy(): ' +
+                'tf.tidy(() => {op();...}); to avoid memory leaks.');
+        }
+        this.activeScope.track.push(result);
+        return result;
+    };
+    return Engine;
+}());
+exports.Engine = Engine;
+function ones(shape) {
+    var values = util_1.makeOnesTypedArray(util_1.sizeFromShape(shape), 'float32');
+    return tensor_1.Tensor.make(shape, { values: values });
+}
+//# sourceMappingURL=engine.js.map
+},{"./profiler":"node_modules\\@tensorflow\\tfjs-core\\dist\\profiler.js","./tape":"node_modules\\@tensorflow\\tfjs-core\\dist\\tape.js","./tensor":"node_modules\\@tensorflow\\tfjs-core\\dist\\tensor.js","./tensor_util":"node_modules\\@tensorflow\\tfjs-core\\dist\\tensor_util.js","./util":"node_modules\\@tensorflow\\tfjs-core\\dist\\util.js"}],"node_modules\\@tensorflow\\tfjs-core\\dist\\environment_util.js":[function(require,module,exports) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Type;
+(function (Type) {
+    Type[Type["NUMBER"] = 0] = "NUMBER";
+    Type[Type["BOOLEAN"] = 1] = "BOOLEAN";
+    Type[Type["STRING"] = 2] = "STRING";
+})(Type = exports.Type || (exports.Type = {}));
+exports.URL_PROPERTIES = [
+    { name: 'DEBUG', type: Type.BOOLEAN }, { name: 'IS_BROWSER', type: Type.BOOLEAN },
+    { name: 'WEBGL_DISJOINT_QUERY_TIMER_EXTENSION_VERSION', type: Type.NUMBER },
+    { name: 'WEBGL_DISJOINT_QUERY_TIMER_EXTENSION_RELIABLE', type: Type.BOOLEAN },
+    { name: 'WEBGL_VERSION', type: Type.NUMBER },
+    { name: 'WEBGL_RENDER_FLOAT32_ENABLED', type: Type.BOOLEAN },
+    { name: 'WEBGL_DOWNLOAD_FLOAT_ENABLED', type: Type.BOOLEAN },
+    { name: 'WEBGL_FENCE_API_ENABLED', type: Type.BOOLEAN },
+    { name: 'BACKEND', type: Type.STRING }, { name: 'EPSILON', type: Type.NUMBER }
+];
+function isWebGLVersionEnabled(webGLVersion, isBrowser) {
+    var gl;
+    try {
+        gl = getWebGLRenderingContext(webGLVersion, isBrowser);
+    }
+    catch (e) {
+        return false;
+    }
+    if (gl != null) {
+        loseContext(gl);
+        return true;
+    }
+    return false;
+}
+exports.isWebGLVersionEnabled = isWebGLVersionEnabled;
+function getWebGLDisjointQueryTimerVersion(webGLVersion, isBrowser) {
+    if (webGLVersion === 0) {
+        return 0;
+    }
+    var queryTimerVersion;
+    var gl = getWebGLRenderingContext(webGLVersion, isBrowser);
+    if (hasExtension(gl, 'EXT_disjoint_timer_query_webgl2') &&
+        webGLVersion === 2) {
+        queryTimerVersion = 2;
+    }
+    else if (hasExtension(gl, 'EXT_disjoint_timer_query')) {
+        queryTimerVersion = 1;
+    }
+    else {
+        queryTimerVersion = 0;
+    }
+    if (gl != null) {
+        loseContext(gl);
+    }
+    return queryTimerVersion;
+}
+exports.getWebGLDisjointQueryTimerVersion = getWebGLDisjointQueryTimerVersion;
+function isRenderToFloatTextureEnabled(webGLVersion, isBrowser) {
+    if (webGLVersion === 0) {
+        return false;
+    }
+    var gl = getWebGLRenderingContext(webGLVersion, isBrowser);
+    if (webGLVersion === 1) {
+        if (!hasExtension(gl, 'OES_texture_float')) {
+            return false;
+        }
+    }
+    else {
+        if (!hasExtension(gl, 'EXT_color_buffer_float')) {
+            return false;
+        }
+    }
+    var isFrameBufferComplete = createFloatTextureAndBindToFramebuffer(gl, webGLVersion);
+    loseContext(gl);
+    return isFrameBufferComplete;
+}
+exports.isRenderToFloatTextureEnabled = isRenderToFloatTextureEnabled;
+function isDownloadFloatTextureEnabled(webGLVersion, isBrowser) {
+    if (webGLVersion === 0) {
+        return false;
+    }
+    var gl = getWebGLRenderingContext(webGLVersion, isBrowser);
+    if (webGLVersion === 1) {
+        if (!hasExtension(gl, 'OES_texture_float')) {
+            return false;
+        }
+        if (!hasExtension(gl, 'WEBGL_color_buffer_float')) {
+            return false;
+        }
+    }
+    else {
+        if (!hasExtension(gl, 'EXT_color_buffer_float')) {
+            return false;
+        }
+    }
+    var isFrameBufferComplete = createFloatTextureAndBindToFramebuffer(gl, webGLVersion);
+    loseContext(gl);
+    return isFrameBufferComplete;
+}
+exports.isDownloadFloatTextureEnabled = isDownloadFloatTextureEnabled;
+function isWebGLFenceEnabled(webGLVersion, isBrowser) {
+    if (webGLVersion !== 2) {
+        return false;
+    }
+    var gl = getWebGLRenderingContext(webGLVersion, isBrowser);
+    var isEnabled = gl.fenceSync != null;
+    loseContext(gl);
+    return isEnabled;
+}
+exports.isWebGLFenceEnabled = isWebGLFenceEnabled;
+function isChrome() {
+    return typeof navigator !== 'undefined' && navigator != null &&
+        navigator.userAgent != null && /Chrome/.test(navigator.userAgent) &&
+        /Google Inc/.test(navigator.vendor);
+}
+exports.isChrome = isChrome;
+var TENSORFLOWJS_FLAGS_PREFIX = 'tfjsflags';
+function getFeaturesFromURL() {
+    var features = {};
+    if (typeof window === 'undefined' || typeof window.location === 'undefined') {
+        return features;
+    }
+    var urlParams = getQueryParams(window.location.search);
+    if (TENSORFLOWJS_FLAGS_PREFIX in urlParams) {
+        var urlFlags_1 = {};
+        var keyValues = urlParams[TENSORFLOWJS_FLAGS_PREFIX].split(',');
+        keyValues.forEach(function (keyValue) {
+            var _a = keyValue.split(':'), key = _a[0], value = _a[1];
+            urlFlags_1[key] = value;
+        });
+        exports.URL_PROPERTIES.forEach(function (urlProperty) {
+            if (urlProperty.name in urlFlags_1) {
+                console.log("Setting feature override from URL " + urlProperty.name + ": " +
+                    ("" + urlFlags_1[urlProperty.name]));
+                if (urlProperty.type === Type.NUMBER) {
+                    features[urlProperty.name] = +urlFlags_1[urlProperty.name];
+                }
+                else if (urlProperty.type === Type.BOOLEAN) {
+                    features[urlProperty.name] = urlFlags_1[urlProperty.name] === 'true';
+                }
+                else if (urlProperty.type === Type.STRING) {
+                    features[urlProperty.name] = urlFlags_1[urlProperty.name];
+                }
+                else {
+                    console.warn("Unknown URL param: " + urlProperty.name + ".");
+                }
+            }
+        });
+    }
+    return features;
+}
+exports.getFeaturesFromURL = getFeaturesFromURL;
+function hasExtension(gl, extensionName) {
+    var ext = gl.getExtension(extensionName);
+    return ext != null;
+}
+function getWebGLRenderingContext(webGLVersion, isBrowser) {
+    if (webGLVersion === 0 || !isBrowser) {
+        throw new Error('Cannot get WebGL rendering context, WebGL is disabled.');
+    }
+    var tempCanvas = document.createElement('canvas');
+    if (webGLVersion === 1) {
+        return (tempCanvas.getContext('webgl') ||
+            tempCanvas.getContext('experimental-webgl'));
+    }
+    return tempCanvas.getContext('webgl2');
+}
+function loseContext(gl) {
+    if (gl != null) {
+        var loseContextExtension = gl.getExtension('WEBGL_lose_context');
+        if (loseContextExtension == null) {
+            throw new Error('Extension WEBGL_lose_context not supported on this browser.');
+        }
+        loseContextExtension.loseContext();
+    }
+}
+function createFloatTextureAndBindToFramebuffer(gl, webGLVersion) {
+    var frameBuffer = gl.createFramebuffer();
+    var texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    var internalFormat = webGLVersion === 2 ? gl.RGBA32F : gl.RGBA;
+    gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, 1, 1, 0, gl.RGBA, gl.FLOAT, null);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+    var isFrameBufferComplete = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
+    gl.bindTexture(gl.TEXTURE_2D, null);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.deleteTexture(texture);
+    gl.deleteFramebuffer(frameBuffer);
+    return isFrameBufferComplete;
+}
+function getQueryParams(queryString) {
+    var params = {};
+    queryString.replace(/[?&]([^=?&]+)(?:=([^&]*))?/g, function (s) {
+        var t = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            t[_i - 1] = arguments[_i];
+        }
+        decodeParam(params, t[0], t[1]);
+        return t.join('=');
+    });
+    return params;
+}
+exports.getQueryParams = getQueryParams;
+function decodeParam(params, name, value) {
+    params[decodeURIComponent(name)] = decodeURIComponent(value || '');
+}
+//# sourceMappingURL=environment_util.js.map
+},{}],"node_modules\\@tensorflow\\tfjs-core\\dist\\environment.js":[function(require,module,exports) {
+var process = require("process");
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var device_util = require("./device_util");
+var engine_1 = require("./engine");
+var environment_util_1 = require("./environment_util");
+var tensor_1 = require("./tensor");
+var tensor_util_1 = require("./tensor_util");
+var EPSILON_FLOAT16 = 1e-3;
+var TEST_EPSILON_FLOAT16 = 1e-1;
+var EPSILON_FLOAT32 = 1e-7;
+var TEST_EPSILON_FLOAT32 = 1e-3;
+var Environment = (function () {
+    function Environment(features) {
+        this.features = {};
+        this.engines = {};
+        this.registry = {};
+        if (features != null) {
+            this.features = features;
+        }
+        if (this.get('DEBUG')) {
+            console.warn('Debugging mode is ON. The output of every math call will ' +
+                'be downloaded to CPU and checked for NaNs. ' +
+                'This significantly impacts performance.');
+        }
+    }
+    Environment.setBackend = function (backendName, safeMode) {
+        if (safeMode === void 0) { safeMode = false; }
+        if (!(backendName in exports.ENV.registry)) {
+            throw new Error("Backend name '" + backendName + "' not found in registry");
+        }
+        exports.ENV.initBackend(backendName, safeMode);
+    };
+    Environment.getBackend = function () {
+        exports.ENV.initDefaultBackend();
+        return exports.ENV.backendName;
+    };
+    Environment.disposeVariables = function () {
+        exports.ENV.engine.disposeVariables();
+    };
+    Environment.memory = function () {
+        return exports.ENV.engine.memory();
+    };
+    Environment.tidy = function (nameOrFn, fn, gradMode) {
+        if (gradMode === void 0) { gradMode = false; }
+        return exports.ENV.engine.tidy(nameOrFn, fn, gradMode);
+    };
+    Environment.dispose = function (container) {
+        var tensors = tensor_util_1.getTensorsInContainer(container);
+        tensors.forEach(function (tensor) { return tensor.dispose(); });
+    };
+    Environment.keep = function (result) {
+        return exports.ENV.engine.keep(result);
+    };
+    Environment.time = function (f) {
+        return exports.ENV.engine.time(f);
+    };
+    Environment.prototype.get = function (feature) {
+        if (feature in this.features) {
+            return this.features[feature];
+        }
+        this.features[feature] = this.evaluateFeature(feature);
+        return this.features[feature];
+    };
+    Environment.prototype.getFeatures = function () {
+        return this.features;
+    };
+    Environment.prototype.set = function (feature, value) {
+        this.features[feature] = value;
+    };
+    Environment.prototype.getBestBackendName = function () {
+        var _this = this;
+        if (Object.keys(this.registry).length === 0) {
+            throw new Error('No backend found in registry.');
+        }
+        var sortedBackends = Object.keys(this.registry)
+            .map(function (name) {
+            return { name: name, entry: _this.registry[name] };
+        })
+            .sort(function (a, b) {
+            return b.entry.priority - a.entry.priority;
+        });
+        return sortedBackends[0].name;
+    };
+    Environment.prototype.evaluateFeature = function (feature) {
+        if (feature === 'DEBUG') {
+            return false;
+        }
+        else if (feature === 'IS_BROWSER') {
+            return typeof window !== 'undefined';
+        }
+        else if (feature === 'IS_NODE') {
+            return (typeof process !== 'undefined') &&
+                (typeof process.versions.node !== 'undefined');
+        }
+        else if (feature === 'IS_CHROME') {
+            return environment_util_1.isChrome();
+        }
+        else if (feature === 'IS_TEST') {
+            return false;
+        }
+        else if (feature === 'BACKEND') {
+            return this.getBestBackendName();
+        }
+        else if (feature === 'WEBGL_DISJOINT_QUERY_TIMER_EXTENSION_VERSION') {
+            var webGLVersion = this.get('WEBGL_VERSION');
+            if (webGLVersion === 0) {
+                return 0;
+            }
+            if (webGLVersion > 0) {
+                return 0;
+            }
+            return environment_util_1.getWebGLDisjointQueryTimerVersion(webGLVersion, this.get('IS_BROWSER'));
+        }
+        else if (feature === 'WEBGL_DISJOINT_QUERY_TIMER_EXTENSION_RELIABLE') {
+            return this.get('WEBGL_DISJOINT_QUERY_TIMER_EXTENSION_VERSION') > 0 &&
+                !device_util.isMobile();
+        }
+        else if (feature === 'HAS_WEBGL') {
+            return this.get('WEBGL_VERSION') > 0;
+        }
+        else if (feature === 'WEBGL_VERSION') {
+            if (environment_util_1.isWebGLVersionEnabled(2, this.get('IS_BROWSER'))) {
+                return 2;
+            }
+            else if (environment_util_1.isWebGLVersionEnabled(1, this.get('IS_BROWSER'))) {
+                return 1;
+            }
+            return 0;
+        }
+        else if (feature === 'WEBGL_RENDER_FLOAT32_ENABLED') {
+            return environment_util_1.isRenderToFloatTextureEnabled(this.get('WEBGL_VERSION'), this.get('IS_BROWSER'));
+        }
+        else if (feature === 'WEBGL_DOWNLOAD_FLOAT_ENABLED') {
+            return environment_util_1.isDownloadFloatTextureEnabled(this.get('WEBGL_VERSION'), this.get('IS_BROWSER'));
+        }
+        else if (feature === 'WEBGL_FENCE_API_ENABLED') {
+            return environment_util_1.isWebGLFenceEnabled(this.get('WEBGL_VERSION'), this.get('IS_BROWSER'));
+        }
+        else if (feature === 'TEST_EPSILON') {
+            return this.backend.floatPrecision() === 32 ? TEST_EPSILON_FLOAT32 :
+                TEST_EPSILON_FLOAT16;
+        }
+        else if (feature === 'EPSILON') {
+            return this.backend.floatPrecision() === 32 ? EPSILON_FLOAT32 :
+                EPSILON_FLOAT16;
+        }
+        throw new Error("Unknown feature " + feature + ".");
+    };
+    Environment.prototype.setFeatures = function (features) {
+        this.features = Object.assign({}, features);
+    };
+    Environment.prototype.reset = function () {
+        this.features = environment_util_1.getFeaturesFromURL();
+        if (this.globalEngine != null) {
+            this.globalEngine = null;
+        }
+    };
+    Environment.prototype.initBackend = function (backendName, safeMode) {
+        var _this = this;
+        if (safeMode === void 0) { safeMode = false; }
+        this.backendName = backendName;
+        if (this.engines[backendName]) {
+            this.globalEngine = this.engines[backendName];
+        }
+        else {
+            var backend = this.findBackend(backendName);
+            this.globalEngine =
+                new engine_1.Engine(backend, safeMode, function () { return _this.get('DEBUG'); });
+            this.engines[backendName] = this.globalEngine;
+        }
+    };
+    Object.defineProperty(Environment.prototype, "backend", {
+        get: function () {
+            return this.engine.backend;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Environment.prototype.findBackend = function (name) {
+        if (!(name in this.registry)) {
+            return null;
+        }
+        return this.registry[name].backend;
+    };
+    Environment.prototype.registerBackend = function (name, factory, priority, setTensorTrackerFn) {
+        var _this = this;
+        if (priority === void 0) { priority = 1; }
+        if (name in this.registry) {
+            console.warn(name + " backend was already registered. Reusing existing backend");
+            if (setTensorTrackerFn != null) {
+                setTensorTrackerFn(function () { return _this.engine; });
+            }
+            return false;
+        }
+        try {
+            var backend = factory();
+            this.registry[name] = { backend: backend, priority: priority };
+            return true;
+        }
+        catch (err) {
+            console.warn("Registration of backend " + name + " failed");
+            console.warn(err.stack || err.message);
+            return false;
+        }
+    };
+    Environment.prototype.removeBackend = function (name) {
+        if (!(name in this.registry)) {
+            throw new Error(name + " backend not found in registry");
+        }
+        this.registry[name].backend.dispose();
+        delete this.registry[name];
+        if (name in this.engines) {
+            delete this.engines[name];
+        }
+    };
+    Object.defineProperty(Environment.prototype, "engine", {
+        get: function () {
+            this.initDefaultBackend();
+            return this.globalEngine;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Environment.prototype.initDefaultBackend = function () {
+        if (this.globalEngine == null) {
+            this.initBackend(this.get('BACKEND'), false);
+        }
+    };
+    return Environment;
+}());
+exports.Environment = Environment;
+function getGlobalNamespace() {
+    var ns;
+    if (typeof (window) !== 'undefined') {
+        ns = window;
+    }
+    else if (typeof (process) !== 'undefined') {
+        ns = process;
+    }
+    else {
+        throw new Error('Could not find a global object');
+    }
+    return ns;
+}
+function getOrMakeEnvironment() {
+    var ns = getGlobalNamespace();
+    if (ns.ENV == null) {
+        ns.ENV = new Environment(environment_util_1.getFeaturesFromURL());
+        tensor_1.setTensorTracker(function () { return ns.ENV.engine; });
+    }
+    return ns.ENV;
+}
+exports.ENV = getOrMakeEnvironment();
+//# sourceMappingURL=environment.js.map
+},{"./device_util":"node_modules\\@tensorflow\\tfjs-core\\dist\\device_util.js","./engine":"node_modules\\@tensorflow\\tfjs-core\\dist\\engine.js","./environment_util":"node_modules\\@tensorflow\\tfjs-core\\dist\\environment_util.js","./tensor":"node_modules\\@tensorflow\\tfjs-core\\dist\\tensor.js","./tensor_util":"node_modules\\@tensorflow\\tfjs-core\\dist\\tensor_util.js","process":"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\node_modules\\process\\browser.js"}],"node_modules\\@tensorflow\\tfjs-core\\dist\\tensor_util_env.js":[function(require,module,exports) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var environment_1 = require("./environment");
+var tensor_1 = require("./tensor");
+var util_1 = require("./util");
+function convertToTensor(x, argName, functionName, dtype) {
+    if (dtype === void 0) { dtype = 'float32'; }
+    dtype = dtype || 'float32';
+    if (x instanceof tensor_1.Tensor) {
+        return x;
+    }
+    if (!util_1.isTypedArray(x) && !Array.isArray(x) && typeof x !== 'number' &&
+        typeof x !== 'boolean') {
+        throw new Error("Argument '" + argName + "' passed to '" + functionName + "' must be a " +
+            ("Tensor or TensorLike, but got " + x.constructor.name));
+    }
+    var inferredShape = util_1.inferShape(x);
+    if (!util_1.isTypedArray(x) && !Array.isArray(x)) {
+        x = [x];
+    }
+    return tensor_1.Tensor.make(inferredShape, { values: util_1.toTypedArray(x, dtype, environment_1.ENV.get('DEBUG')) }, dtype);
+}
+exports.convertToTensor = convertToTensor;
+function convertToTensorArray(arg, argName, functionName) {
+    if (!Array.isArray(arg)) {
+        throw new Error("Argument " + argName + " passed to " + functionName + " must be a " +
+            '`Tensor[]` or `TensorLike[]`');
+    }
+    var tensors = arg;
+    return tensors.map(function (t, i) { return convertToTensor(t, argName + "[" + i + "]", functionName); });
+}
+exports.convertToTensorArray = convertToTensorArray;
+//# sourceMappingURL=tensor_util_env.js.map
+},{"./environment":"node_modules\\@tensorflow\\tfjs-core\\dist\\environment.js","./tensor":"node_modules\\@tensorflow\\tfjs-core\\dist\\tensor.js","./util":"node_modules\\@tensorflow\\tfjs-core\\dist\\util.js"}],"node_modules\\@tensorflow\\tfjs-core\\dist\\ops\\operation.js":[function(require,module,exports) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var environment_1 = require("../environment");
+function op(f) {
+    var keys = Object.keys(f);
+    if (keys.length !== 1) {
+        throw new Error("Please provide an object with a single key " +
+            "(operation name) mapping to a function. Got an object with " +
+            (keys.length + " keys."));
+    }
+    var opName = keys[0];
+    var fn = f[opName];
+    if (opName.endsWith('_')) {
+        opName = opName.substring(0, opName.length - 1);
+    }
+    var f2 = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        environment_1.ENV.engine.startScope(opName);
+        try {
+            var result = fn.apply(void 0, args);
+            if (result instanceof Promise) {
+                console.error('Cannot return a Promise inside of tidy.');
+            }
+            environment_1.ENV.engine.endScope(result);
+            return result;
+        }
+        catch (ex) {
+            environment_1.ENV.engine.endScope(null);
+            throw ex;
+        }
+    };
+    Object.defineProperty(f2, 'name', { value: opName, configurable: true });
+    return f2;
+}
+exports.op = op;
+//# sourceMappingURL=operation.js.map
+},{"../environment":"node_modules\\@tensorflow\\tfjs-core\\dist\\environment.js"}],"node_modules\\@tensorflow\\tfjs-core\\dist\\ops\\complex_ops.js":[function(require,module,exports) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var environment_1 = require("../environment");
+var tensor_util_env_1 = require("../tensor_util_env");
+var util = require("../util");
+var operation_1 = require("./operation");
+function complex_(real, imag) {
+    var $real = tensor_util_env_1.convertToTensor(real, 'real', 'complex');
+    var $imag = tensor_util_env_1.convertToTensor(imag, 'imag', 'complex');
+    util.assertShapesMatch($real.shape, $imag.shape, "real and imag shapes, " + $real.shape + " and " + $imag.shape + ", " +
+        "must match in call to tf.complex().");
+    return environment_1.ENV.engine.runKernel(function (backend) { return backend.complex($real, $imag); }, { $real: $real, $imag: $imag });
+}
+function real_(input) {
+    var $input = tensor_util_env_1.convertToTensor(input, 'input', 'real');
+    return environment_1.ENV.engine.runKernel(function (backend) { return backend.real($input); }, { $input: $input });
+}
+function imag_(input) {
+    var $input = tensor_util_env_1.convertToTensor(input, 'input', 'imag');
+    return environment_1.ENV.engine.runKernel(function (backend) { return backend.imag($input); }, { $input: $input });
+}
+exports.complex = operation_1.op({ complex_: complex_ });
+exports.real = operation_1.op({ real_: real_ });
+exports.imag = operation_1.op({ imag_: imag_ });
+//# sourceMappingURL=complex_ops.js.map
+},{"../environment":"node_modules\\@tensorflow\\tfjs-core\\dist\\environment.js","../tensor_util_env":"node_modules\\@tensorflow\\tfjs-core\\dist\\tensor_util_env.js","../util":"node_modules\\@tensorflow\\tfjs-core\\dist\\util.js","./operation":"node_modules\\@tensorflow\\tfjs-core\\dist\\ops\\operation.js"}],"node_modules\\@tensorflow\\tfjs-core\\dist\\ops\\tensor_ops.js":[function(require,module,exports) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var environment_1 = require("../environment");
+var tensor_1 = require("../tensor");
+var tensor_util_env_1 = require("../tensor_util_env");
+var util_1 = require("../util");
+var complex_ops_1 = require("./complex_ops");
+var operation_1 = require("./operation");
+function tensor(values, shape, dtype) {
+    if (dtype === void 0) { dtype = 'float32'; }
+    if (dtype === 'complex64') {
+        throw new Error("Cannot construct a complex64 tensor directly. " +
+            "Please use tf.complex(real, imag).");
+    }
+    if (!util_1.isTypedArray(values) && !Array.isArray(values) &&
+        typeof values !== 'number' && typeof values !== 'boolean') {
+        throw new Error('values passed to tensor(values) must be an ' +
+            'array of numbers or booleans, or a TypedArray');
+    }
+    var inferredShape = util_1.inferShape(values);
+    if (shape != null && inferredShape.length !== 1) {
+        util_1.assertShapesMatch(shape, inferredShape, "Error creating a new Tensor. " +
+            ("Inferred shape (" + inferredShape + ") does not match the ") +
+            ("provided shape (" + shape + "). "));
+    }
+    if (!util_1.isTypedArray(values) && !Array.isArray(values)) {
+        values = [values];
+    }
+    shape = shape || inferredShape;
+    return tensor_1.Tensor.make(shape, {
+        values: util_1.toTypedArray(values, dtype, environment_1.ENV.get('DEBUG'))
+    }, dtype);
+}
+exports.tensor = tensor;
+function scalar(value, dtype) {
+    if (dtype === void 0) { dtype = 'float32'; }
+    if ((util_1.isTypedArray(value) || Array.isArray(value)) && dtype !== 'complex64') {
+        throw new Error('Error creating a new Scalar: value must be a primitive ' +
+            '(number|boolean)');
+    }
+    return tensor(value, [], dtype);
+}
+exports.scalar = scalar;
+function tensor1d(values, dtype) {
+    if (dtype === void 0) { dtype = 'float32'; }
+    util_1.assertNonNull(values);
+    var inferredShape = util_1.inferShape(values);
+    if (inferredShape.length !== 1) {
+        throw new Error('tensor1d() requires values to be a flat/TypedArray');
+    }
+    return tensor(values, inferredShape, dtype);
+}
+exports.tensor1d = tensor1d;
+function tensor2d(values, shape, dtype) {
+    if (dtype === void 0) { dtype = 'float32'; }
+    util_1.assertNonNull(values);
+    if (shape != null && shape.length !== 2) {
+        throw new Error('tensor2d() requires shape to have two numbers');
+    }
+    var inferredShape = util_1.inferShape(values);
+    if (inferredShape.length !== 2 && inferredShape.length !== 1) {
+        throw new Error('tensor2d() requires values to be number[][] or flat/TypedArray');
+    }
+    if (inferredShape.length === 1 && shape == null) {
+        throw new Error('tensor2d() requires shape to be provided when `values` ' +
+            'are a flat/TypedArray');
+    }
+    shape = shape || inferredShape;
+    return tensor(values, shape, dtype);
+}
+exports.tensor2d = tensor2d;
+function tensor3d(values, shape, dtype) {
+    if (dtype === void 0) { dtype = 'float32'; }
+    util_1.assertNonNull(values);
+    if (shape != null && shape.length !== 3) {
+        throw new Error('tensor3d() requires shape to have three numbers');
+    }
+    var inferredShape = util_1.inferShape(values);
+    if (inferredShape.length !== 3 && inferredShape.length !== 1) {
+        throw new Error('tensor3d() requires values to be number[][][] or flat/TypedArray');
+    }
+    if (inferredShape.length === 1 && shape == null) {
+        throw new Error('tensor3d() requires shape to be provided when `values` ' +
+            'are a flat array');
+    }
+    shape = shape || inferredShape;
+    return tensor(values, shape, dtype);
+}
+exports.tensor3d = tensor3d;
+function tensor4d(values, shape, dtype) {
+    if (dtype === void 0) { dtype = 'float32'; }
+    util_1.assertNonNull(values);
+    if (shape != null && shape.length !== 4) {
+        throw new Error('tensor4d() requires shape to have four numbers');
+    }
+    var inferredShape = util_1.inferShape(values);
+    if (inferredShape.length !== 4 && inferredShape.length !== 1) {
+        throw new Error('tensor4d() requires values to be number[][][][] or flat/TypedArray');
+    }
+    if (inferredShape.length === 1 && shape == null) {
+        throw new Error('tensor4d() requires shape to be provided when `values` ' +
+            'are a flat array');
+    }
+    shape = shape || inferredShape;
+    return tensor(values, shape, dtype);
+}
+exports.tensor4d = tensor4d;
+function tensor5d(values, shape, dtype) {
+    if (dtype === void 0) { dtype = 'float32'; }
+    util_1.assertNonNull(values);
+    if (shape != null && shape.length !== 5) {
+        throw new Error('tensor5d() requires shape to have five numbers');
+    }
+    var inferredShape = util_1.inferShape(values);
+    if (inferredShape.length !== 5 && inferredShape.length !== 1) {
+        throw new Error('tensor5d() requires values to be ' +
+            'number[][][][][] or flat/TypedArray');
+    }
+    if (inferredShape.length === 1 && shape == null) {
+        throw new Error('tensor5d() requires shape to be provided when `values` ' +
+            'are a flat array');
+    }
+    shape = shape || inferredShape;
+    return tensor(values, shape, dtype);
+}
+exports.tensor5d = tensor5d;
+function tensor6d(values, shape, dtype) {
+    if (dtype === void 0) { dtype = 'float32'; }
+    util_1.assertNonNull(values);
+    if (shape != null && shape.length !== 6) {
+        throw new Error('tensor6d() requires shape to have six numbers');
+    }
+    var inferredShape = util_1.inferShape(values);
+    if (inferredShape.length !== 6 && inferredShape.length !== 1) {
+        throw new Error('tensor6d() requires values to be number[][][][] or flat/TypedArray');
+    }
+    if (inferredShape.length === 1 && shape == null) {
+        throw new Error('tensor6d() requires shape to be provided when `values` ' +
+            'are a flat array');
+    }
+    shape = shape ||
+        inferredShape;
+    return tensor(values, shape, dtype);
+}
+exports.tensor6d = tensor6d;
+function ones(shape, dtype) {
+    if (dtype === void 0) { dtype = 'float32'; }
+    if (dtype === 'complex64') {
+        var real = ones(shape, 'float32');
+        var imag = ones(shape, 'float32');
+        return complex_ops_1.complex(real, imag);
+    }
+    var values = util_1.makeOnesTypedArray(util_1.sizeFromShape(shape), dtype);
+    return tensor_1.Tensor.make(shape, { values: values }, dtype);
+}
+exports.ones = ones;
+function zeros(shape, dtype) {
+    if (dtype === void 0) { dtype = 'float32'; }
+    if (dtype === 'complex64') {
+        var real = zeros(shape, 'float32');
+        var imag = zeros(shape, 'float32');
+        return complex_ops_1.complex(real, imag);
+    }
+    var values = util_1.makeZerosTypedArray(util_1.sizeFromShape(shape), dtype);
+    return tensor_1.Tensor.make(shape, { values: values }, dtype);
+}
+exports.zeros = zeros;
+function fill(shape, value, dtype) {
+    if (dtype === void 0) { dtype = 'float32'; }
+    var values = util_1.getTypedArrayFromDType(dtype, util_1.sizeFromShape(shape));
+    values.fill(value);
+    return tensor_1.Tensor.make(shape, { values: values }, dtype);
+}
+exports.fill = fill;
+function onesLike_(x) {
+    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'onesLike');
+    return ones($x.shape, $x.dtype);
+}
+function zerosLike_(x) {
+    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'zerosLike');
+    return zeros($x.shape, $x.dtype);
+}
+function linspace(start, stop, num) {
+    if (num === 0) {
+        throw new Error('Cannot request zero samples');
+    }
+    var step = (stop - start) / (num - 1);
+    var values = util_1.makeZerosTypedArray(num, 'float32');
+    values[0] = start;
+    for (var i = 1; i < values.length; i++) {
+        values[i] = values[i - 1] + step;
+    }
+    return tensor1d(values, 'float32');
+}
+exports.linspace = linspace;
+function range(start, stop, step, dtype) {
+    if (step === void 0) { step = 1; }
+    if (dtype === void 0) { dtype = 'float32'; }
+    if (step === 0) {
+        throw new Error('Cannot have a step of zero');
+    }
+    var sameStartStop = start === stop;
+    var increasingRangeNegativeStep = start < stop && step < 0;
+    var decreasingRangePositiveStep = stop < start && step > 1;
+    if (sameStartStop || increasingRangeNegativeStep ||
+        decreasingRangePositiveStep) {
+        return zeros([0], dtype);
+    }
+    var numElements = Math.abs(Math.ceil((stop - start) / step));
+    var values = util_1.makeZerosTypedArray(numElements, dtype);
+    if (stop < start && step === 1) {
+        step = -1;
+    }
+    values[0] = start;
+    for (var i = 1; i < values.length; i++) {
+        values[i] = values[i - 1] + step;
+    }
+    return tensor1d(values, dtype);
+}
+exports.range = range;
+exports.onesLike = operation_1.op({ onesLike_: onesLike_ });
+exports.zerosLike = operation_1.op({ zerosLike_: zerosLike_ });
+//# sourceMappingURL=tensor_ops.js.map
+},{"../environment":"node_modules\\@tensorflow\\tfjs-core\\dist\\environment.js","../tensor":"node_modules\\@tensorflow\\tfjs-core\\dist\\tensor.js","../tensor_util_env":"node_modules\\@tensorflow\\tfjs-core\\dist\\tensor_util_env.js","../util":"node_modules\\@tensorflow\\tfjs-core\\dist\\util.js","./complex_ops":"node_modules\\@tensorflow\\tfjs-core\\dist\\ops\\complex_ops.js","./operation":"node_modules\\@tensorflow\\tfjs-core\\dist\\ops\\operation.js"}],"node_modules\\@tensorflow\\tfjs-core\\dist\\io\\types.js":[function(require,module,exports) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DTYPE_VALUE_SIZE_MAP = {
+    'float32': 4,
+    'int32': 4,
+    'uint16': 2,
+    'uint8': 1,
+    'bool': 1,
+};
+//# sourceMappingURL=types.js.map
+},{}],"node_modules\\@tensorflow\\tfjs-core\\dist\\io\\io_utils.js":[function(require,module,exports) {
+var Buffer = require("buffer").Buffer;
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var tensor_ops_1 = require("../ops/tensor_ops");
+var util_1 = require("../util");
+var types_1 = require("./types");
+function encodeWeights(tensors) {
+    return __awaiter(this, void 0, void 0, function () {
+        var specs, dataPromises, name_1, t, tensorValues;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    specs = [];
+                    dataPromises = [];
+                    for (name_1 in tensors) {
+                        t = tensors[name_1];
+                        if (t.dtype !== 'float32' && t.dtype !== 'int32' && t.dtype !== 'bool') {
+                            throw new Error("Unsupported dtype in weight '" + name_1 + "': " + t.dtype);
+                        }
+                        specs.push({ name: name_1, shape: t.shape, dtype: t.dtype });
+                        dataPromises.push(t.data());
+                    }
+                    return [4, Promise.all(dataPromises)];
+                case 1:
+                    tensorValues = _a.sent();
+                    return [2, { data: concatenateTypedArrays(tensorValues), specs: specs }];
+            }
+        });
+    });
+}
+exports.encodeWeights = encodeWeights;
+function decodeWeights(buffer, specs) {
+    var out = {};
+    var offset = 0;
+    var _loop_1 = function (spec) {
+        var name_2 = spec.name;
+        var dtype = spec.dtype;
+        var shape = spec.shape;
+        var size = util_1.sizeFromShape(shape);
+        var typedArray = void 0;
+        if ('quantization' in spec) {
+            var quantization_1 = spec.quantization;
+            if (quantization_1.dtype !== 'uint8' && quantization_1.dtype !== 'uint16') {
+                throw new Error("Weight " + spec.name + " has unknown " +
+                    ("quantization dtype " + quantization_1.dtype + ". ") +
+                    "Supported quantization dtypes are: 'uint8' and 'uint16'.");
+            }
+            var quantizationSizeFactor = types_1.DTYPE_VALUE_SIZE_MAP[quantization_1.dtype];
+            var byteBuffer = buffer.slice(offset, offset + size * quantizationSizeFactor);
+            var quantizedArray = (quantization_1.dtype === 'uint8') ?
+                new Uint8Array(byteBuffer) :
+                new Uint16Array(byteBuffer);
+            if (dtype === 'float32') {
+                typedArray = Float32Array.from(quantizedArray, function (v) { return v * quantization_1.scale + quantization_1.min; });
+            }
+            else if (dtype === 'int32') {
+                typedArray = Int32Array.from(quantizedArray, function (v) { return Math.round(v * quantization_1.scale + quantization_1.min); });
+            }
+            else {
+                throw new Error("Unsupported dtype in weight '" + name_2 + "': " + dtype);
+            }
+            offset += size * quantizationSizeFactor;
+        }
+        else {
+            var dtypeFactor = types_1.DTYPE_VALUE_SIZE_MAP[dtype];
+            var byteBuffer = buffer.slice(offset, offset + size * dtypeFactor);
+            if (dtype === 'float32') {
+                typedArray = new Float32Array(byteBuffer);
+            }
+            else if (dtype === 'int32') {
+                typedArray = new Int32Array(byteBuffer);
+            }
+            else if (dtype === 'bool') {
+                typedArray = new Uint8Array(byteBuffer);
+            }
+            else {
+                throw new Error("Unsupported dtype in weight '" + name_2 + "': " + dtype);
+            }
+            offset += size * dtypeFactor;
+        }
+        var value = void 0;
+        if (dtype === 'float32') {
+            value = tensor_ops_1.tensor(typedArray, shape, 'float32');
+        }
+        else if (dtype === 'int32') {
+            value = tensor_ops_1.tensor(typedArray, shape, 'int32');
+        }
+        else if (dtype === 'bool') {
+            value = tensor_ops_1.tensor(typedArray, shape, 'bool');
+        }
+        else {
+            throw new Error("Unsupported dtype in weight '" + name_2 + "': " + dtype);
+        }
+        out[name_2] = value;
+    };
+    for (var _i = 0, specs_1 = specs; _i < specs_1.length; _i++) {
+        var spec = specs_1[_i];
+        _loop_1(spec);
+    }
+    return out;
+}
+exports.decodeWeights = decodeWeights;
+function concatenateTypedArrays(xs) {
+    if (xs === null) {
+        throw new Error("Invalid input value: " + JSON.stringify(xs));
+    }
+    var totalByteLength = 0;
+    var normalizedXs = [];
+    xs.forEach(function (x) {
+        totalByteLength += x.byteLength;
+        normalizedXs.push(x.byteLength === x.buffer.byteLength ? x :
+            new x.constructor(x));
+        if (!(x instanceof Float32Array || x instanceof Int32Array ||
+            x instanceof Uint8Array)) {
+            throw new Error("Unsupported TypedArray subtype: " + x.constructor.name);
+        }
+    });
+    var y = new Uint8Array(totalByteLength);
+    var offset = 0;
+    normalizedXs.forEach(function (x) {
+        y.set(new Uint8Array(x.buffer), offset);
+        offset += x.byteLength;
+    });
+    return y.buffer;
+}
+exports.concatenateTypedArrays = concatenateTypedArrays;
+var useNodeBuffer = typeof Buffer !== 'undefined' &&
+    (typeof Blob === 'undefined' || typeof atob === 'undefined' ||
+        typeof btoa === 'undefined');
+function stringByteLength(str) {
+    if (useNodeBuffer) {
+        return Buffer.byteLength(str);
+    }
+    return new Blob([str]).size;
+}
+exports.stringByteLength = stringByteLength;
+function arrayBufferToBase64String(buffer) {
+    if (useNodeBuffer) {
+        return Buffer.from(buffer).toString('base64');
+    }
+    return btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
+}
+exports.arrayBufferToBase64String = arrayBufferToBase64String;
+function base64StringToArrayBuffer(str) {
+    if (useNodeBuffer) {
+        var buf = Buffer.from(str, 'base64');
+        return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+    }
+    var s = atob(str);
+    var buffer = new Uint8Array(s.length);
+    for (var i = 0; i < s.length; ++i) {
+        buffer.set([s.charCodeAt(i)], i);
+    }
+    return buffer.buffer;
+}
+exports.base64StringToArrayBuffer = base64StringToArrayBuffer;
+function concatenateArrayBuffers(buffers) {
+    var totalByteLength = 0;
+    buffers.forEach(function (buffer) {
+        totalByteLength += buffer.byteLength;
+    });
+    var temp = new Uint8Array(totalByteLength);
+    var offset = 0;
+    buffers.forEach(function (buffer) {
+        temp.set(new Uint8Array(buffer), offset);
+        offset += buffer.byteLength;
+    });
+    return temp.buffer;
+}
+exports.concatenateArrayBuffers = concatenateArrayBuffers;
+function basename(path) {
+    var SEPARATOR = '/';
+    path = path.trim();
+    while (path.endsWith(SEPARATOR)) {
+        path = path.slice(0, path.length - 1);
+    }
+    var items = path.split(SEPARATOR);
+    return items[items.length - 1];
+}
+exports.basename = basename;
+function getModelArtifactsInfoForJSON(modelArtifacts) {
+    if (modelArtifacts.modelTopology instanceof ArrayBuffer) {
+        throw new Error('Expected JSON model topology, received ArrayBuffer.');
+    }
+    return {
+        dateSaved: new Date(),
+        modelTopologyType: 'JSON',
+        modelTopologyBytes: modelArtifacts.modelTopology == null ?
+            0 :
+            stringByteLength(JSON.stringify(modelArtifacts.modelTopology)),
+        weightSpecsBytes: modelArtifacts.weightSpecs == null ?
+            0 :
+            stringByteLength(JSON.stringify(modelArtifacts.weightSpecs)),
+        weightDataBytes: modelArtifacts.weightData == null ?
+            0 :
+            modelArtifacts.weightData.byteLength,
+    };
+}
+exports.getModelArtifactsInfoForJSON = getModelArtifactsInfoForJSON;
+//# sourceMappingURL=io_utils.js.map
+},{"../ops/tensor_ops":"node_modules\\@tensorflow\\tfjs-core\\dist\\ops\\tensor_ops.js","../util":"node_modules\\@tensorflow\\tfjs-core\\dist\\util.js","./types":"node_modules\\@tensorflow\\tfjs-core\\dist\\io\\types.js","buffer":"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\node_modules\\buffer\\index.js"}],"node_modules\\@tensorflow\\tfjs-core\\dist\\io\\router_registry.js":[function(require,module,exports) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var IORouterRegistry = (function () {
+    function IORouterRegistry() {
+        this.saveRouters = [];
+        this.loadRouters = [];
+    }
+    IORouterRegistry.getInstance = function () {
+        if (IORouterRegistry.instance == null) {
+            IORouterRegistry.instance = new IORouterRegistry();
+        }
+        return IORouterRegistry.instance;
+    };
+    IORouterRegistry.registerSaveRouter = function (saveRouter) {
+        IORouterRegistry.getInstance().saveRouters.push(saveRouter);
+    };
+    IORouterRegistry.registerLoadRouter = function (loadRouter) {
+        IORouterRegistry.getInstance().loadRouters.push(loadRouter);
+    };
+    IORouterRegistry.getSaveHandlers = function (url) {
+        return IORouterRegistry.getHandlers(url, 'save');
+    };
+    IORouterRegistry.getLoadHandlers = function (url) {
+        return IORouterRegistry.getHandlers(url, 'load');
+    };
+    IORouterRegistry.getHandlers = function (url, handlerType) {
+        var validHandlers = [];
+        var routers = handlerType === 'load' ? this.getInstance().loadRouters :
+            this.getInstance().saveRouters;
+        routers.forEach(function (router) {
+            var handler = router(url);
+            if (handler !== null) {
+                validHandlers.push(handler);
+            }
+        });
+        return validHandlers;
+    };
+    return IORouterRegistry;
+}());
+exports.IORouterRegistry = IORouterRegistry;
+//# sourceMappingURL=router_registry.js.map
+},{}],"node_modules\\@tensorflow\\tfjs-core\\dist\\io\\model_management.js":[function(require,module,exports) {
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var util_1 = require("../util");
+var router_registry_1 = require("./router_registry");
+var URL_SCHEME_SUFFIX = '://';
+var ModelStoreManagerRegistry = (function () {
+    function ModelStoreManagerRegistry() {
+        this.managers = {};
+    }
+    ModelStoreManagerRegistry.getInstance = function () {
+        if (ModelStoreManagerRegistry.instance == null) {
+            ModelStoreManagerRegistry.instance = new ModelStoreManagerRegistry();
+        }
+        return ModelStoreManagerRegistry.instance;
+    };
+    ModelStoreManagerRegistry.registerManager = function (scheme, manager) {
+        util_1.assert(scheme != null, 'scheme must not be undefined or null.');
+        if (scheme.endsWith(URL_SCHEME_SUFFIX)) {
+            scheme = scheme.slice(0, scheme.indexOf(URL_SCHEME_SUFFIX));
+        }
+        util_1.assert(scheme.length > 0, 'scheme must not be an empty string.');
+        var registry = ModelStoreManagerRegistry.getInstance();
+        util_1.assert(registry.managers[scheme] == null, "A model store manager is already registered for scheme '" + scheme + "'.");
+        registry.managers[scheme] = manager;
+    };
+    ModelStoreManagerRegistry.getManager = function (scheme) {
+        var manager = this.getInstance().managers[scheme];
+        if (manager == null) {
+            throw new Error("Cannot find model manager for scheme '" + scheme + "'");
+        }
+        return manager;
+    };
+    ModelStoreManagerRegistry.getSchemes = function () {
+        return Object.keys(this.getInstance().managers);
+    };
+    return ModelStoreManagerRegistry;
+}());
+exports.ModelStoreManagerRegistry = ModelStoreManagerRegistry;
+function parseURL(url) {
+    if (url.indexOf(URL_SCHEME_SUFFIX) === -1) {
+        throw new Error("The url string provided does not contain a scheme. " +
+            "Supported schemes are: " +
+            ("" + ModelStoreManagerRegistry.getSchemes().join(',')));
+    }
+    return {
+        scheme: url.split(URL_SCHEME_SUFFIX)[0],
+        path: url.split(URL_SCHEME_SUFFIX)[1],
+    };
+}
+function cloneModelInternal(sourceURL, destURL, deleteSource) {
+    if (deleteSource === void 0) { deleteSource = false; }
+    return __awaiter(this, void 0, void 0, function () {
+        var loadHandlers, loadHandler, saveHandlers, saveHandler, sourceScheme, sourcePath, sameMedium, modelArtifacts, saveResult;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    util_1.assert(sourceURL !== destURL, "Old path and new path are the same: '" + sourceURL + "'");
+                    loadHandlers = router_registry_1.IORouterRegistry.getLoadHandlers(sourceURL);
+                    util_1.assert(loadHandlers.length > 0, "Copying failed because no load handler is found for source URL " + sourceURL + ".");
+                    util_1.assert(loadHandlers.length < 2, "Copying failed because more than one (" + loadHandlers.length + ") " +
+                        ("load handlers for source URL " + sourceURL + "."));
+                    loadHandler = loadHandlers[0];
+                    saveHandlers = router_registry_1.IORouterRegistry.getSaveHandlers(destURL);
+                    util_1.assert(saveHandlers.length > 0, "Copying failed because no save handler is found for destination URL " +
+                        (destURL + "."));
+                    util_1.assert(saveHandlers.length < 2, "Copying failed because more than one (" + loadHandlers.length + ") " +
+                        ("save handlers for destination URL " + destURL + "."));
+                    saveHandler = saveHandlers[0];
+                    sourceScheme = parseURL(sourceURL).scheme;
+                    sourcePath = parseURL(sourceURL).path;
+                    sameMedium = sourceScheme === parseURL(sourceURL).scheme;
+                    return [4, loadHandler.load()];
+                case 1:
+                    modelArtifacts = _a.sent();
+                    if (!(deleteSource && sameMedium)) return [3, 3];
+                    return [4, ModelStoreManagerRegistry.getManager(sourceScheme)
+                            .removeModel(sourcePath)];
+                case 2:
+                    _a.sent();
+                    _a.label = 3;
+                case 3: return [4, saveHandler.save(modelArtifacts)];
+                case 4:
+                    saveResult = _a.sent();
+                    if (!(deleteSource && !sameMedium)) return [3, 6];
+                    return [4, ModelStoreManagerRegistry.getManager(sourceScheme)
+                            .removeModel(sourcePath)];
+                case 5:
+                    _a.sent();
+                    _a.label = 6;
+                case 6: return [2, saveResult.modelArtifactsInfo];
+            }
+        });
+    });
+}
+function listModels() {
+    return __awaiter(this, void 0, void 0, function () {
+        var schemes, out, _i, schemes_1, scheme, schemeOut, path, url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schemes = ModelStoreManagerRegistry.getSchemes();
+                    out = {};
+                    _i = 0, schemes_1 = schemes;
+                    _a.label = 1;
+                case 1:
+                    if (!(_i < schemes_1.length)) return [3, 4];
+                    scheme = schemes_1[_i];
+                    return [4, ModelStoreManagerRegistry.getManager(scheme).listModels()];
+                case 2:
+                    schemeOut = _a.sent();
+                    for (path in schemeOut) {
+                        url = scheme + URL_SCHEME_SUFFIX + path;
+                        out[url] = schemeOut[path];
+                    }
+                    _a.label = 3;
+                case 3:
+                    _i++;
+                    return [3, 1];
+                case 4: return [2, out];
+            }
+        });
+    });
+}
+exports.listModels = listModels;
+function removeModel(url) {
+    return __awaiter(this, void 0, void 0, function () {
+        var schemeAndPath, manager;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schemeAndPath = parseURL(url);
+                    manager = ModelStoreManagerRegistry.getManager(schemeAndPath.scheme);
+                    return [4, manager.removeModel(schemeAndPath.path)];
+                case 1: return [2, _a.sent()];
+            }
+        });
+    });
+}
+exports.removeModel = removeModel;
+function copyModel(sourceURL, destURL) {
+    return __awaiter(this, void 0, void 0, function () {
+        var deleteSource;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    deleteSource = false;
+                    return [4, cloneModelInternal(sourceURL, destURL, deleteSource)];
+                case 1: return [2, _a.sent()];
+            }
+        });
+    });
+}
+exports.copyModel = copyModel;
+function moveModel(sourceURL, destURL) {
+    return __awaiter(this, void 0, void 0, function () {
+        var deleteSource;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    deleteSource = true;
+                    return [4, cloneModelInternal(sourceURL, destURL, deleteSource)];
+                case 1: return [2, _a.sent()];
+            }
+        });
+    });
+}
+exports.moveModel = moveModel;
+//# sourceMappingURL=model_management.js.map
+},{"../util":"node_modules\\@tensorflow\\tfjs-core\\dist\\util.js","./router_registry":"node_modules\\@tensorflow\\tfjs-core\\dist\\io\\router_registry.js"}],"node_modules\\@tensorflow\\tfjs-core\\dist\\io\\local_storage.js":[function(require,module,exports) {
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var environment_1 = require("../environment");
+var util_1 = require("../util");
+var io_utils_1 = require("./io_utils");
+var model_management_1 = require("./model_management");
+var router_registry_1 = require("./router_registry");
+var PATH_SEPARATOR = '/';
+var PATH_PREFIX = 'tensorflowjs_models';
+var INFO_SUFFIX = 'info';
+var MODEL_TOPOLOGY_SUFFIX = 'model_topology';
+var WEIGHT_SPECS_SUFFIX = 'weight_specs';
+var WEIGHT_DATA_SUFFIX = 'weight_data';
+function purgeLocalStorageArtifacts() {
+    if (!environment_1.ENV.get('IS_BROWSER') || typeof window.localStorage === 'undefined') {
+        throw new Error('purgeLocalStorageModels() cannot proceed because local storage is ' +
+            'unavailable in the current environment.');
+    }
+    var LS = window.localStorage;
+    var purgedModelPaths = [];
+    for (var i = 0; i < LS.length; ++i) {
+        var key = LS.key(i);
+        var prefix = PATH_PREFIX + PATH_SEPARATOR;
+        if (key.startsWith(prefix) && key.length > prefix.length) {
+            LS.removeItem(key);
+            var modelName = getModelPathFromKey(key);
+            if (purgedModelPaths.indexOf(modelName) === -1) {
+                purgedModelPaths.push(modelName);
+            }
+        }
+    }
+    return purgedModelPaths;
+}
+exports.purgeLocalStorageArtifacts = purgeLocalStorageArtifacts;
+function getModelKeys(path) {
+    return {
+        info: [PATH_PREFIX, path, INFO_SUFFIX].join(PATH_SEPARATOR),
+        topology: [PATH_PREFIX, path, MODEL_TOPOLOGY_SUFFIX].join(PATH_SEPARATOR),
+        weightSpecs: [PATH_PREFIX, path, WEIGHT_SPECS_SUFFIX].join(PATH_SEPARATOR),
+        weightData: [PATH_PREFIX, path, WEIGHT_DATA_SUFFIX].join(PATH_SEPARATOR)
+    };
+}
+function getModelPathFromKey(key) {
+    var items = key.split(PATH_SEPARATOR);
+    if (items.length < 3) {
+        throw new Error("Invalid key format: " + key);
+    }
+    return items.slice(1, items.length - 1).join(PATH_SEPARATOR);
+}
+function maybeStripScheme(key) {
+    return key.startsWith(BrowserLocalStorage.URL_SCHEME) ?
+        key.slice(BrowserLocalStorage.URL_SCHEME.length) :
+        key;
+}
+var BrowserLocalStorage = (function () {
+    function BrowserLocalStorage(modelPath) {
+        if (!environment_1.ENV.get('IS_BROWSER') || typeof window.localStorage === 'undefined') {
+            throw new Error('The current environment does not support local storage.');
+        }
+        this.LS = window.localStorage;
+        if (modelPath == null || !modelPath) {
+            throw new Error('For local storage, modelPath must not be null, undefined or empty.');
+        }
+        this.modelPath = modelPath;
+        this.keys = getModelKeys(this.modelPath);
+    }
+    BrowserLocalStorage.prototype.save = function (modelArtifacts) {
+        return __awaiter(this, void 0, void 0, function () {
+            var topology, weightSpecs, modelArtifactsInfo, key;
+            return __generator(this, function (_a) {
+                if (modelArtifacts.modelTopology instanceof ArrayBuffer) {
+                    throw new Error('BrowserLocalStorage.save() does not support saving model topology ' +
+                        'in binary formats yet.');
+                }
+                else {
+                    topology = JSON.stringify(modelArtifacts.modelTopology);
+                    weightSpecs = JSON.stringify(modelArtifacts.weightSpecs);
+                    modelArtifactsInfo = io_utils_1.getModelArtifactsInfoForJSON(modelArtifacts);
+                    try {
+                        this.LS.setItem(this.keys.info, JSON.stringify(modelArtifactsInfo));
+                        this.LS.setItem(this.keys.topology, topology);
+                        this.LS.setItem(this.keys.weightSpecs, weightSpecs);
+                        this.LS.setItem(this.keys.weightData, io_utils_1.arrayBufferToBase64String(modelArtifacts.weightData));
+                        return [2, { modelArtifactsInfo: modelArtifactsInfo }];
+                    }
+                    catch (err) {
+                        for (key in this.keys) {
+                            this.LS.removeItem(this.keys[key]);
+                        }
+                        throw new Error("Failed to save model '" + this.modelPath + "' to local storage: " +
+                            "size quota being exceeded is a possible cause of this failure: " +
+                            ("modelTopologyBytes=" + modelArtifactsInfo.modelTopologyBytes + ", ") +
+                            ("weightSpecsBytes=" + modelArtifactsInfo.weightSpecsBytes + ", ") +
+                            ("weightDataBytes=" + modelArtifactsInfo.weightDataBytes + "."));
+                    }
+                }
+                return [2];
+            });
+        });
+    };
+    BrowserLocalStorage.prototype.load = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var info, out, topology, weightSpecs, weightDataBase64;
+            return __generator(this, function (_a) {
+                info = JSON.parse(this.LS.getItem(this.keys.info));
+                if (info == null) {
+                    throw new Error("In local storage, there is no model with name '" + this.modelPath + "'");
+                }
+                if (info.modelTopologyType !== 'JSON') {
+                    throw new Error('BrowserLocalStorage does not support loading non-JSON model ' +
+                        'topology yet.');
+                }
+                out = {};
+                topology = JSON.parse(this.LS.getItem(this.keys.topology));
+                if (topology == null) {
+                    throw new Error("In local storage, the topology of model '" + this.modelPath + "' " +
+                        "is missing.");
+                }
+                out.modelTopology = topology;
+                weightSpecs = JSON.parse(this.LS.getItem(this.keys.weightSpecs));
+                if (weightSpecs == null) {
+                    throw new Error("In local storage, the weight specs of model '" + this.modelPath + "' " +
+                        "are missing.");
+                }
+                out.weightSpecs = weightSpecs;
+                weightDataBase64 = this.LS.getItem(this.keys.weightData);
+                if (weightDataBase64 == null) {
+                    throw new Error("In local storage, the binary weight values of model " +
+                        ("'" + this.modelPath + "' are missing."));
+                }
+                out.weightData = io_utils_1.base64StringToArrayBuffer(weightDataBase64);
+                return [2, out];
+            });
+        });
+    };
+    BrowserLocalStorage.URL_SCHEME = 'localstorage://';
+    return BrowserLocalStorage;
+}());
+exports.BrowserLocalStorage = BrowserLocalStorage;
+exports.localStorageRouter = function (url) {
+    if (!environment_1.ENV.get('IS_BROWSER')) {
+        return null;
+    }
+    else {
+        if (!Array.isArray(url) &&
+            url.startsWith(BrowserLocalStorage.URL_SCHEME)) {
+            return browserLocalStorage(url.slice(BrowserLocalStorage.URL_SCHEME.length));
+        }
+        else {
+            return null;
+        }
+    }
+};
+router_registry_1.IORouterRegistry.registerSaveRouter(exports.localStorageRouter);
+router_registry_1.IORouterRegistry.registerLoadRouter(exports.localStorageRouter);
+function browserLocalStorage(modelPath) {
+    return new BrowserLocalStorage(modelPath);
+}
+exports.browserLocalStorage = browserLocalStorage;
+var BrowserLocalStorageManager = (function () {
+    function BrowserLocalStorageManager() {
+        util_1.assert(environment_1.ENV.get('IS_BROWSER'), 'Current environment is not a web browser');
+        util_1.assert(typeof window.localStorage !== 'undefined', 'Current browser does not appear to support localStorage');
+        this.LS = window.localStorage;
+    }
+    BrowserLocalStorageManager.prototype.listModels = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var out, prefix, suffix, i, key, modelPath;
+            return __generator(this, function (_a) {
+                out = {};
+                prefix = PATH_PREFIX + PATH_SEPARATOR;
+                suffix = PATH_SEPARATOR + INFO_SUFFIX;
+                for (i = 0; i < this.LS.length; ++i) {
+                    key = this.LS.key(i);
+                    if (key.startsWith(prefix) && key.endsWith(suffix)) {
+                        modelPath = getModelPathFromKey(key);
+                        out[modelPath] = JSON.parse(this.LS.getItem(key));
+                    }
+                }
+                return [2, out];
+            });
+        });
+    };
+    BrowserLocalStorageManager.prototype.removeModel = function (path) {
+        return __awaiter(this, void 0, void 0, function () {
+            var keys, info;
+            return __generator(this, function (_a) {
+                path = maybeStripScheme(path);
+                keys = getModelKeys(path);
+                if (this.LS.getItem(keys.info) == null) {
+                    throw new Error("Cannot find model at path '" + path + "'");
+                }
+                info = JSON.parse(this.LS.getItem(keys.info));
+                this.LS.removeItem(keys.info);
+                this.LS.removeItem(keys.topology);
+                this.LS.removeItem(keys.weightSpecs);
+                this.LS.removeItem(keys.weightData);
+                return [2, info];
+            });
+        });
+    };
+    return BrowserLocalStorageManager;
+}());
+exports.BrowserLocalStorageManager = BrowserLocalStorageManager;
+if (environment_1.ENV.get('IS_BROWSER')) {
+    try {
+        model_management_1.ModelStoreManagerRegistry.registerManager(BrowserLocalStorage.URL_SCHEME, new BrowserLocalStorageManager());
+    }
+    catch (err) {
+    }
+}
+//# sourceMappingURL=local_storage.js.map
+},{"../environment":"node_modules\\@tensorflow\\tfjs-core\\dist\\environment.js","../util":"node_modules\\@tensorflow\\tfjs-core\\dist\\util.js","./io_utils":"node_modules\\@tensorflow\\tfjs-core\\dist\\io\\io_utils.js","./model_management":"node_modules\\@tensorflow\\tfjs-core\\dist\\io\\model_management.js","./router_registry":"node_modules\\@tensorflow\\tfjs-core\\dist\\io\\router_registry.js"}],"content.js":[function(require,module,exports) {
 'use strict';
 
 var _mobilenet = require('@tensorflow-models/mobilenet');
@@ -34848,6 +38447,8 @@ var _posenet = require('@tensorflow-models/posenet');
 var posenet = _interopRequireWildcard(_posenet);
 
 var _demo_util = require('./demo_util');
+
+var _local_storage = require('@tensorflow/tfjs-core/dist/io/local_storage');
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -34869,10 +38470,14 @@ let mobilenet;
 const TOPK = 10;
 
 let count = 0;
-let hit = [0, 0, 0, 0, 0, 0, 0];
 //save& load
 let myIncomingClassifier = [];
 let myGroups = [];
+
+//setting values initialized by message from background
+let pm, sc, fq, ac;
+let mode;
+
 /*
  * 프로그램이 실행되면 실행되는 코드
  */
@@ -34886,7 +38491,21 @@ async function setup() {
     // console.log(video);
     await loadCanvas();
     // if(model) model.dispose();
-    model = await posenet.load(0.75);
+    switch (pm) {
+        case 0:
+            mode = 0.5;
+            break;
+        case 1:
+            mode = 0.75;
+            break;
+        case 2:
+            mode = 1.0;
+            break;
+        default:
+            mode = 1.01;
+            break;
+    }
+    model = await posenet.load(mode);
     // console.log(model);
     // if(knn) knn.dispose();
     knn = knnClassifier.create();
@@ -34900,7 +38519,7 @@ async function detect() {
     let playAlert = setInterval(async function () {
         if (isDetecting === true && count == 0) {
             // const pose = await 
-            let pose = await model.estimateSinglePose(video, 0.4, true, 16);
+            let pose = await model.estimateSinglePose(video, sc, true, 16);
             // console.log(pose);
             ctx.clearRect(0, 0, 640, 480);
             if (pose.score >= 0.1) {
@@ -34923,7 +38542,7 @@ async function detect() {
                 var ytb_video = document.getElementsByTagName("video")[0];
                 var nextButton = document.getElementsByClassName("ytp-next-button")[0];
 
-                if (res.confidences[res.classIndex] * 100 > 60) {
+                if (res.confidences[res.classIndex] * 100 > ac) {
                     switch (res.classIndex) {
                         case 1:
                             if (ytb_video.volume < 0.2) {
@@ -34973,7 +38592,7 @@ async function detect() {
         } else if (count != 0) {
             count--;
         } else clearInterval(playAlert);
-    }, 500);
+    }, fq);
 }
 /**
  * 카메라가 활성화된 HTMLVideoElement를 생성후 리턴
@@ -35025,7 +38644,7 @@ async function myloadModel() {
 // setup();
 chrome.runtime.onMessage.addListener(gotMessage);
 async function gotMessage(message, sender, sendResponse) {
-    console.log(message.data);
+    console.log(message);
     if (message.data === "OFF") {
         isDetecting = false;
         //video.pause();
@@ -35035,6 +38654,11 @@ async function gotMessage(message, sender, sendResponse) {
         });
     } else if (message.data === "ON") {
         // video = await loadVideo();
+        pm = message.pmm;
+        sc = message.scm;
+        fq = message.fqm;
+        ac = message.acm;
+
         if (!loading) {
             loading = true;
             await setup();
@@ -35047,7 +38671,7 @@ async function gotMessage(message, sender, sendResponse) {
         }
     }
 }
-},{"@tensorflow-models/mobilenet":"node_modules\\@tensorflow-models\\mobilenet\\dist\\mobilenet.esm.js","@tensorflow/tfjs":"node_modules\\@tensorflow\\tfjs\\dist\\tf.esm.js","@tensorflow-models/knn-classifier":"node_modules\\@tensorflow-models\\knn-classifier\\dist\\knn-classifier.esm.js","@tensorflow-models/posenet":"node_modules\\@tensorflow-models\\posenet\\dist\\posenet.esm.js","./demo_util":"demo_util.js"}],"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js":[function(require,module,exports) {
+},{"@tensorflow-models/mobilenet":"node_modules\\@tensorflow-models\\mobilenet\\dist\\mobilenet.esm.js","@tensorflow/tfjs":"node_modules\\@tensorflow\\tfjs\\dist\\tf.esm.js","@tensorflow-models/knn-classifier":"node_modules\\@tensorflow-models\\knn-classifier\\dist\\knn-classifier.esm.js","@tensorflow-models/posenet":"node_modules\\@tensorflow-models\\posenet\\dist\\posenet.esm.js","./demo_util":"demo_util.js","@tensorflow/tfjs-core/dist/io/local_storage":"node_modules\\@tensorflow\\tfjs-core\\dist\\io\\local_storage.js"}],"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -35076,7 +38700,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '50825' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '52075' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
