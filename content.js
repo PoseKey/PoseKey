@@ -30,6 +30,8 @@ let myGroups = []
 let pm, sc, fq, ac;
 let mode;
 
+let custom, defaults, customs, list;
+                    
 /*
  * 프로그램이 실행되면 실행되는 코드
  */
@@ -83,50 +85,24 @@ async function detect(){
                 // If classes have been added run predict
                 logits = infer();
                 const res = await knn.predictClass(logits, TOPK);
-                console.clear();
-                console.log("%c" + res.classIndex + " " + res.confidences[res.classIndex]*100, "color: blue; font-size: 100pt");
-                // chrome.tabs.executeScript(null,{code:"scrollBy(0,200);"});
+                // chrome.tabs.executeScript(null,{code:""});
                 //control
-                var ytb_video = document.getElementsByTagName("video")[0];
-                var nextButton = document.getElementsByClassName("ytp-next-button")[0];
+                console.clear();
+                console.log("%c" + defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex]*100, "color: blue; font-size: 50pt");
+                
+                let ytb_video = document.getElementsByTagName("video")[0];
+                let nextButton = document.getElementsByClassName("ytp-next-button")[0];
 
-                if(res.confidences[res.classIndex]*100 > ac){
-                    switch(res.classIndex){
-                        case 1:
-                            if(ytb_video.volume < 0.2){
-                                ytb_video.volume = 0.2;
-                            }
-                            else{
-                                ytb_video.volume -= 0.2;
-                            }
-                            break;
-                        case 2:
-                            if (ytb_video.volume > 0.8){
-                                ytb_video.volume = 1;
-                            }
-                            else{ 
-                                ytb_video.volume += 0.1;
-                            }
-                            break;
-                        case 3:
-                            //scrollBy(0,200);
-                            if(ytb_video.paused){
-                                ytb_video.play();
-                            }
-                            else{
-                                ytb_video.pause();
-                            }
-                            count = 5;
-                            break;
-                        case 4:
-                            ytb_video.currentTime -= 10;
-                            break;
-                        case 5:
-                            ytb_video.currentTime += 10;
-                            break;
-                        case 6:
-                            //scrollBy(0,-200);
-                            nextButton.click();
+                // console.log(defaults[res.classIndex - 1] == "Scroll Up");
+                if(res.classIndex != 0 && res.confidences[res.classIndex]*100 >= ac){
+                    if(custom == false){
+                        list = defaults;
+                    }
+                    else list = customs;
+                    switch(list[res.classIndex - 1]){
+                        case "Scroll Up":
+                            scrollBy(0,-200);
+                            console.log("scroll up");
                             break;
                         default:
                             break;
@@ -212,7 +188,9 @@ async function gotMessage(message, sender, sendResponse){
         sc = message.scm;
         fq = message.fqm;
         ac = message.acm;
-        
+        custom = message.customm;
+        defaults = message.defaultsm;
+        customs = message.customsm;
         if(!loading){
             loading = true;
             await setup();

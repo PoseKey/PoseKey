@@ -120,6 +120,8 @@ let firstImage = "man-celebrating1.png";
 //ac = accuracy
 let pm, sc, fq, ac;
 
+let defaults, customs, custom;
+
 load();
 loadS();
 //power
@@ -130,7 +132,8 @@ function save() {
             pmm: pm,
             scm: sc,
             fqm: fq,
-            acm: ac
+            acm: ac,
+            customm: custom, defaultsm: defaults, customsm: customs
         }
     });else chrome.storage.sync.set({
         power: false,
@@ -138,7 +141,8 @@ function save() {
             pmm: pm,
             scm: sc,
             fqm: fq,
-            acm: ac
+            acm: ac,
+            customm: custom, defaultsm: defaults, customsm: customs
         } });
 }
 function load() {
@@ -155,6 +159,9 @@ function loadS() {
         if (data.sc) sc = data.sc;else sc = 0.4;
         if (data.fq) fq = data.fq;else fq = 500;
         if (data.ac) ac = data.ac;else ac = 70;
+        if (data.custom) custom = data.custom;else custom = false;
+        if (data.defaults) defaults = data.defaults;else defaults = ["Scroll Up", null, null, null, null, null];
+        if (data.customs) customs = data.customs;else customs = [null, null, null, null, null, null];
     });
 }
 
@@ -170,7 +177,7 @@ function gotMessage(message, sender, sendResponse) {
     console.log(message);
     if (message.data == "trigger") {
         let msg = {
-            data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac
+            data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs
         };
         if (is === true) {
             msg.data = "OFF";
@@ -209,20 +216,23 @@ function gotMessage(message, sender, sendResponse) {
             }
         });
     } else if (message.data == "setting") {
-        console.log(message);
         pm = message.pmm;
         sc = message.scm;
         fq = message.fqm;
         ac = message.acm;
+    } else if (message.data == "poses") {
+        custom = message.customm;
+        defaults = message.defaultsm;
+        customs = message.customsm;
     }
     save();
-    sendResponse({ data: is, pmm: pm, scm: sc, fqm: fq, acm: ac });
+    sendResponse({ data: is, pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs });
 }
 function buttonClicked(tab) {
     console.log("button clicked!");
     console.log(tab);
     let msg = {
-        data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac
+        data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs
     };
     if (is === true) {
         msg.data = "OFF";
@@ -245,15 +255,11 @@ function buttonClicked(tab) {
 function onLoad(id) {
     console.log("onLoad!");
     // console.log(id);
-    let msg;
-    if (is === true) {
-        msg = {
-            data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac
-        };
-    } else {
-        msg = {
-            data: "OFF", pmm: pm, scm: sc, fqm: fq, acm: ac
-        };
+    let msg = {
+        data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs
+    };
+    if (is == false) {
+        msg.data = "OFF";
     }
     save();
     chrome.tabs.sendMessage(id, msg);
@@ -263,10 +269,10 @@ function active(tab) {
     // console.log("tab changed!");
     // console.log(tab.tabId);
     let msg = {
-        data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac
+        data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs
     };
     let msg2 = {
-        data: "OFF", pmm: pm, scm: sc, fqm: fq, acm: ac
+        data: "OFF", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs
     };
     if (is === false) {
         msg.data = "OFF";
@@ -286,10 +292,10 @@ function active(tab) {
 
 function window(windowId) {
     let msg = {
-        data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac
+        data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs
     };
     let msg2 = {
-        data: "OFF", pmm: pm, scm: sc, fqm: fq, acm: ac
+        data: "OFF", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs
     };
     if (is === false) {
         msg.data = "OFF";
@@ -316,7 +322,7 @@ function window(windowId) {
 }
 
 function highlight(tab) {
-    console.log("highlight!");
+    // console.log("highlight!");
 }
 },{}],"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -347,7 +353,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '52075' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '50439' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
