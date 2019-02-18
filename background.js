@@ -58,7 +58,7 @@ function loadS(){
         if(data.fq) fq = data.fq; else fq = 500;
         if(data.ac) ac = data.ac; else ac = 70;
         if(data.custom) custom = data.custom; else custom = false;
-        if(data.defaults) defaults = data.defaults; else defaults = ["Scroll Up",null,null,null,null,null];
+        if(data.defaults) defaults = data.defaults; else defaults = [null,null,null,null,null,null];
         if(data.customs) customs = data.customs; else customs = [null,null,null,null,null,null];
     });
 }
