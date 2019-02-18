@@ -91,7 +91,6 @@ async function detect(){
                 console.log("%c" + defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex]*100, "color: blue; font-size: 50pt");
                 
                 let ytb_video = document.getElementsByTagName("video")[0];
-                let nextButton = document.getElementsByClassName("ytp-next-button")[0];
 
                 // console.log(defaults[res.classIndex - 1] == "Scroll Up");
                 if(res.classIndex != 0 && res.confidences[res.classIndex]*100 >= ac){
@@ -149,7 +148,7 @@ async function detect(){
                             break;
                         
                         case "next video":
-                            var nextButton = document.getElementsByClassName('ytp-next-button')[0]; nextButton.click();
+                            let nextButton = document.getElementsByClassName('ytp-next-button')[0]; nextButton.click();
                             console.log("next video");
                             break;
 
