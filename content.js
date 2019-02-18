@@ -100,10 +100,59 @@ async function detect(){
                     }
                     else list = customs;
                     switch(list[res.classIndex - 1]){
-                        case "Scroll Up":
+                        case "scroll up":
                             scrollBy(0,-200);
                             console.log("scroll up");
                             break;
+
+                        case "scroll down":
+                            scrollBy(0,200);
+                            console.log("scroll down");
+                            break;
+                        
+                        case "volume down":
+                            if(ytb_video.volume < 0.2){ytb_video.volume = 0.2;} else{ytb_video.volume -= 0.2;}
+                            console.log("volume down");
+                            break;
+
+                        case "volume up":
+                            if (ytb_video.volume > 0.8)
+                                {ytb_video.volume = 1;} 
+                            else{ ytb_video.volume += 0.1;}
+                            console.log("volume up");
+                            break;
+                        
+                        case "stop video":
+                            if(ytb_video.paused){ytb_video.play();}else{ytb_video.pause();}
+                            count = 5;
+                            console.log("stop video");
+                            break;
+                        
+                        case "forward 10sec":
+                            ytb_video.currentTime -= 10;
+                            console.log("forward 10sec");
+                            break;
+                        
+                        case "backward 10sec":
+                            ytb_video.currentTime += 10;
+                            console.log("backward 10sec");
+                            break;
+                        
+                        case "previous slide":
+                            location.href = '#slide=previous';
+                            console.log("previous slide");
+                            break;
+
+                        case "next slide":
+                            location.href = '#slide=next';
+                            console.log("next slide");
+                            break;
+                        
+                        case "next video":
+                            var nextButton = document.getElementsByClassName('ytp-next-button')[0]; nextButton.click();
+                            console.log("next video");
+                            break;
+
                         default:
                             break;
                     }
