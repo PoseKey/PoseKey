@@ -29,9 +29,11 @@ let myGroups = []
 //setting values initialized by message from background
 let pm, sc, fq, ac;
 let mode;
-
+//variables for mapping each poses with functions
 let custom, defaults, customs, list;
-                    
+//variables for loading custom define model
+let uid;
+
 /*
  * 프로그램이 실행되면 실행되는 코드
  */
@@ -63,7 +65,10 @@ async function setup(){
     // if(!mobilenet)
     mobilenet = await mobilenetModule.load();
     // console.log(mobilenet);
-    await myloadModel();
+    if (custom ==true && uid!= undefined){
+        await loadCustomModel();
+    }
+    else await myloadModel();
 }
 async function detect(){
     let playAlert = setInterval(async function(){
@@ -217,7 +222,18 @@ async function myloadModel(){
     // console.log(knn);
     // console.log('Classifier loaded');
 }
-
+async function loadCustomModel(){
+    const myLoadedModel  = await tf.loadModel("indexeddb://" + uid);
+    const myMaxLayers = myLoadedModel.layers.length;
+    const myDenseEnd =  myMaxLayers - 2;
+    const myDenseStart = myDenseEnd/2;                                  
+    for (let myWeightLoop = myDenseStart; myWeightLoop < myDenseEnd; myWeightLoop++ ){
+        myIncomingClassifier[myWeightLoop - myDenseStart] =  myLoadedModel.layers[myWeightLoop].getWeights()[0];
+        myGroups[myWeightLoop - myDenseStart] =  myLoadedModel.layers[myWeightLoop].name;                        
+    }
+    knn.dispose();
+    knn.setClassifierDataset(myIncomingClassifier);
+}
 // setup();
 chrome.runtime.onMessage.addListener(gotMessage);
 async function gotMessage(message, sender, sendResponse){
@@ -239,6 +255,7 @@ async function gotMessage(message, sender, sendResponse){
         custom = message.customm;
         defaults = message.defaultsm;
         customs = message.customsm;
+        uid = message.uidm;
         if(!loading){
             loading = true;
             await setup();

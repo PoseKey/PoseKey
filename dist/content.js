@@ -38477,8 +38477,10 @@ let myGroups = [];
 //setting values initialized by message from background
 let pm, sc, fq, ac;
 let mode;
-
+//variables for mapping each poses with functions
 let custom, defaults, customs, list;
+//variables for loading custom define model
+let uid;
 
 /*
  * 프로그램이 실행되면 실행되는 코드
@@ -38515,7 +38517,9 @@ async function setup() {
     // if(!mobilenet)
     mobilenet = await mobilenetModule.load();
     // console.log(mobilenet);
-    await myloadModel();
+    if (custom == true && uid != undefined) {
+        await loadCustomModel();
+    } else await myloadModel();
 }
 async function detect() {
     let playAlert = setInterval(async function () {
@@ -38543,7 +38547,6 @@ async function detect() {
                 console.log("%c" + defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex] * 100, "color: blue; font-size: 50pt");
 
                 let ytb_video = document.getElementsByTagName("video")[0];
-                let nextButton = document.getElementsByClassName("ytp-next-button")[0];
 
                 // console.log(defaults[res.classIndex - 1] == "Scroll Up");
                 if (res.classIndex != 0 && res.confidences[res.classIndex] * 100 >= ac) {
@@ -38551,10 +38554,69 @@ async function detect() {
                         list = defaults;
                     } else list = customs;
                     switch (list[res.classIndex - 1]) {
-                        case "Scroll Up":
+                        case "scroll up":
                             scrollBy(0, -200);
                             console.log("scroll up");
                             break;
+
+                        case "scroll down":
+                            scrollBy(0, 200);
+                            console.log("scroll down");
+                            break;
+
+                        case "volume down":
+                            if (ytb_video.volume < 0.2) {
+                                ytb_video.volume = 0.2;
+                            } else {
+                                ytb_video.volume -= 0.2;
+                            }
+                            console.log("volume down");
+                            break;
+
+                        case "volume up":
+                            if (ytb_video.volume > 0.8) {
+                                ytb_video.volume = 1;
+                            } else {
+                                ytb_video.volume += 0.1;
+                            }
+                            console.log("volume up");
+                            break;
+
+                        case "stop video":
+                            if (ytb_video.paused) {
+                                ytb_video.play();
+                            } else {
+                                ytb_video.pause();
+                            }
+                            count = 5;
+                            console.log("stop video");
+                            break;
+
+                        case "forward 10sec":
+                            ytb_video.currentTime -= 10;
+                            console.log("forward 10sec");
+                            break;
+
+                        case "backward 10sec":
+                            ytb_video.currentTime += 10;
+                            console.log("backward 10sec");
+                            break;
+
+                        case "previous slide":
+                            location.href = '#slide=previous';
+                            console.log("previous slide");
+                            break;
+
+                        case "next slide":
+                            location.href = '#slide=next';
+                            console.log("next slide");
+                            break;
+
+                        case "next video":
+                            let nextButton = document.getElementsByClassName('ytp-next-button')[0];nextButton.click();
+                            console.log("next video");
+                            break;
+
                         default:
                             break;
                     }
@@ -38618,7 +38680,18 @@ async function myloadModel() {
     // console.log(knn);
     // console.log('Classifier loaded');
 }
-
+async function loadCustomModel() {
+    const myLoadedModel = await tf.loadModel("indexeddb://" + uid);
+    const myMaxLayers = myLoadedModel.layers.length;
+    const myDenseEnd = myMaxLayers - 2;
+    const myDenseStart = myDenseEnd / 2;
+    for (let myWeightLoop = myDenseStart; myWeightLoop < myDenseEnd; myWeightLoop++) {
+        myIncomingClassifier[myWeightLoop - myDenseStart] = myLoadedModel.layers[myWeightLoop].getWeights()[0];
+        myGroups[myWeightLoop - myDenseStart] = myLoadedModel.layers[myWeightLoop].name;
+    }
+    knn.dispose();
+    knn.setClassifierDataset(myIncomingClassifier);
+}
 // setup();
 chrome.runtime.onMessage.addListener(gotMessage);
 async function gotMessage(message, sender, sendResponse) {
@@ -38639,6 +38712,7 @@ async function gotMessage(message, sender, sendResponse) {
         custom = message.customm;
         defaults = message.defaultsm;
         customs = message.customsm;
+        uid = message.uidm;
         if (!loading) {
             loading = true;
             await setup();
@@ -38680,7 +38754,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '50439' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '58853' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 

@@ -119,8 +119,24 @@ let firstImage = "man-celebrating1.png";
 //fq = frequency
 //ac = accuracy
 let pm, sc, fq, ac;
-
+/*
+ * defaults = 사용자의 기본 모델 기능 맵핑 리스트 
+ * customs = 사용자의 커스텀 모델 기능 매핑 리스트
+ * custom = 커스텀 모델로 설정 여부
+ */
 let defaults, customs, custom;
+
+/*
+ * login = 로그인 여부, true or false
+ * uid = 로그인한 사용자의 uid
+ * local = custom 모델 생성 여부
+ * storedModel = custom 모델 생성자들의 uid 리스트
+ */
+
+let login,
+    uid,
+    local = false,
+    storedModel;
 
 load();
 loadS();
@@ -160,8 +176,9 @@ function loadS() {
         if (data.fq) fq = data.fq;else fq = 500;
         if (data.ac) ac = data.ac;else ac = 70;
         if (data.custom) custom = data.custom;else custom = false;
-        if (data.defaults) defaults = data.defaults;else defaults = ["Scroll Up", null, null, null, null, null];
+        if (data.defaults) defaults = data.defaults;else defaults = [null, null, null, null, null, null];
         if (data.customs) customs = data.customs;else customs = [null, null, null, null, null, null];
+        if (data.storedModel) storedModel = data.storedModel;else storedModel = [];
     });
 }
 
@@ -224,15 +241,31 @@ function gotMessage(message, sender, sendResponse) {
         custom = message.customm;
         defaults = message.defaultsm;
         customs = message.customsm;
+    } else if (message.data == "login") {
+        login = true;
+        uid = message.uid;
+        storedModel.forEach(function (item, i) {
+            if (item == uid) {
+                local = true;
+            }
+        });
+    } else if (message.data == "logout") {
+        login = false;
+        uid = undefined;
+        local = false;
+        custom = false;
+    } else if (message.data == "saveModel") {
+        let exist = storedModel.include(uid);
+        if (!exist) storedModel.push(uid);
     }
     save();
-    sendResponse({ data: is, pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs });
+    sendResponse({ data: is, pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs, localm: local });
 }
 function buttonClicked(tab) {
     console.log("button clicked!");
     console.log(tab);
     let msg = {
-        data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs
+        data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs, uidm: uid
     };
     if (is === true) {
         msg.data = "OFF";
@@ -256,7 +289,7 @@ function onLoad(id) {
     console.log("onLoad!");
     // console.log(id);
     let msg = {
-        data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs
+        data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs, uidm: uid
     };
     if (is == false) {
         msg.data = "OFF";
@@ -269,10 +302,10 @@ function active(tab) {
     // console.log("tab changed!");
     // console.log(tab.tabId);
     let msg = {
-        data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs
+        data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs, uidm: uid
     };
     let msg2 = {
-        data: "OFF", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs
+        data: "OFF", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs, uidm: uid
     };
     if (is === false) {
         msg.data = "OFF";
@@ -292,10 +325,10 @@ function active(tab) {
 
 function window(windowId) {
     let msg = {
-        data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs
+        data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs, uidm: uid
     };
     let msg2 = {
-        data: "OFF", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs
+        data: "OFF", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs, uidm: uid
     };
     if (is === false) {
         msg.data = "OFF";
@@ -353,7 +386,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '50439' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '58853' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
