@@ -159,8 +159,8 @@ function gotMessage(message, sender, sendResponse){
         custom = false;
     }
     else if (message.data == "saveModel"){
-        let exist = storedModel.include(uid);
-        if(!exist) storedModel.push(uid);
+        let exist = storedModel.include(message.uidm);
+        if(!exist) storedModel.push(message.uidm);
     }
     save();
     sendResponse({data:is, pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, localm: local });
