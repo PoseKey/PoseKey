@@ -145,12 +145,8 @@ function gotMessage(message, sender, sendResponse){
     }
     else if (message.data =="login"){
         login = true;
-        uid = message.uid;
-        storedModel.forEach(function(item,i){
-            if(item == uid){
-                local = true;
-            }
-        })
+        uid = message.uidm;
+        local = storedModel.includes(message.uidm);
     }
     else if (message.data == "logout"){
         login = false;
@@ -159,7 +155,7 @@ function gotMessage(message, sender, sendResponse){
         custom = false;
     }
     else if (message.data == "saveModel"){
-        let exist = storedModel.include(message.uidm);
+        let exist = storedModel.includes(message.uidm);
         if(!exist) storedModel.push(message.uidm);
     }
     save();
