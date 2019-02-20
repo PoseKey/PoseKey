@@ -113,6 +113,16 @@ async function detect(){
                             scrollBy(0,200);
                             console.log("scroll down");
                             break;
+
+                        case "go to top":
+                            scrollBy(0,0);
+                            console.log("go to top");
+                            break;
+
+                        case "go to bottom":
+                            scrollBy(0,document.body.scrollHeight);
+                            console.log("go to bottom");
+                            break;
                         
                         case "volume down":
                             if(ytb_video.volume < 0.2){ytb_video.volume = 0.2;} else{ytb_video.volume -= 0.2;}
@@ -156,7 +166,77 @@ async function detect(){
                             let nextButton = document.getElementsByClassName('ytp-next-button')[0]; nextButton.click();
                             console.log("next video");
                             break;
+                        
+                        case "close tab":
+                            chrome.runtime.sendMessage({msg: "close tab"}, function(response) {
+                                console.log(response.farewell);
+                            });
+                            console.log("close tab");
+                            break;
+                        
+                        case "move tab left":
+                            chrome.runtime.sendMessage({msg: "move tab left"}, function(response) {
+                                console.log(response.farewell);
+                            });
+                            console.log("move tab left");
+                            break;
+                        
+                        case "move tab right":
+                            chrome.runtime.sendMessage({msg: "move tab right"}, function(response) {
+                                console.log(response.farewell);
+                            });
+                            console.log("move tab right");
+                            break;
+                        
+                        case "close window":
+                            chrome.runtime.sendMessage({msg: "close window"}, function(response) {
+                                console.log(response.farewell);
+                            });
+                            console.log("close window");
+                            break;
 
+                        case "zoom-in":
+                            chrome.runtime.sendMessage({msg: "zoom-in"}, function(response) {
+                                console.log(response.farewell);
+                            });
+                            console.log("zoom-in");
+                            break;
+                        
+                        case "zoom-out":
+                            chrome.runtime.sendMessage({msg: "zoom-out"}, function(response) {
+                                console.log(response.farewell);
+                            });
+                            console.log("zoom-out");
+                            break;
+                        
+                        case "zoom-reset":
+                            chrome.runtime.sendMessage({msg: "zoom-reset"}, function(response) {
+                                console.log(response.farewell);
+                            });
+                            console.log("zoom-reset");
+                            break;
+                        
+                        case "back":
+                            chrome.runtime.sendMessage({msg: "back"}, function(response) {
+                                console.log(response.farewell);
+                            });
+                            console.log("back");
+                            break;
+
+                        case "forward":
+                            chrome.runtime.sendMessage({msg: "forward"}, function(response) {
+                                console.log(response.farewell);
+                            });
+                            console.log("forward");
+                            break;
+
+                        case "reload":
+                            chrome.runtime.sendMessage({msg: "reload"}, function(response) {
+                                console.log(response.farewell);
+                            });
+                            console.log("reload");
+                            break;
+                    
                         default:
                             break;
                     }
