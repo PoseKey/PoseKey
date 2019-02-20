@@ -258,3 +258,78 @@ function window(windowId){
 function highlight(tab){
     // console.log("highlight!");
 }
+
+function handleMessage(request, sender, sendResponse) {
+    
+    if(request.msg == "close tab"){
+        chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+            chrome.tabs.remove(tab[0].id)
+        })
+    }
+
+    else if(request.msg == "move tab left"){
+        chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+            if (tab[0].index > 0) {
+            chrome.tabs.move(tab[0].id, {'index': tab[0].index - 1})
+            }
+        })
+          
+    }
+
+    else if(request.msg == "move tab right"){
+        chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+            chrome.tabs.move(tab[0].id, {'index': tab[0].index + 1})
+        })
+          
+    }
+
+    else if(request.msg == "close window"){
+        chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+            chrome.windows.remove(tab[0].windowId)
+        })
+          
+    }
+
+    else if(request.msg == "zoom-in"){
+        chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+            chrome.tabs.getZoom(tab[0].id, (zoomFactor) => {
+              console.log(zoomFactor)
+              chrome.tabs.setZoom(tab[0].id, zoomFactor + 0.1)
+            })
+          })
+          
+    }
+
+    else if(request.msg == "zoom-out"){
+        chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+            chrome.tabs.getZoom(tab[0].id, (zoomFactor) => {
+              chrome.tabs.setZoom(tab[0].id, zoomFactor - 0.1)
+            })
+          })
+          
+    }
+
+    else if(request.msg == "zoom-reset"){
+        chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+            chrome.tabs.setZoom(tab[0].id, 0)
+        })
+          
+    }
+
+    else if(request.msg == "back"){
+        chrome.tabs.executeScript(null, {'code': 'window.history.back()'})
+    }
+
+    else if(request.msg == "forward"){
+        chrome.tabs.executeScript(null, {'code': 'window.history.forward()'})    
+    }
+
+    else if(request.msg == "reload"){
+        chrome.tabs.executeScript(null, {'code': 'window.location.reload()'})   
+    }
+
+    
+    //sendResponse({response: "Response from background script"});
+  }
+  
+  chrome.runtime.onMessage.addListener(handleMessage);
