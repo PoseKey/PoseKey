@@ -236,7 +236,6 @@ async function detect(){
                             });
                             console.log("reload");
                             break;
-                    
                         default:
                             break;
                     }
