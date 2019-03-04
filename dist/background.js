@@ -167,14 +167,16 @@ function load() {
         console.log(data.power);
         if (is) chrome.browserAction.setIcon({ path: firstImage });else chrome.browserAction.setIcon({ path: secondImage });
     });
+    chrome.tabs.create({ url: "/option/index.html" });
 }
 
 function loadS() {
     chrome.storage.sync.get('sets', function (data) {
+        // console.log(data);
         if (data.pm) pm = data.pm;else pm = 1;
-        if (data.sc) sc = data.sc;else sc = 0.4;
+        if (data.sc) sc = data.sc;else sc = 0.3;
         if (data.fq) fq = data.fq;else fq = 500;
-        if (data.ac) ac = data.ac;else ac = 70;
+        if (data.ac) ac = data.ac;else ac = 60;
         if (data.custom) custom = data.custom;else custom = false;
         if (data.defaults) defaults = data.defaults;else defaults = [null, null, null, null, null, null];
         if (data.customs) customs = data.customs;else customs = [null, null, null, null, null, null];
@@ -257,32 +259,85 @@ function gotMessage(message, sender, sendResponse) {
         if (!exist) storedModel.push(id);
         local = true;
     }
+
+    //function mapped to poses
+    else if (message.data == "close tab") {
+            chrome.tabs.query({ currentWindow: true, active: true }, tab => {
+                chrome.tabs.remove(tab[0].id);
+            });
+        } else if (message.data == "move tab left") {
+            chrome.tabs.query({ currentWindow: true, active: true }, tab => {
+                if (tab[0].index > 0) {
+                    chrome.tabs.move(tab[0].id, { 'index': tab[0].index - 1 });
+                }
+            });
+        } else if (message.data == "move tab right") {
+            chrome.tabs.query({ currentWindow: true, active: true }, tab => {
+                chrome.tabs.move(tab[0].id, { 'index': tab[0].index + 1 });
+            });
+        } else if (message.data == "close window") {
+            chrome.tabs.query({ currentWindow: true, active: true }, tab => {
+                chrome.windows.remove(tab[0].windowId);
+            });
+        }
+    // else if(message.data == "zoom-in"){
+    //     chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+    //         chrome.tabs.getZoom(tab[0].id, (zoomFactor) => {
+    //             // console.log(zoomFactor)
+    //             chrome.tabs.setZoom(tab[0].id, zoomFactor + 0.1)
+    //         })
+    //     })
+    // }
+    // else if(message.data == "zoom-out"){
+    //     chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+    //         chrome.tabs.getZoom(tab[0].id, (zoomFactor) => {
+    //             chrome.tabs.setZoom(tab[0].id, zoomFactor - 0.1)
+    //         })
+    //     })
+    // }
+    // else if(message.data == "zoom-reset"){
+    //     chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+    //         chrome.tabs.setZoom(tab[0].id, 0)
+    //     })     
+    // }
+    // else if(message.data == "back"){
+    //     chrome.tabs.executeScript(null, {'code': 'window.history.back()'})
+    // }
+    // else if(message.data == "forward"){
+    //     chrome.tabs.executeScript(null, {'code': 'window.history.forward()'})    
+    // }
+    // else if(message.data == "reload"){
+    //     chrome.tabs.executeScript(null, {'code': 'window.location.reload()'})   
+    // }
+
     save();
     sendResponse({ data: is, pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs, localm: local });
 }
-function buttonClicked(tab) {
-    console.log("button clicked!");
-    console.log(tab);
-    let msg = {
-        data: "ON", pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs, uidm: uid
-    };
-    if (is === true) {
-        msg.data = "OFF";
-        is = false;
-        chrome.browserAction.setIcon({ path: secondImage });
-        /* 모든 탭에 OFF하라고 보냄*/
-        chrome.tabs.query({}, function (tabs) {
-            for (let i = 0; i < tabs.length; i++) {
-                chrome.tabs.sendMessage(tabs[i].id, msg);
-            }
-        });
-    } else {
-        is = true;
-        chrome.browserAction.setIcon({ path: firstImage });
-        chrome.tabs.sendMessage(tab.id, msg); // 현재 탭에만 ON하라고 보냄
-    }
-    save();
-}
+
+// function buttonClicked(tab) {
+//     console.log("button clicked!");
+//     console.log(tab);
+//     let msg = {
+//         data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid
+//     };
+//     if(is===true){
+//         msg.data = "OFF";
+//         is = false;
+//         chrome.browserAction.setIcon({path: secondImage});
+//         /* 모든 탭에 OFF하라고 보냄*/
+//         chrome.tabs.query({}, function(tabs) {
+//             for (let i=0; i<tabs.length; i++) {
+//                 chrome.tabs.sendMessage(tabs[i].id, msg);
+//             }
+//         });
+//     }
+//     else {
+//         is = true;
+//         chrome.browserAction.setIcon({path: firstImage});
+//         chrome.tabs.sendMessage(tab.id, msg);   // 현재 탭에만 ON하라고 보냄
+//     }
+//     save();
+// }
 
 function onLoad(id) {
     console.log("onLoad!");
@@ -353,59 +408,84 @@ function window(windowId) {
     save();
 }
 
-function highlight(tab) {
-    // console.log("highlight!");
-}
+// function highlight(tab){
+//     // console.log("highlight!");
+// }
 
-function handleMessage(request, sender, sendResponse) {
+// function handleMessage(request, sender, sendResponse) {
 
-    if (request.msg == "close tab") {
-        chrome.tabs.query({ currentWindow: true, active: true }, tab => {
-            chrome.tabs.remove(tab[0].id);
-        });
-    } else if (request.msg == "move tab left") {
-        chrome.tabs.query({ currentWindow: true, active: true }, tab => {
-            if (tab[0].index > 0) {
-                chrome.tabs.move(tab[0].id, { 'index': tab[0].index - 1 });
-            }
-        });
-    } else if (request.msg == "move tab right") {
-        chrome.tabs.query({ currentWindow: true, active: true }, tab => {
-            chrome.tabs.move(tab[0].id, { 'index': tab[0].index + 1 });
-        });
-    } else if (request.msg == "close window") {
-        chrome.tabs.query({ currentWindow: true, active: true }, tab => {
-            chrome.windows.remove(tab[0].windowId);
-        });
-    } else if (request.msg == "zoom-in") {
-        chrome.tabs.query({ currentWindow: true, active: true }, tab => {
-            chrome.tabs.getZoom(tab[0].id, zoomFactor => {
-                console.log(zoomFactor);
-                chrome.tabs.setZoom(tab[0].id, zoomFactor + 0.1);
-            });
-        });
-    } else if (request.msg == "zoom-out") {
-        chrome.tabs.query({ currentWindow: true, active: true }, tab => {
-            chrome.tabs.getZoom(tab[0].id, zoomFactor => {
-                chrome.tabs.setZoom(tab[0].id, zoomFactor - 0.1);
-            });
-        });
-    } else if (request.msg == "zoom-reset") {
-        chrome.tabs.query({ currentWindow: true, active: true }, tab => {
-            chrome.tabs.setZoom(tab[0].id, 0);
-        });
-    } else if (request.msg == "back") {
-        chrome.tabs.executeScript(null, { 'code': 'window.history.back()' });
-    } else if (request.msg == "forward") {
-        chrome.tabs.executeScript(null, { 'code': 'window.history.forward()' });
-    } else if (request.msg == "reload") {
-        chrome.tabs.executeScript(null, { 'code': 'window.location.reload()' });
-    }
+//     if(request.msg == "close tab"){
+//         chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+//             chrome.tabs.remove(tab[0].id)
+//         })
+//     }
 
-    //sendResponse({response: "Response from background script"});
-}
+//     else if(request.msg == "move tab left"){
+//         chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+//             if (tab[0].index > 0) {
+//             chrome.tabs.move(tab[0].id, {'index': tab[0].index - 1})
+//             }
+//         })
 
-chrome.runtime.onMessage.addListener(handleMessage);
+//     }
+
+//     else if(request.msg == "move tab right"){
+//         chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+//             chrome.tabs.move(tab[0].id, {'index': tab[0].index + 1})
+//         })
+
+//     }
+
+//     else if(request.msg == "close window"){
+//         chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+//             chrome.windows.remove(tab[0].windowId)
+//         })
+
+//     }
+
+//     else if(request.msg == "zoom-in"){
+//         chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+//             chrome.tabs.getZoom(tab[0].id, (zoomFactor) => {
+//               console.log(zoomFactor)
+//               chrome.tabs.setZoom(tab[0].id, zoomFactor + 0.1)
+//             })
+//           })
+
+//     }
+
+//     else if(request.msg == "zoom-out"){
+//         chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+//             chrome.tabs.getZoom(tab[0].id, (zoomFactor) => {
+//               chrome.tabs.setZoom(tab[0].id, zoomFactor - 0.1)
+//             })
+//           })
+
+//     }
+
+//     else if(request.msg == "zoom-reset"){
+//         chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
+//             chrome.tabs.setZoom(tab[0].id, 0)
+//         })
+
+//     }
+
+//     else if(request.msg == "back"){
+//         chrome.tabs.executeScript(null, {'code': 'window.history.back()'})
+//     }
+
+//     else if(request.msg == "forward"){
+//         chrome.tabs.executeScript(null, {'code': 'window.history.forward()'})    
+//     }
+
+//     else if(request.msg == "reload"){
+//         chrome.tabs.executeScript(null, {'code': 'window.location.reload()'})   
+//     }
+
+
+//     //sendResponse({response: "Response from background script"});
+//   }
+
+//   chrome.runtime.onMessage.addListener(handleMessage);
 },{}],"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -435,7 +515,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '63519' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '62023' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 

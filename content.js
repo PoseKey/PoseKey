@@ -34,6 +34,7 @@ let custom, defaults, customs, list;
 //variables for loading custom define model
 let uid;
 
+let size = 1.0;
 /*
  * 프로그램이 실행되면 실행되는 코드
  */
@@ -72,7 +73,7 @@ async function setup(){
 }
 async function detect(){
     let playAlert = setInterval(async function(){
-        if(isDetecting === true&& count==0){
+        if(isDetecting === true && count==0){
             // const pose = await 
             let pose = await model.estimateSinglePose(video,sc,true,16);
             // console.log(pose);
@@ -94,7 +95,7 @@ async function detect(){
                 //control
                 console.clear();
                 console.log("%c" + defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex]*100, "color: blue; font-size: 50pt");
-                
+                // console.log(defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex]*100);
                 let ytb_video = document.getElementsByTagName("video")[0];
 
                 // console.log(defaults[res.classIndex - 1] == "Scroll Up");
@@ -106,135 +107,139 @@ async function detect(){
                     switch(list[res.classIndex - 1]){
                         case "scroll up":
                             scrollBy(0,-200);
-                            console.log("scroll up");
+                            // console.log("scroll up");
                             break;
 
                         case "scroll down":
                             scrollBy(0,200);
-                            console.log("scroll down");
+                            // console.log("scroll down");
                             break;
 
                         case "go to top":
-                            scrollBy(0,0);
-                            console.log("go to top");
+                            scrollTo(0,0);
+                            // console.log("go to top");
                             break;
 
                         case "go to bottom":
                             scrollBy(0,document.body.scrollHeight);
-                            console.log("go to bottom");
+                            // console.log("go to bottom");
                             break;
                         
                         case "volume down":
-                            if(ytb_video.volume < 0.2){ytb_video.volume = 0.2;} else{ytb_video.volume -= 0.2;}
-                            console.log("volume down");
+                            if(ytb_video.volume < 0.2){ytb_video.volume = 0.2;} else{ ytb_video.volume -= 0.2;}
+                            // console.log("volume down");
                             break;
 
                         case "volume up":
                             if (ytb_video.volume > 0.8)
                                 {ytb_video.volume = 1;} 
                             else{ ytb_video.volume += 0.1;}
-                            console.log("volume up");
+                            // console.log("volume up");
                             break;
                         
                         case "stop video":
-                            if(ytb_video.paused){ytb_video.play();}else{ytb_video.pause();}
+                            if(ytb_video.paused){ytb_video.play();} else{ytb_video.pause();}
                             count = 5;
-                            console.log("stop video");
+                            // console.log("stop video");
                             break;
                         
                         case "forward 10sec":
                             ytb_video.currentTime -= 10;
-                            console.log("forward 10sec");
+                            // console.log("forward 10sec");
                             break;
                         
                         case "backward 10sec":
                             ytb_video.currentTime += 10;
-                            console.log("backward 10sec");
+                            // console.log("backward 10sec");
                             break;
                         
                         case "previous slide":
                             location.href = '#slide=previous';
-                            console.log("previous slide");
+                            // console.log("previous slide");
                             break;
 
                         case "next slide":
                             location.href = '#slide=next';
-                            console.log("next slide");
+                            // console.log("next slide");
                             break;
                         
                         case "next video":
                             let nextButton = document.getElementsByClassName('ytp-next-button')[0]; nextButton.click();
-                            console.log("next video");
+                            // console.log("next video");
                             break;
                         
                         case "close tab":
-                            chrome.runtime.sendMessage({msg: "close tab"}, function(response) {
-                                console.log(response.farewell);
-                            });
-                            console.log("close tab");
+                            chrome.runtime.sendMessage({data: "close tab"});
+                            // console.log("close tab");
                             break;
                         
+                        case "new tab":
+                            window.open("chrome://newtab");
+                            break;
                         case "move tab left":
-                            chrome.runtime.sendMessage({msg: "move tab left"}, function(response) {
-                                console.log(response.farewell);
-                            });
-                            console.log("move tab left");
+                            chrome.runtime.sendMessage({data: "move tab left"}, 
+                                // function(response) {
+                                //     console.log(response.farewell);
+                                // }
+                            );
+                            // console.log("move tab left");
                             break;
                         
                         case "move tab right":
-                            chrome.runtime.sendMessage({msg: "move tab right"}, function(response) {
-                                console.log(response.farewell);
-                            });
-                            console.log("move tab right");
+                            chrome.runtime.sendMessage({data: "move tab right"},
+                                // function(response) {
+                                //     console.log(response.farewell);
+                                // }
+                            );
+                            // console.log("move tab right");
                             break;
                         
                         case "close window":
-                            chrome.runtime.sendMessage({msg: "close window"}, function(response) {
-                                console.log(response.farewell);
-                            });
-                            console.log("close window");
+                            chrome.runtime.sendMessage({data: "close window"},
+                                // function(response) {
+                                //     console.log(response.farewell);
+                                // }
+                            );
+                            // console.log("close window");
                             break;
 
                         case "zoom-in":
-                            chrome.runtime.sendMessage({msg: "zoom-in"}, function(response) {
-                                console.log(response.farewell);
-                            });
-                            console.log("zoom-in");
+                            size = size + 0.1;
+                            document.body.style.zoom=size;
+                            // chrome.runtime.sendMessage({data: "zoom-in"});
+                            // console.log("zoom-in");
                             break;
                         
                         case "zoom-out":
-                            chrome.runtime.sendMessage({msg: "zoom-out"}, function(response) {
-                                console.log(response.farewell);
-                            });
-                            console.log("zoom-out");
+                            size = size - 0.1;
+                            document.body.style.zoom = size;
+                            // chrome.runtime.sendMessage({data: "zoom-out"});
+                            // console.log("zoom-out");
                             break;
                         
                         case "zoom-reset":
-                            chrome.runtime.sendMessage({msg: "zoom-reset"}, function(response) {
-                                console.log(response.farewell);
-                            });
-                            console.log("zoom-reset");
+                            size = 1.0;
+                            document.body.style.zoom = size;
+                            // chrome.runtime.sendMessage({data: "zoom-reset"});
+                            // console.log("zoom-reset");
                             break;
                         
                         case "back":
-                            chrome.runtime.sendMessage({msg: "back"}, function(response) {
-                                console.log(response.farewell);
-                            });
-                            console.log("back");
+                            window.history.back();
+                            // chrome.runtime.sendMessage({data: "back"});
+                            // console.log("back");
                             break;
 
                         case "forward":
-                            chrome.runtime.sendMessage({msg: "forward"}, function(response) {
-                                console.log(response.farewell);
-                            });
-                            console.log("forward");
+                            window.history.forward();
+                            // chrome.runtime.sendMessage({data: "forward"});
+                            // console.log("forward");
                             break;
 
                         case "reload":
-                            chrome.runtime.sendMessage({msg: "reload"}, function(response) {
-                                console.log(response.farewell);
-                            });
-                            console.log("reload");
+                            window.location.reload();
+                            // chrome.runtime.sendMessage({data: "reload"});
+                            // console.log("reload");
                             break;
                         default:
                             break;
