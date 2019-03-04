@@ -145,11 +145,12 @@ function save() {
     if (is == true) chrome.storage.sync.set({
         power: true,
         sets: {
-            pmm: pm,
-            scm: sc,
-            fqm: fq,
-            acm: ac,
-            customm: custom, defaultsm: defaults, customsm: customs
+            pm: pm,
+            sc: sc,
+            fq: fq,
+            ac: ac,
+            custom: custom, defaults: defaults, customs: customs,
+            local: local
         }
     });else chrome.storage.sync.set({
         power: false,
@@ -158,7 +159,8 @@ function save() {
             scm: sc,
             fqm: fq,
             acm: ac,
-            customm: custom, defaultsm: defaults, customsm: customs
+            custom: custom, defaults: defaults, customs: customs,
+            local: local
         } });
 }
 function load() {
@@ -180,6 +182,7 @@ function loadS() {
         if (data.custom) custom = data.custom;else custom = false;
         if (data.defaults) defaults = data.defaults;else defaults = [null, null, null, null, null, null];
         if (data.customs) customs = data.customs;else customs = [null, null, null, null, null, null];
+        if (data.local) local = data.local;else local = false;
         if (data.storedModel) storedModel = data.storedModel;else storedModel = [];
     });
 }
@@ -515,7 +518,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '62023' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '53821' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 

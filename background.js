@@ -37,11 +37,12 @@ function save(){
         chrome.storage.sync.set({
             power: true,
             sets:{
-                pmm: pm,
-                scm: sc,
-                fqm: fq,
-                acm: ac,
-                customm:custom, defaultsm:defaults, customsm:customs,
+                pm: pm,
+                sc: sc,
+                fq: fq,
+                ac: ac,
+                custom:custom, defaults:defaults, customs:customs,
+                local: local,
             }
         });
     else
@@ -52,7 +53,8 @@ function save(){
                 scm: sc,
                 fqm: fq,
                 acm: ac,
-                customm:custom, defaultsm:defaults, customsm:customs,
+                custom:custom, defaults:defaults, customs:customs,
+                local: local,
             }});
 }
 function load(){
@@ -75,6 +77,7 @@ function loadS(){
         if(data.custom) custom = data.custom; else custom = false;
         if(data.defaults) defaults = data.defaults; else defaults = [null,null,null,null,null,null];
         if(data.customs) customs = data.customs; else customs = [null,null,null,null,null,null];
+        if(data.local) local = data.local; else local = false;
         if(data.storedModel) storedModel = data.storedModel; else storedModel = [];
     });
 }
