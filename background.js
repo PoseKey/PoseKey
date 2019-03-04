@@ -146,7 +146,8 @@ function gotMessage(message, sender, sendResponse){
     else if (message.data =="login"){
         login = true;
         uid = message.uidm;
-        local = storedModel.includes(message.uidm);
+        local = storedModel.includes(uid);
+        console.log(storedModel, local);
     }
     else if (message.data == "logout"){
         login = false;
@@ -156,7 +157,9 @@ function gotMessage(message, sender, sendResponse){
     }
     else if (message.data == "saveModel"){
         let exist = storedModel.includes(message.uidm);
-        if(!exist) storedModel.push(message.uidm);
+        let id = message.uidm;
+        if(!exist) storedModel.push(id);
+        local = true;
     }
     save();
     sendResponse({data:is, pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, localm: local });
@@ -332,4 +335,4 @@ function handleMessage(request, sender, sendResponse) {
     //sendResponse({response: "Response from background script"});
   }
   
-  chrome.runtime.onMessage.addListener(handleMessage);
+//   chrome.runtime.onMessage.addListener(handleMessage);
