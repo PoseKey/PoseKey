@@ -3,7 +3,7 @@ console.log('background running');
 let is = null;
 let lastTab;
 let lastWindow;
-let first;
+let first = false;
 let secondImage ="standing-up-man-.png";
 let firstImage ="man-celebrating1.png";
 
