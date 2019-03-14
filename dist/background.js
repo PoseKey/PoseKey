@@ -255,7 +255,7 @@ function gotMessage(message, sender, sendResponse) {
     } else if (message.data == "login") {
         uid = message.uidm;
         local = storedModel.includes(uid);
-        // console.log(storedModel, local);
+        console.log(storedModel, local);
     } else if (message.data == "logout") {
         login = false;
         uid = undefined;
@@ -319,7 +319,17 @@ function gotMessage(message, sender, sendResponse) {
     // }
 
     save();
-    sendResponse({ data: is, pmm: pm, scm: sc, fqm: fq, acm: ac, customm: custom, defaultsm: defaults, customsm: customs, localm: local });
+    sendResponse({
+        data: is,
+        pmm: pm,
+        scm: sc,
+        fqm: fq,
+        acm: ac,
+        customm: custom,
+        defaultsm: defaults,
+        customsm: customs,
+        localm: local
+    });
 }
 
 // function buttonClicked(tab) {
