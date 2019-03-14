@@ -109,7 +109,7 @@ console.log('background running');
 let is = null;
 let lastTab;
 let lastWindow;
-
+let first = false;
 let secondImage = "standing-up-man-.png";
 let firstImage = "man-celebrating1.png";
 
@@ -144,16 +144,19 @@ loadS();
 function save() {
     if (is == true) chrome.storage.sync.set({
         power: true,
+        first: false,
         sets: {
             pm: pm,
             sc: sc,
             fq: fq,
             ac: ac,
             custom: custom, defaults: defaults, customs: customs,
-            local: local
+            local: local,
+            storedModel: storedModel
         }
     });else chrome.storage.sync.set({
         power: false,
+        first: false,
         sets: {
             pmm: pm,
             scm: sc,
@@ -169,7 +172,10 @@ function load() {
         console.log(data.power);
         if (is) chrome.browserAction.setIcon({ path: firstImage });else chrome.browserAction.setIcon({ path: secondImage });
     });
-    chrome.tabs.create({ url: "/option/index.html" });
+    chrome.storage.sync.get('first', data => {
+        if (data.first) first = data.first;else first = true;
+    });
+    if (first) chrome.tabs.create({ url: "/option/index.html" });
 }
 
 function loadS() {
@@ -518,7 +524,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '53821' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '57439' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
