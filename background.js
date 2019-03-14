@@ -156,10 +156,9 @@ function gotMessage(message, sender, sendResponse){
         customs = message.customsm;
     }
     else if (message.data =="login"){
-        login = true;
         uid = message.uidm;
         local = storedModel.includes(uid);
-        console.log(storedModel, local);
+        // console.log(storedModel, local);
     }
     else if (message.data == "logout"){
         login = false;

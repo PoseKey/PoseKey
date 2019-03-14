@@ -253,10 +253,9 @@ function gotMessage(message, sender, sendResponse) {
         defaults = message.defaultsm;
         customs = message.customsm;
     } else if (message.data == "login") {
-        login = true;
         uid = message.uidm;
         local = storedModel.includes(uid);
-        console.log(storedModel, local);
+        // console.log(storedModel, local);
     } else if (message.data == "logout") {
         login = false;
         uid = undefined;
@@ -524,7 +523,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '57439' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '52026' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
