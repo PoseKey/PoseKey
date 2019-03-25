@@ -38545,7 +38545,7 @@ async function detect() {
                 // chrome.tabs.executeScript(null,{code:""});
                 //control
                 console.clear();
-                console.log("%c" + defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex] * 100, "color: blue; font-size: 50pt");
+                if (defaults[res.classIndex - 1] == undefined) console.log("%c" + "Idle " + res.confidences[res.classIndex] * 100 + "%", "color: blue; font-size: 50pt");else console.log("%c" + defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex] * 100 + "%", "color: blue; font-size: 50pt");
                 // console.log(defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex]*100);
                 let ytb_video = document.getElementsByTagName("video")[0];
 
@@ -38779,15 +38779,19 @@ async function loadCustomModel() {
 // setup();
 chrome.runtime.onMessage.addListener(gotMessage);
 async function gotMessage(message, sender, sendResponse) {
-    console.log(message);
+    // console.log(message);
     if (message.data === "OFF") {
+        console.log("PoseKey - turned off");
         isDetecting = false;
-        //video.pause();
-        video.srcObject = null;
-        stream.getTracks().forEach(track => {
-            track.stop();
-        });
+        if (video) {
+            video.pause();
+            video.srcObject = undefined;
+            stream.getTracks().forEach(track => {
+                track.stop();
+            });
+        }
     } else if (message.data === "ON") {
+        console.log("PoseKey - Initializing");
         // video = await loadVideo();
         pm = message.pmm;
         sc = message.scm;
@@ -38798,11 +38802,13 @@ async function gotMessage(message, sender, sendResponse) {
         customs = message.customsm;
         uid = message.uidm;
         if (!loading) {
+            console.log("PoseKey - Loading Model...");
             loading = true;
             await setup();
             loaded = true;
         }
         if (!isDetecting && loaded && !videoErr) {
+            console.log("PoseKey - Loading Video...");
             video = await loadVideo();
             isDetecting = true;
             detect();
@@ -38838,7 +38844,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '52026' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '59407' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
