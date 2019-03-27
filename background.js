@@ -29,6 +29,12 @@ let defaults, customs, custom;
 
 let login, uid, local = false, storedModel;
 
+/*
+ *
+ *
+ */
+let isDialog = true, ri, gi, bi, ti, hi, vi;
+
 load();
 loadS();
 //power
@@ -86,6 +92,13 @@ function loadS(){
         if(data.customs) customs = data.customs; else customs = [null,null,null,null,null,null];
         if(data.local) local = data.local; else local = false;
         if(data.storedModel) storedModel = data.storedModel; else storedModel = [];
+        if(data.isDialog == false) isDialog = data.isDialog;else isDialog = true;
+        if(data.ri) ri = data.ri; else ri = 255;
+        if(data.gi) gi = data.gi; else gi = 255;
+        if(data.bi) bi = data.bi; else bi = 255;
+        if(data.ti) ti = data.ti; else ti = 255;
+        if(data.hi == false) hi = data.hi; else hi = true;
+        if(data.vi == false) vi = data.vi; else vi = true;
     });
 }
 
@@ -101,7 +114,16 @@ function gotMessage(message, sender, sendResponse){
     console.log(message);
     if(message.data=="trigger"){
         let msg = {
-            data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs,
+            data: "ON",
+            pmm:pm, scm:sc, fqm:fq, acm:ac,
+            customm:custom, defaultsm:defaults, customsm:customs,
+            isDialogm: isDialog,
+            rim: ri,
+            gim: gi,
+            bim: bi,
+            tim: ti,
+            him: hi,
+            vim: vi,
         };
         if(is===true){
             msg.data = "OFF";
@@ -154,6 +176,17 @@ function gotMessage(message, sender, sendResponse){
         custom = message.customm;
         defaults = message.defaultsm;
         customs = message.customsm;
+    }
+    else if(message.data =="interface"){
+        ri = message.rim;
+        gi = message.gim;
+        bi = message.bim;
+        ti = message.tim;
+    }
+    else if(message.data =="interfaceIO"){
+        isDialog = message.isDialogm;
+        hi = message.him;
+        vi = message.vim;
     }
     else if (message.data =="login"){
         uid = message.uidm;
@@ -236,7 +269,14 @@ function gotMessage(message, sender, sendResponse){
         customm:custom,
         defaultsm:defaults,
         customsm:customs,
-        localm: local
+        localm: local,
+        isDialogm: isDialog,
+        rim: ri,
+        gim: gi,
+        bim: bi,
+        tim: ti,
+        him: hi,
+        vim: vi,
     });
 }
 
@@ -269,7 +309,14 @@ function onLoad(id){
     console.log("onLoad!");
     // console.log(id);
     let msg = {
-        data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid
+        data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid,
+        isDialogm: isDialog,
+        rim: ri,
+        gim: gi,
+        bim: bi,
+        tim: ti,
+        him: hi,
+        vim: vi,
     };
     if (is == false) {
         msg.data = "OFF";
@@ -282,10 +329,24 @@ function active(tab){
     // console.log("tab changed!");
     // console.log(tab.tabId);
     let msg={
-        data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid
+        data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid,
+        isDialogm: isDialog,
+        rim: ri,
+        gim: gi,
+        bim: bi,
+        tim: ti,
+        him: hi,
+        vim: vi,
     }
     let msg2={
-        data: "OFF", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid
+        data: "OFF", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid, 
+        isDialogm: isDialog,
+        rim: ri,
+        gim: gi,
+        bim: bi,
+        tim: ti,
+        him: hi,
+        vim: vi,
     }
     if (is === false){
         msg.data = "OFF";
@@ -305,10 +366,24 @@ function active(tab){
 
 function window(windowId){
     let msg={
-        data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid
+        data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid,
+        isDialogm: isDialog,
+        rim: ri,
+        gim: gi,
+        bim: bi,
+        tim: ti,
+        him: hi,
+        vim: vi,
     }
     let msg2={
-        data: "OFF", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid
+        data: "OFF", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid,
+        isDialogm: isDialog,
+        rim: ri,
+        gim: gi,
+        bim: bi,
+        tim: ti,
+        him: hi,
+        vim: vi,
     }
     if (is === false){
         msg.data = "OFF";

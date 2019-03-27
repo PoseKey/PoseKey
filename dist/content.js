@@ -38450,6 +38450,8 @@ var _demo_util = require('./demo_util');
 
 var _local_storage = require('@tensorflow/tfjs-core/dist/io/local_storage');
 
+var _util = require('@tensorflow/tfjs-core/dist/util');
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 //global variables
@@ -38483,14 +38485,57 @@ let custom, defaults, customs, list;
 let uid;
 
 let size = 1.0;
+let screen,
+    dialog,
+    text,
+    isDialog = false;
+let ri = 255,
+    gi = 255,
+    bi = 255,
+    ti = 0.3;
+let Sstyle;
+let Dstyle; // dialog.style =  "position: fixed;display: none;width: 100%;height: 100%;top: 0;left: 0;right: 0;bottom: 0;background-color: rgba(0,0,0,0.5);z-index: 2;cursor: pointer;"
+let HorizontalInterface = true,
+    VerticalInterface = true; //Horizontal - 1 = top, 0 - bottom; Vertical - 1 - left, 0 - bottom;
 /*
- * 프로그램이 실행되면 실행되는 코드
- */
+* 프로그램이 실행되면 실행되는 코드
+*/
+function setStyle() {
+    let Dposition = "";
+    if (!HorizontalInterface) {
+        Dposition = "right:0;";
+    }
+    if (!VerticalInterface) {
+        Dposition = Dposition + "bottom:0;";
+    }
+    Sstyle = "pointer-events:none;position:fixed;display:block;z-index:10000;pointer-events:none;height:100%;width:100%;top:0;left:0;";
+    Dstyle = "pointer-events:none;position:fixed;display:flex;margin:10px;" + Dposition + "padding:10px;background-color:rgba(" + ri + "," + gi + "," + bi + "," + ti + ");border-radius:5px;justify-content:center;align-items:center";
+    screen.style = Sstyle;
+    dialog.style = Dstyle;
+}
+async function LoadInterface() {
+    isDialog = true;
+    screen = document.createElement('div');
+    dialog = document.createElement('div');
+    // dialog.innerHTML = "PoseKey Loading...";
+    text = document.createElement('p');
+    text.innerHTML = "PoseKey - Loading...";
+    setStyle();
+    screen.appendChild(dialog);
+    dialog.appendChild(text);
+    document.body.appendChild(screen);
+}
+
+async function CloseInterface() {
+    screen.style = "display:hidden";
+    dialog.style = "display:hidden";
+    text.innerHTML = "";
+}
 async function setup() {
     video = await loadVideo().catch(error => {
         if (error) {
             videoErr = true;
-            console.log('Pose-Detector(Chrome:Extension) has been stopped because the site is insecure for camera permission!');
+            // console.log('Pose-Detector(Chrome:Extension) has been stopped because the site is insecure for camera permission!')
         }
     });
     // console.log(video);
@@ -38544,8 +38589,14 @@ async function detect() {
                 const res = await knn.predictClass(logits, TOPK);
                 // chrome.tabs.executeScript(null,{code:""});
                 //control
-                console.clear();
-                if (defaults[res.classIndex - 1] == undefined) console.log("%c" + "Idle " + res.confidences[res.classIndex] * 100 + "%", "color: blue; font-size: 50pt");else console.log("%c" + defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex] * 100 + "%", "color: blue; font-size: 50pt");
+                // console.clear();
+                if (defaults[res.classIndex - 1] == undefined) {
+                    // console.log("%c" + "Idle " + res.confidences[res.classIndex]*100 + "%", "color: blue; font-size: 50pt");
+                    text.innerHTML = "Idle " + res.confidences[res.classIndex] * 100 + "%";
+                } else {
+                    // console.log("%c" + defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex]*100 + "%", "color: blue; font-size: 50pt");
+                    text.innerHTML = defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex] * 100 + "%";
+                }
                 // console.log(defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex]*100);
                 let ytb_video = document.getElementsByTagName("video")[0];
 
@@ -38779,9 +38830,12 @@ async function loadCustomModel() {
 // setup();
 chrome.runtime.onMessage.addListener(gotMessage);
 async function gotMessage(message, sender, sendResponse) {
-    // console.log(message);
+    console.log(message);
     if (message.data === "OFF") {
-        console.log("PoseKey - turned off");
+        // (console.log("PoseKey - turned off"));
+        if (isDialog) {
+            CloseInterface();
+        }
         isDetecting = false;
         if (video) {
             video.pause();
@@ -38791,31 +38845,50 @@ async function gotMessage(message, sender, sendResponse) {
             });
         }
     } else if (message.data === "ON") {
-        console.log("PoseKey - Initializing");
+        // console.log("PoseKey - Initializing");
         // video = await loadVideo();
         pm = message.pmm;
         sc = message.scm;
         fq = message.fqm;
         ac = message.acm;
+
+        ri = message.rim;
+        gi = message.gim;
+        bi = message.bim;
+        ti = message.tim;
+        VerticalInterface = message.vim;
+        HorizontalInterface = message.him;
+
         custom = message.customm;
         defaults = message.defaultsm;
         customs = message.customsm;
+
         uid = message.uidm;
+        if (isDialog) {
+            text.innerHTML = "PoseKey - Initializing";
+            setStyle();
+        } else LoadInterface();
         if (!loading) {
-            console.log("PoseKey - Loading Model...");
+            // console.log("PoseKey - Loading Model...");
+            if (isDialog) {
+                text.innerHTML = "PoseKey - Loading Model...";
+            }
             loading = true;
             await setup();
             loaded = true;
         }
         if (!isDetecting && loaded && !videoErr) {
-            console.log("PoseKey - Loading Video...");
+            // console.log("PoseKey - Loading Video...");
+            if (isDialog) {
+                text.innerHTML = "PoseKey - Loading Video...";
+            }
             video = await loadVideo();
             isDetecting = true;
             detect();
         }
     }
 }
-},{"@tensorflow-models/mobilenet":"node_modules\\@tensorflow-models\\mobilenet\\dist\\mobilenet.esm.js","@tensorflow/tfjs":"node_modules\\@tensorflow\\tfjs\\dist\\tf.esm.js","@tensorflow-models/knn-classifier":"node_modules\\@tensorflow-models\\knn-classifier\\dist\\knn-classifier.esm.js","@tensorflow-models/posenet":"node_modules\\@tensorflow-models\\posenet\\dist\\posenet.esm.js","./demo_util":"demo_util.js","@tensorflow/tfjs-core/dist/io/local_storage":"node_modules\\@tensorflow\\tfjs-core\\dist\\io\\local_storage.js"}],"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js":[function(require,module,exports) {
+},{"@tensorflow-models/mobilenet":"node_modules\\@tensorflow-models\\mobilenet\\dist\\mobilenet.esm.js","@tensorflow/tfjs":"node_modules\\@tensorflow\\tfjs\\dist\\tf.esm.js","@tensorflow-models/knn-classifier":"node_modules\\@tensorflow-models\\knn-classifier\\dist\\knn-classifier.esm.js","@tensorflow-models/posenet":"node_modules\\@tensorflow-models\\posenet\\dist\\posenet.esm.js","./demo_util":"demo_util.js","@tensorflow/tfjs-core/dist/io/local_storage":"node_modules\\@tensorflow\\tfjs-core\\dist\\io\\local_storage.js","@tensorflow/tfjs-core/dist/util":"node_modules\\@tensorflow\\tfjs-core\\dist\\util.js"}],"C:\\Users\\y_jos\\AppData\\Roaming\\npm\\node_modules\\parcel-bundler\\src\\builtins\\hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -38844,7 +38917,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '59407' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '61675' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
