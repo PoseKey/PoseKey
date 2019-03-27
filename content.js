@@ -37,10 +37,10 @@ let uid;
 
 let size = 1.0;
 let screen, dialog, text, isDialog = false;
-let ri = 255, gi = 255, bi = 255, ti = 0.3;
+let ri = 255, gi = 255, bi = 255, ti = 0.0;
 let Sstyle;
 let Dstyle;// dialog.style =  "position: fixed;display: none;width: 100%;height: 100%;top: 0;left: 0;right: 0;bottom: 0;background-color: rgba(0,0,0,0.5);z-index: 2;cursor: pointer;"
-let HorizontalInterface = true, VerticalInterface = true; //Horizontal - 1 = top, 0 - bottom; Vertical - 1 - left, 0 - bottom;
+let HorizontalInterface = false, VerticalInterface = false; //Horizontal - 1 = top, 0 - bottom; Vertical - 1 - left, 0 - bottom;
     /*
  * 프로그램이 실행되면 실행되는 코드
  */
@@ -56,6 +56,8 @@ function setStyle(){
     Dstyle = "pointer-events:none;position:fixed;display:flex;margin:10px;"+Dposition+"padding:10px;background-color:rgba("+ri+","+gi+","+bi+","+ti+");border-radius:5px;justify-content:center;align-items:center";
     screen.style = Sstyle;
     dialog.style = Dstyle;
+    text.style = "padding:0px;margin:0px;";
+    text.style.font = "16px arial,serif";
 }
 async function LoadInterface(){
     isDialog = true;

@@ -35,6 +35,8 @@ let login, uid, local = false, storedModel;
  */
 let isDialog = true, ri, gi, bi, ti, hi, vi;
 
+let msg, msg2;
+
 load();
 loadS();
 //power
@@ -93,15 +95,36 @@ function loadS(){
         if(data.local) local = data.local; else local = false;
         if(data.storedModel) storedModel = data.storedModel; else storedModel = [];
         if(data.isDialog == false) isDialog = data.isDialog;else isDialog = true;
-        if(data.ri) ri = data.ri; else ri = 255;
-        if(data.gi) gi = data.gi; else gi = 255;
-        if(data.bi) bi = data.bi; else bi = 255;
-        if(data.ti) ti = data.ti; else ti = 255;
+        if(data.ri) ri = data.ri; else ri = 56;
+        if(data.gi) gi = data.gi; else gi = 104;
+        if(data.bi) bi = data.bi; else bi = 188;
+        if(data.ti) ti = data.ti; else ti = 0.3;
         if(data.hi == false) hi = data.hi; else hi = true;
         if(data.vi == false) vi = data.vi; else vi = true;
     });
 }
-
+function updateMsg(){
+    msg={
+        data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid,
+        isDialogm: isDialog,
+        rim: ri,
+        gim: gi,
+        bim: bi,
+        tim: ti,
+        him: hi,
+        vim: vi,
+    }
+    msg2={
+        data: "OFF", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid, 
+        isDialogm: isDialog,
+        rim: ri,
+        gim: gi,
+        bim: bi,
+        tim: ti,
+        him: hi,
+        vim: vi,
+    }
+}
 // chrome.browserAction.onClicked.addListener(buttonClicked);
 chrome.tabs.onUpdated.addListener(onLoad);
 chrome.tabs.onCreated.addListener(onLoad);
@@ -113,31 +136,20 @@ chrome.runtime.onMessage.addListener(gotMessage);
 function gotMessage(message, sender, sendResponse){
     console.log(message);
     if(message.data=="trigger"){
-        let msg = {
-            data: "ON",
-            pmm:pm, scm:sc, fqm:fq, acm:ac,
-            customm:custom, defaultsm:defaults, customsm:customs,
-            isDialogm: isDialog,
-            rim: ri,
-            gim: gi,
-            bim: bi,
-            tim: ti,
-            him: hi,
-            vim: vi,
-        };
         if(is===true){
-            msg.data = "OFF";
             is = false;
+            updateMsg();
             chrome.browserAction.setIcon({path: secondImage});
             /* 모든 탭에 OFF하라고 보냄*/
             chrome.tabs.query({}, function(tabs) {
                 for (let i=0; i<tabs.length; i++) {
-                    chrome.tabs.sendMessage(tabs[i].id, msg);
+                    chrome.tabs.sendMessage(tabs[i].id, msg2);
                 }
             });
         }
         else {
             is = true;
+            updateMsg();
             chrome.browserAction.setIcon({path: firstImage});
             chrome.tabs.query({active:true,currentWindow: true},function(tabs){
                 var current = tabs[0].id;
@@ -150,6 +162,7 @@ function gotMessage(message, sender, sendResponse){
     }
     else if(message.data =="ON"){
         is = true;
+        updateMsg();
         chrome.browserAction.setIcon({path: firstImage});
         chrome.tabs.query({active:true,currentWindow: true},function(tabs){
             var current = tabs[0].id;
@@ -158,6 +171,7 @@ function gotMessage(message, sender, sendResponse){
     }
     else if(message.data =="OFF"){
         is = false;
+        updateMsg();
         chrome.browserAction.setIcon({path: secondImage});
         /* 모든 탭에 OFF하라고 보냄*/
         chrome.tabs.query({}, function(tabs) {
@@ -191,7 +205,7 @@ function gotMessage(message, sender, sendResponse){
     else if (message.data =="login"){
         uid = message.uidm;
         local = storedModel.includes(uid);
-        console.log(storedModel, local);
+        // console.log(storedModel, local);
     }
     else if (message.data == "logout"){
         login = false;
@@ -280,44 +294,10 @@ function gotMessage(message, sender, sendResponse){
     });
 }
 
-// function buttonClicked(tab) {
-//     console.log("button clicked!");
-//     console.log(tab);
-//     let msg = {
-//         data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid
-//     };
-//     if(is===true){
-//         msg.data = "OFF";
-//         is = false;
-//         chrome.browserAction.setIcon({path: secondImage});
-//         /* 모든 탭에 OFF하라고 보냄*/
-//         chrome.tabs.query({}, function(tabs) {
-//             for (let i=0; i<tabs.length; i++) {
-//                 chrome.tabs.sendMessage(tabs[i].id, msg);
-//             }
-//         });
-//     }
-//     else {
-//         is = true;
-//         chrome.browserAction.setIcon({path: firstImage});
-//         chrome.tabs.sendMessage(tab.id, msg);   // 현재 탭에만 ON하라고 보냄
-//     }
-//     save();
-// }
-
 function onLoad(id){
     console.log("onLoad!");
     // console.log(id);
-    let msg = {
-        data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid,
-        isDialogm: isDialog,
-        rim: ri,
-        gim: gi,
-        bim: bi,
-        tim: ti,
-        him: hi,
-        vim: vi,
-    };
+    updateMsg();
     if (is == false) {
         msg.data = "OFF";
     }
@@ -328,26 +308,7 @@ function onLoad(id){
 function active(tab){
     // console.log("tab changed!");
     // console.log(tab.tabId);
-    let msg={
-        data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid,
-        isDialogm: isDialog,
-        rim: ri,
-        gim: gi,
-        bim: bi,
-        tim: ti,
-        him: hi,
-        vim: vi,
-    }
-    let msg2={
-        data: "OFF", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid, 
-        isDialogm: isDialog,
-        rim: ri,
-        gim: gi,
-        bim: bi,
-        tim: ti,
-        him: hi,
-        vim: vi,
-    }
+    updateMsg();
     if (is === false){
         msg.data = "OFF";
     }
@@ -358,33 +319,10 @@ function active(tab){
     });
     chrome.tabs.sendMessage(tab.tabId, msg);
     save();
-    // if(lastTab){
-    //     chrome.tabs.sendMessage(lastTab, msg2);
-    // }
-    // lastTab = tab.tabId;
 }
 
 function window(windowId){
-    let msg={
-        data: "ON", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid,
-        isDialogm: isDialog,
-        rim: ri,
-        gim: gi,
-        bim: bi,
-        tim: ti,
-        him: hi,
-        vim: vi,
-    }
-    let msg2={
-        data: "OFF", pmm:pm, scm:sc, fqm:fq, acm:ac, customm:custom, defaultsm:defaults, customsm:customs, uidm:uid,
-        isDialogm: isDialog,
-        rim: ri,
-        gim: gi,
-        bim: bi,
-        tim: ti,
-        him: hi,
-        vim: vi,
-    }
+    updateMsg();
     if (is === false){
         msg.data = "OFF";
     }
@@ -403,87 +341,5 @@ function window(windowId){
         lastTab = current;
         // lastWindow=windowId;
     });
-    // if(lastWindow!=windowId){
-    //     chrome.tabs.sendMessage(lastTab, msg2);
-    // }
     save();
 }
-
-// function highlight(tab){
-//     // console.log("highlight!");
-// }
-
-// function handleMessage(request, sender, sendResponse) {
-    
-//     if(request.msg == "close tab"){
-//         chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
-//             chrome.tabs.remove(tab[0].id)
-//         })
-//     }
-
-//     else if(request.msg == "move tab left"){
-//         chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
-//             if (tab[0].index > 0) {
-//             chrome.tabs.move(tab[0].id, {'index': tab[0].index - 1})
-//             }
-//         })
-          
-//     }
-
-//     else if(request.msg == "move tab right"){
-//         chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
-//             chrome.tabs.move(tab[0].id, {'index': tab[0].index + 1})
-//         })
-          
-//     }
-
-//     else if(request.msg == "close window"){
-//         chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
-//             chrome.windows.remove(tab[0].windowId)
-//         })
-          
-//     }
-
-//     else if(request.msg == "zoom-in"){
-//         chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
-//             chrome.tabs.getZoom(tab[0].id, (zoomFactor) => {
-//               console.log(zoomFactor)
-//               chrome.tabs.setZoom(tab[0].id, zoomFactor + 0.1)
-//             })
-//           })
-          
-//     }
-
-//     else if(request.msg == "zoom-out"){
-//         chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
-//             chrome.tabs.getZoom(tab[0].id, (zoomFactor) => {
-//               chrome.tabs.setZoom(tab[0].id, zoomFactor - 0.1)
-//             })
-//           })
-          
-//     }
-
-//     else if(request.msg == "zoom-reset"){
-//         chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
-//             chrome.tabs.setZoom(tab[0].id, 0)
-//         })
-          
-//     }
-
-//     else if(request.msg == "back"){
-//         chrome.tabs.executeScript(null, {'code': 'window.history.back()'})
-//     }
-
-//     else if(request.msg == "forward"){
-//         chrome.tabs.executeScript(null, {'code': 'window.history.forward()'})    
-//     }
-
-//     else if(request.msg == "reload"){
-//         chrome.tabs.executeScript(null, {'code': 'window.location.reload()'})   
-//     }
-
-    
-//     //sendResponse({response: "Response from background script"});
-//   }
-  
-//   chrome.runtime.onMessage.addListener(handleMessage);
