@@ -236,9 +236,12 @@ function updateMsg() {
     };
 }
 function updateCurrent() {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    if (is) chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         var current = tabs[0].id;
         chrome.tabs.sendMessage(current, msg);
+    });else chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        var current = tabs[0].id;
+        chrome.tabs.sendMessage(current, msg2);
     });
 }
 // chrome.browserAction.onClicked.addListener(buttonClicked);
@@ -325,16 +328,22 @@ function gotMessage(message, sender, sendResponse) {
             uid = message.uidm;
             local = storedModel.includes(uid);
             // console.log(storedModel, local);
+            updateMsg();
+            updateCurrent();
         } else if (message.data == "logout") {
             login = false;
             uid = undefined;
             local = false;
             custom = false;
+            updateMsg();
+            updateCurrent();
         } else if (message.data == "saveModel") {
             let exist = storedModel.includes(message.uidm);
             let id = message.uidm;
             if (!exist) storedModel.push(id);
             local = true;
+            updateMsg();
+            updateCurrent();
         }
 
         //function mapped to poses
