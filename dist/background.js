@@ -235,6 +235,12 @@ function updateMsg() {
         vim: vi
     };
 }
+function updateCurrent() {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        var current = tabs[0].id;
+        chrome.tabs.sendMessage(current, msg);
+    });
+}
 // chrome.browserAction.onClicked.addListener(buttonClicked);
 chrome.tabs.onUpdated.addListener(onLoad);
 chrome.tabs.onCreated.addListener(onLoad);
@@ -245,6 +251,7 @@ chrome.runtime.onMessage.addListener(gotMessage);
 
 function gotMessage(message, sender, sendResponse) {
     console.log(message);
+    updateMsg();
     if (message.data == "trigger") {
         if (is === true) {
             is = false;
@@ -265,80 +272,91 @@ function gotMessage(message, sender, sendResponse) {
                 chrome.tabs.sendMessage(current, msg);
             }); // 현재 탭에만 ON하라고 보냄
         }
-    } else if (message.data == "?") {
-        console.log("?");
-    } else if (message.data == "ON") {
-        is = true;
-        updateMsg();
-        chrome.browserAction.setIcon({ path: firstImage });
-        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-            var current = tabs[0].id;
-            chrome.tabs.sendMessage(current, msg);
-        });
-    } else if (message.data == "OFF") {
-        is = false;
-        updateMsg();
-        chrome.browserAction.setIcon({ path: secondImage });
-        /* 모든 탭에 OFF하라고 보냄*/
-        chrome.tabs.query({}, function (tabs) {
-            for (let i = 0; i < tabs.length; i++) {
-                chrome.tabs.sendMessage(tabs[i].id, msg);
-            }
-        });
-    } else if (message.data == "setting") {
-        pm = message.pmm;
-        sc = message.scm;
-        fq = message.fqm;
-        ac = message.acm;
-    } else if (message.data == "poses") {
-        custom = message.customm;
-        defaults = message.defaultsm;
-        customs = message.customsm;
-    } else if (message.data == "interface") {
-        ri = message.rim;
-        gi = message.gim;
-        bi = message.bim;
-        ti = message.tim;
-    } else if (message.data == "interfaceIO") {
-        isDialog = message.isDialogm;
-        hi = message.him;
-        vi = message.vim;
-    } else if (message.data == "login") {
-        uid = message.uidm;
-        local = storedModel.includes(uid);
-        // console.log(storedModel, local);
-    } else if (message.data == "logout") {
-        login = false;
-        uid = undefined;
-        local = false;
-        custom = false;
-    } else if (message.data == "saveModel") {
-        let exist = storedModel.includes(message.uidm);
-        let id = message.uidm;
-        if (!exist) storedModel.push(id);
-        local = true;
-    }
+    } else if (message.data == "?") {}
+    // console.log("?");
 
-    //function mapped to poses
-    else if (message.data == "close tab") {
-            chrome.tabs.query({ currentWindow: true, active: true }, tab => {
-                chrome.tabs.remove(tab[0].id);
-            });
-        } else if (message.data == "move tab left") {
-            chrome.tabs.query({ currentWindow: true, active: true }, tab => {
-                if (tab[0].index > 0) {
-                    chrome.tabs.move(tab[0].id, { 'index': tab[0].index - 1 });
-                }
-            });
-        } else if (message.data == "move tab right") {
-            chrome.tabs.query({ currentWindow: true, active: true }, tab => {
-                chrome.tabs.move(tab[0].id, { 'index': tab[0].index + 1 });
-            });
-        } else if (message.data == "close window") {
-            chrome.tabs.query({ currentWindow: true, active: true }, tab => {
-                chrome.windows.remove(tab[0].windowId);
-            });
+    // else if(message.data =="ON"){
+    //     is = true;
+    //     updateMsg();
+    //     chrome.browserAction.setIcon({path: firstImage});
+    //     chrome.tabs.query({active:true,currentWindow: true},function(tabs){
+    //         var current = tabs[0].id;
+    //         chrome.tabs.sendMessage(current, msg);
+    //     });
+    // }
+    // else if(message.data =="OFF"){
+    //     is = false;
+    //     updateMsg();
+    //     chrome.browserAction.setIcon({path: secondImage});
+    //     /* 모든 탭에 OFF하라고 보냄*/
+    //     chrome.tabs.query({}, function(tabs) {
+    //         for (let i=0; i<tabs.length; i++) {
+    //             chrome.tabs.sendMessage(tabs[i].id, msg);
+    //         }
+    //     });
+    // }
+    else if (message.data == "setting") {
+            pm = message.pmm;
+            sc = message.scm;
+            fq = message.fqm;
+            ac = message.acm;
+            updateMsg();
+            updateCurrent();
+        } else if (message.data == "poses") {
+            custom = message.customm;
+            defaults = message.defaultsm;
+            customs = message.customsm;
+            updateMsg();
+            updateCurrent();
+        } else if (message.data == "interface") {
+            ri = message.rim;
+            gi = message.gim;
+            bi = message.bim;
+            ti = message.tim;
+            updateMsg();
+            updateCurrent();
+        } else if (message.data == "interfaceIO") {
+            isDialog = message.isDialogm;
+            hi = message.him;
+            vi = message.vim;
+            updateMsg();
+            updateCurrent();
+        } else if (message.data == "login") {
+            uid = message.uidm;
+            local = storedModel.includes(uid);
+            // console.log(storedModel, local);
+        } else if (message.data == "logout") {
+            login = false;
+            uid = undefined;
+            local = false;
+            custom = false;
+        } else if (message.data == "saveModel") {
+            let exist = storedModel.includes(message.uidm);
+            let id = message.uidm;
+            if (!exist) storedModel.push(id);
+            local = true;
         }
+
+        //function mapped to poses
+        else if (message.data == "close tab") {
+                chrome.tabs.query({ currentWindow: true, active: true }, tab => {
+                    chrome.tabs.remove(tab[0].id);
+                });
+            } else if (message.data == "move tab left") {
+                chrome.tabs.query({ currentWindow: true, active: true }, tab => {
+                    if (tab[0].index > 0) {
+                        chrome.tabs.move(tab[0].id, { 'index': tab[0].index - 1 });
+                    }
+                });
+            } else if (message.data == "move tab right") {
+                chrome.tabs.query({ currentWindow: true, active: true }, tab => {
+                    chrome.tabs.move(tab[0].id, { 'index': tab[0].index + 1 });
+                });
+            } else if (message.data == "close window") {
+                chrome.tabs.query({ currentWindow: true, active: true }, tab => {
+                    chrome.windows.remove(tab[0].windowId);
+                });
+            }
     // else if(message.data == "zoom-in"){
     //     chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
     //         chrome.tabs.getZoom(tab[0].id, (zoomFactor) => {
@@ -468,7 +486,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '61675' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '57522' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 

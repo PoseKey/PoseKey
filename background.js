@@ -125,6 +125,12 @@ function updateMsg(){
         vim: vi,
     }
 }
+function updateCurrent(){
+    chrome.tabs.query({active:true,currentWindow: true},function(tabs){
+        var current = tabs[0].id;
+        chrome.tabs.sendMessage(current, msg);
+    });
+}
 // chrome.browserAction.onClicked.addListener(buttonClicked);
 chrome.tabs.onUpdated.addListener(onLoad);
 chrome.tabs.onCreated.addListener(onLoad);
@@ -135,6 +141,7 @@ chrome.runtime.onMessage.addListener(gotMessage);
 
 function gotMessage(message, sender, sendResponse){
     console.log(message);
+    updateMsg();
     if(message.data=="trigger"){
         if(is===true){
             is = false;
@@ -158,49 +165,57 @@ function gotMessage(message, sender, sendResponse){
         }
     }
     else if(message.data == "?"){
-        console.log("?");
+        // console.log("?");
     }
-    else if(message.data =="ON"){
-        is = true;
-        updateMsg();
-        chrome.browserAction.setIcon({path: firstImage});
-        chrome.tabs.query({active:true,currentWindow: true},function(tabs){
-            var current = tabs[0].id;
-            chrome.tabs.sendMessage(current, msg);
-        });
-    }
-    else if(message.data =="OFF"){
-        is = false;
-        updateMsg();
-        chrome.browserAction.setIcon({path: secondImage});
-        /* 모든 탭에 OFF하라고 보냄*/
-        chrome.tabs.query({}, function(tabs) {
-            for (let i=0; i<tabs.length; i++) {
-                chrome.tabs.sendMessage(tabs[i].id, msg);
-            }
-        });
-    }
+    // else if(message.data =="ON"){
+    //     is = true;
+    //     updateMsg();
+    //     chrome.browserAction.setIcon({path: firstImage});
+    //     chrome.tabs.query({active:true,currentWindow: true},function(tabs){
+    //         var current = tabs[0].id;
+    //         chrome.tabs.sendMessage(current, msg);
+    //     });
+    // }
+    // else if(message.data =="OFF"){
+    //     is = false;
+    //     updateMsg();
+    //     chrome.browserAction.setIcon({path: secondImage});
+    //     /* 모든 탭에 OFF하라고 보냄*/
+    //     chrome.tabs.query({}, function(tabs) {
+    //         for (let i=0; i<tabs.length; i++) {
+    //             chrome.tabs.sendMessage(tabs[i].id, msg);
+    //         }
+    //     });
+    // }
     else if(message.data == "setting"){
         pm = message.pmm;
         sc = message.scm;
         fq = message.fqm;
         ac = message.acm;
+        updateMsg();
+        updateCurrent();
     }
     else if(message.data == "poses"){
         custom = message.customm;
         defaults = message.defaultsm;
         customs = message.customsm;
+        updateMsg();
+        updateCurrent();
     }
     else if(message.data =="interface"){
         ri = message.rim;
         gi = message.gim;
         bi = message.bim;
         ti = message.tim;
+        updateMsg();
+        updateCurrent();
     }
     else if(message.data =="interfaceIO"){
         isDialog = message.isDialogm;
         hi = message.him;
         vi = message.vim;
+        updateMsg();
+        updateCurrent();
     }
     else if (message.data =="login"){
         uid = message.uidm;

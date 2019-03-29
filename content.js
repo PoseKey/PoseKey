@@ -394,6 +394,7 @@ async function gotMessage(message, sender, sendResponse){
         gi = message.gim;
         bi = message.bim;
         ti = message.tim;
+        isDialog = message.isDialogm;
         VerticalInterface = message.vim;
         HorizontalInterface = message.him;
         
@@ -402,11 +403,16 @@ async function gotMessage(message, sender, sendResponse){
         customs = message.customsm;
         
         uid = message.uidm;
-        if(isDialog){
+
+        
+        if(text){
             text.innerHTML = "PoseKey - Initializing";
             setStyle();
         }
         else LoadInterface();
+        if(text&&isDialog==false){
+            CloseInterface();
+        }
         if(!loading){
             // console.log("PoseKey - Loading Model...");
             if(isDialog){

@@ -38858,6 +38858,7 @@ async function gotMessage(message, sender, sendResponse) {
         gi = message.gim;
         bi = message.bim;
         ti = message.tim;
+        isDialog = message.isDialogm;
         VerticalInterface = message.vim;
         HorizontalInterface = message.him;
 
@@ -38866,10 +38867,14 @@ async function gotMessage(message, sender, sendResponse) {
         customs = message.customsm;
 
         uid = message.uidm;
-        if (isDialog) {
+
+        if (text) {
             text.innerHTML = "PoseKey - Initializing";
             setStyle();
         } else LoadInterface();
+        if (text && isDialog == false) {
+            CloseInterface();
+        }
         if (!loading) {
             // console.log("PoseKey - Loading Model...");
             if (isDialog) {
@@ -38919,7 +38924,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '61675' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '57522' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
