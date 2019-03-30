@@ -38508,7 +38508,7 @@ function setStyle() {
     if (!VerticalInterface) {
         Dposition = Dposition + "bottom:0;";
     }
-    Sstyle = "pointer-events:none;position:fixed;display:block;z-index:10000;pointer-events:none;height:100%;width:100%;top:0;left:0;";
+    Sstyle = "pointer-events:none;position:fixed;display:block;z-index:9999999999;pointer-events:none;height:100%;width:100%;top:0;left:0;";
     Dstyle = "pointer-events:none;position:fixed;display:flex;margin:10px;" + Dposition + "padding:10px;background-color:rgba(" + ri + "," + gi + "," + bi + "," + ti + ");border-radius:5px;justify-content:center;align-items:center";
     screen.style = Sstyle;
     dialog.style = Dstyle;
@@ -38537,7 +38537,8 @@ async function setup() {
     video = await loadVideo().catch(error => {
         if (error) {
             videoErr = true;
-            // console.log('Pose-Detector(Chrome:Extension) has been stopped because the site is insecure for camera permission!')
+            console.log('Pose-Detector(Chrome:Extension) has been stopped because the site is insecure for camera permission!');
+            text.innerHTML = "Camera not connected";
         }
     });
     // console.log(video);
@@ -38592,7 +38593,8 @@ async function detect() {
                 // chrome.tabs.executeScript(null,{code:""});
                 //control
                 // console.clear();
-                if (custom) {
+                if (custom && uid != undefined) {
+                    list = customs;
                     if (customs[res.classIndex - 1] == undefined) {
                         // console.log("%c" + "Idle " + res.confidences[res.classIndex]*100 + "%", "color: blue; font-size: 50pt");
                         text.innerHTML = "Idle " + res.confidences[res.classIndex] * 100 + "%";
@@ -38601,6 +38603,7 @@ async function detect() {
                         text.innerHTML = customs[res.classIndex - 1] + " " + res.confidences[res.classIndex] * 100 + "%";
                     }
                 } else {
+                    list = defaults;
                     if (defaults[res.classIndex - 1] == undefined) {
                         // console.log("%c" + "Idle " + res.confidences[res.classIndex]*100 + "%", "color: blue; font-size: 50pt");
                         text.innerHTML = "Idle " + res.confidences[res.classIndex] * 100 + "%";
@@ -38614,9 +38617,7 @@ async function detect() {
 
                 // console.log(defaults[res.classIndex - 1] == "Scroll Up");
                 if (res.classIndex != 0 && res.confidences[res.classIndex] * 100 >= ac) {
-                    if (custom == false) {
-                        list = defaults;
-                    } else list = customs;
+
                     switch (list[res.classIndex - 1]) {
                         case "scroll up":
                             scrollBy(0, -200);
@@ -38827,6 +38828,7 @@ async function myloadModel() {
     // console.log(knn);
     // console.log('Classifier loaded');
 }
+
 async function loadCustomModel() {
     const myLoadedModel = await tf.loadModel("indexeddb://" + uid);
     const myMaxLayers = myLoadedModel.layers.length;
