@@ -38592,12 +38592,22 @@ async function detect() {
                 // chrome.tabs.executeScript(null,{code:""});
                 //control
                 // console.clear();
-                if (defaults[res.classIndex - 1] == undefined) {
-                    // console.log("%c" + "Idle " + res.confidences[res.classIndex]*100 + "%", "color: blue; font-size: 50pt");
-                    text.innerHTML = "Idle " + res.confidences[res.classIndex] * 100 + "%";
+                if (custom) {
+                    if (customs[res.classIndex - 1] == undefined) {
+                        // console.log("%c" + "Idle " + res.confidences[res.classIndex]*100 + "%", "color: blue; font-size: 50pt");
+                        text.innerHTML = "Idle " + res.confidences[res.classIndex] * 100 + "%";
+                    } else {
+                        // console.log("%c" + defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex]*100 + "%", "color: blue; font-size: 50pt");
+                        text.innerHTML = customs[res.classIndex - 1] + " " + res.confidences[res.classIndex] * 100 + "%";
+                    }
                 } else {
-                    // console.log("%c" + defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex]*100 + "%", "color: blue; font-size: 50pt");
-                    text.innerHTML = defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex] * 100 + "%";
+                    if (defaults[res.classIndex - 1] == undefined) {
+                        // console.log("%c" + "Idle " + res.confidences[res.classIndex]*100 + "%", "color: blue; font-size: 50pt");
+                        text.innerHTML = "Idle " + res.confidences[res.classIndex] * 100 + "%";
+                    } else {
+                        // console.log("%c" + defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex]*100 + "%", "color: blue; font-size: 50pt");
+                        text.innerHTML = defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex] * 100 + "%";
+                    }
                 }
                 // console.log(defaults[res.classIndex - 1] + " " + res.confidences[res.classIndex]*100);
                 let ytb_video = document.getElementsByTagName("video")[0];
@@ -38924,7 +38934,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '57522' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '53454' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
