@@ -3,8 +3,7 @@ import * as tf from '@tensorflow/tfjs';
 import * as knnClassifier from '@tensorflow-models/knn-classifier';
 import * as posenet from '@tensorflow-models/posenet';
 import {drawKeypoints, drawSkeleton} from './demo_util';
-import { browserLocalStorage } from '@tensorflow/tfjs-core/dist/io/local_storage';
-import { rightPad } from '@tensorflow/tfjs-core/dist/util';
+
 //global variables
 let isDetecting;
 let loading = false;
@@ -416,7 +415,6 @@ async function gotMessage(message, sender, sendResponse){
         customs = message.customsm;
         
         uid = message.uidm;
-
         
         if(text){
             text.innerHTML = "PoseKey - Initializing";
