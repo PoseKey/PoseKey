@@ -1,7 +1,7 @@
 {
     "manifest_version":2,
-    "name": "Posenet Chrome extension",
-    "description": "A chrome extension that connects your motion to browser action with the webcam",
+    "name": "PoseKey",
+    "description": "A chrome extension that enables your poses to control browsers with a webcam",
     "version": "1.0",
     "permissions":[
         "activeTab",
