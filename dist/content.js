@@ -34676,8 +34676,9 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
  * limitations under the License.
  * =============================================================================
  */
-const color = 'aqua';
-const lineWidth = 2;
+const color = ['Red', 'lime', 'blue'];
+// const color = 'black';
+const lineWidth = 10;
 
 function toTuple({ y, x }) {
   return [y, x];
@@ -34708,15 +34709,38 @@ function drawSegment([ay, ax], [by, bx], color, scale, ctx) {
 function drawSkeleton(keypoints, minConfidence, ctx, scale = 1) {
   const adjacentKeyPoints = posenet.getAdjacentKeyPoints(keypoints, minConfidence);
 
-  adjacentKeyPoints.forEach(keypoints => {
-    drawSegment(toTuple(keypoints[0].position), toTuple(keypoints[1].position), color, scale, ctx);
-  });
+  // adjacentKeyPoints.forEach((keypoints) => {
+  //   drawSegment(toTuple(keypoints[0].position),
+  //     toTuple(keypoints[1].position), color, scale, ctx);
+  // });
+  const keypoint5 = keypoints[5];
+  const keypoint6 = keypoints[6];
+  const keypoint7 = keypoints[7];
+  const keypoint8 = keypoints[8];
+  const keypoint9 = keypoints[9];
+  const keypoint10 = keypoints[10];
+  const keypoint11 = keypoints[11];
+  const keypoint12 = keypoints[12];
+  // if (keypoint5.score > minConfidence && keypoint6.score > minConfidence && keypoint7.score > minConfidence && keypoint8.score > minConfidence && keypoint9.score > minConfidence && keypoint10.score > minConfidence) {
+  //left arm
+  drawSegment(toTuple(keypoint7.position), toTuple(keypoint9.position), color[0], scale, ctx);
+  drawSegment(toTuple(keypoint5.position), toTuple(keypoint7.position), color[0], scale, ctx);
+  //body
+  drawSegment(toTuple(keypoint5.position), toTuple(keypoint11.position), color[1], scale, ctx);
+  drawSegment(toTuple(keypoint5.position), toTuple(keypoint6.position), color[1], scale, ctx);
+  drawSegment(toTuple(keypoint11.position), toTuple(keypoint12.position), color[1], scale, ctx);
+  drawSegment(toTuple(keypoint6.position), toTuple(keypoint12.position), color[1], scale, ctx);
+  //right arm
+  drawSegment(toTuple(keypoint6.position), toTuple(keypoint8.position), color[2], scale, ctx);
+  drawSegment(toTuple(keypoint8.position), toTuple(keypoint10.position), color[2], scale, ctx);
+  // }
 }
 
 /**
  * Draw pose keypoints onto a canvas
  */
 function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
+  // for (let i = 5; i < 11; i++) {
   for (let i = 0; i < keypoints.length; i++) {
     const keypoint = keypoints[i];
 
@@ -34940,6 +34964,7 @@ async function setup() {
     });
     // console.log(video);
     await loadCanvas();
+    // document.body.appendChild(canvas);
     // if(model) model.dispose();
     switch (pm) {
         case 0:
@@ -35333,7 +35358,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '64245' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '49595' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 

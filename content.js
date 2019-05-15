@@ -86,6 +86,7 @@ async function setup(){
     });
     // console.log(video);
     await loadCanvas();
+    // document.body.appendChild(canvas);
     // if(model) model.dispose();
     switch (pm){
         case 0: mode = 0.5;

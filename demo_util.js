@@ -17,8 +17,9 @@
 import * as tf from '@tensorflow/tfjs';
 import * as posenet from '@tensorflow-models/posenet';
 
-const color = 'aqua';
-const lineWidth = 2;
+const color = ['Red', 'lime', 'blue'];
+// const color = 'black';
+const lineWidth = 10;
 
 function toTuple({y, x}) {
   return [y, x];
@@ -50,17 +51,87 @@ export function drawSkeleton(keypoints, minConfidence, ctx, scale = 1) {
   const adjacentKeyPoints = posenet.getAdjacentKeyPoints(
     keypoints, minConfidence);
 
-  adjacentKeyPoints.forEach((keypoints) => {
-    drawSegment(toTuple(keypoints[0].position),
-      toTuple(keypoints[1].position), color, scale, ctx);
-  });
+  // adjacentKeyPoints.forEach((keypoints) => {
+  //   drawSegment(toTuple(keypoints[0].position),
+  //     toTuple(keypoints[1].position), color, scale, ctx);
+  // });
+  const keypoint5 = keypoints[5];
+  const keypoint6 = keypoints[6];
+  const keypoint7 = keypoints[7];
+  const keypoint8 = keypoints[8];
+  const keypoint9 = keypoints[9];
+  const keypoint10 = keypoints[10];
+  const keypoint11 = keypoints[11];
+  const keypoint12 = keypoints[12];
+  // if (keypoint5.score > minConfidence && keypoint6.score > minConfidence && keypoint7.score > minConfidence && keypoint8.score > minConfidence && keypoint9.score > minConfidence && keypoint10.score > minConfidence) {
+    //left arm
+    drawSegment(
+      toTuple(keypoint7.position),
+      toTuple(keypoint9.position),
+      color[0],
+      scale,
+      ctx
+    );
+    drawSegment(
+      toTuple(keypoint5.position),
+      toTuple(keypoint7.position),
+      color[0],
+      scale,
+      ctx
+    );
+    //body
+    drawSegment(
+      toTuple(keypoint5.position),
+      toTuple(keypoint11.position),
+      color[1],
+      scale,
+      ctx
+    );
+    drawSegment(
+      toTuple(keypoint5.position),
+      toTuple(keypoint6.position),
+      color[1],
+      scale,
+      ctx
+    );
+    drawSegment(
+      toTuple(keypoint11.position),
+      toTuple(keypoint12.position),
+      color[1],
+      scale,
+      ctx
+    );
+    drawSegment(
+      toTuple(keypoint6.position),
+      toTuple(keypoint12.position),
+      color[1],
+      scale,
+      ctx
+    );
+    //right arm
+    drawSegment(
+      toTuple(keypoint6.position),
+      toTuple(keypoint8.position),
+      color[2],
+      scale,
+      ctx
+    );
+    drawSegment(
+      toTuple(keypoint8.position),
+      toTuple(keypoint10.position),
+      color[2],
+      scale,
+      ctx
+    ); 
+  // }
 }
 
 /**
  * Draw pose keypoints onto a canvas
  */
 export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
-  for (let i = 0; i < keypoints.length; i++) {
+  // for (let i = 5; i < 11; i++) {
+    for (let i = 0; i < keypoints.length; i++) {
     const keypoint = keypoints[i];
 
     if (keypoint.score < minConfidence) {
@@ -176,3 +247,4 @@ export function drawOffsetVectors(
       color, scale, ctx);
   }
 }
+
