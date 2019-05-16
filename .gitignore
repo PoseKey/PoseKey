@@ -1,3 +1,5 @@
 #directories
 .cache/
 /node_modules/
+#files
+./posekey.zip
