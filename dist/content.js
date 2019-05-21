@@ -34723,16 +34723,16 @@ function drawSkeleton(keypoints, minConfidence, ctx, scale = 1) {
   const keypoint12 = keypoints[12];
   // if (keypoint5.score > minConfidence && keypoint6.score > minConfidence && keypoint7.score > minConfidence && keypoint8.score > minConfidence && keypoint9.score > minConfidence && keypoint10.score > minConfidence) {
   //left arm
-  drawSegment(toTuple(keypoint7.position), toTuple(keypoint9.position), color[0], scale, ctx);
-  drawSegment(toTuple(keypoint5.position), toTuple(keypoint7.position), color[0], scale, ctx);
+  if (keypoint7.score > minConfidence && keypoint9.score > minConfidence) drawSegment(toTuple(keypoint7.position), toTuple(keypoint9.position), color[0], scale, ctx);
+  if (keypoint5.score > minConfidence && keypoint7.score > minConfidence) drawSegment(toTuple(keypoint5.position), toTuple(keypoint7.position), color[0], scale, ctx);
   //body
-  drawSegment(toTuple(keypoint5.position), toTuple(keypoint11.position), color[1], scale, ctx);
-  drawSegment(toTuple(keypoint5.position), toTuple(keypoint6.position), color[1], scale, ctx);
-  drawSegment(toTuple(keypoint11.position), toTuple(keypoint12.position), color[1], scale, ctx);
-  drawSegment(toTuple(keypoint6.position), toTuple(keypoint12.position), color[1], scale, ctx);
+  if (keypoint5.score > minConfidence && keypoint11.score > minConfidence) drawSegment(toTuple(keypoint5.position), toTuple(keypoint11.position), color[1], scale, ctx);
+  if (keypoint5.score > minConfidence && keypoint6.score > minConfidence) drawSegment(toTuple(keypoint5.position), toTuple(keypoint6.position), color[1], scale, ctx);
+  if (keypoint11.score > minConfidence && keypoint12.score > minConfidence) drawSegment(toTuple(keypoint11.position), toTuple(keypoint12.position), color[1], scale, ctx);
+  if (keypoint6.score > minConfidence && keypoint12.score > minConfidence) drawSegment(toTuple(keypoint6.position), toTuple(keypoint12.position), color[1], scale, ctx);
   //right arm
-  drawSegment(toTuple(keypoint6.position), toTuple(keypoint8.position), color[2], scale, ctx);
-  drawSegment(toTuple(keypoint8.position), toTuple(keypoint10.position), color[2], scale, ctx);
+  if (keypoint6.score > minConfidence && keypoint8.score > minConfidence) drawSegment(toTuple(keypoint6.position), toTuple(keypoint8.position), color[2], scale, ctx);
+  if (keypoint8.score > minConfidence && keypoint10.score > minConfidence) drawSegment(toTuple(keypoint8.position), toTuple(keypoint10.position), color[2], scale, ctx);
   // }
 }
 
@@ -35358,7 +35358,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '56295' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '50699' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
