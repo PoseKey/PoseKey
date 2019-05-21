@@ -366,7 +366,7 @@ async function myloadModel(){
 }
 
 async function loadCustomModel(){
-    const myLoadedModel  = await tf.loadModel("indexeddb://" + uid);
+    const myLoadedModel  = await tf.loadModel("https://s3.ap-northeast-2.amazonaws.com/ai-models/user/" + uid + "/model.json");
     const myMaxLayers = myLoadedModel.layers.length;
     const myDenseEnd =  myMaxLayers - 2;
     const myDenseStart = myDenseEnd/2;                                  

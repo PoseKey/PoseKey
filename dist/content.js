@@ -35252,7 +35252,7 @@ async function myloadModel() {
 }
 
 async function loadCustomModel() {
-    const myLoadedModel = await tf.loadModel("indexeddb://" + uid);
+    const myLoadedModel = await tf.loadModel("https://s3.ap-northeast-2.amazonaws.com/ai-models/user/" + uid + "/model.json");
     const myMaxLayers = myLoadedModel.layers.length;
     const myDenseEnd = myMaxLayers - 2;
     const myDenseStart = myDenseEnd / 2;
@@ -35358,7 +35358,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '49595' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '55260' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
