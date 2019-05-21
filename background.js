@@ -24,10 +24,9 @@ let defaults, customs, custom;
  * login = 로그인 여부, true or false
  * uid = 로그인한 사용자의 uid
  * local = custom 모델 생성 여부
- * storedModel = custom 모델 생성자들의 uid 리스트
  */
 
-let login, uid, local = false, storedModel;
+let login, uid, local = false;
 
 /*
  *
@@ -52,7 +51,6 @@ function save(){
                 ac: ac,
                 custom:custom, defaults:defaults, customs:customs,
                 local: local,
-                storedModel: storedModel,
             }
         });
     else
@@ -93,7 +91,6 @@ function loadS(){
         if(data.defaults) defaults = data.defaults; else defaults = [null,null,null,null,null,null];
         if(data.customs) customs = data.customs; else customs = [null,null,null,null,null,null];
         if(data.local) local = data.local; else local = false;
-        if(data.storedModel) storedModel = data.storedModel; else storedModel = [];
         if(data.isDialog == false) isDialog = data.isDialog;else isDialog = true;
         if(data.ri) ri = data.ri; else ri = 56;
         if(data.gi) gi = data.gi; else gi = 104;
@@ -225,8 +222,6 @@ function gotMessage(message, sender, sendResponse){
     }
     else if (message.data =="login"){
         uid = message.uidm;
-        local = storedModel.includes(uid);
-        // console.log(storedModel, local);
         updateMsg();
         updateCurrent();
     }
@@ -239,9 +234,6 @@ function gotMessage(message, sender, sendResponse){
         updateCurrent();
     }
     else if (message.data == "saveModel"){
-        let exist = storedModel.includes(message.uidm);
-        let id = message.uidm;
-        if(!exist) storedModel.push(id);
         local = true;
         updateMsg();
         updateCurrent();
