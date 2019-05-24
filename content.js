@@ -341,7 +341,7 @@ async function loadCanvas(){
 }
 
 async function myloadModel(){
-    const myLoadedModel  = await tf.loadModel('https://s3.ap-northeast-2.amazonaws.com/ai-models/model.json');
+    const myLoadedModel  = await tf.loadModel("https://ujoy7851.github.io/Capstone/model/model.json");
     // console.log(myLoadedModel);
     // console.log('myLoadedModel.layers.length');
     // console.log(myLoadedModel.layers.length);

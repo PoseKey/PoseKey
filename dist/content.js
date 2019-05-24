@@ -35227,7 +35227,7 @@ async function loadCanvas() {
 }
 
 async function myloadModel() {
-    const myLoadedModel = await tf.loadModel('https://s3.ap-northeast-2.amazonaws.com/ai-models/model.json');
+    const myLoadedModel = await tf.loadModel("https://ujoy7851.github.io/Capstone/model/model.json");
     // console.log(myLoadedModel);
     // console.log('myLoadedModel.layers.length');
     // console.log(myLoadedModel.layers.length);
@@ -35358,7 +35358,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '56046' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '50449' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
